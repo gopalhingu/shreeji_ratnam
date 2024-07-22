@@ -35,6 +35,10 @@ class DiamondController extends Controller
             $sheet = $spreadsheet->getActiveSheet();
             $data = $sheet->toArray();
 
+            // echo "<pre>";
+			// print_r($data);
+			// die;
+
             // Use the first row as keys
             $header = array_shift($data);
             $newHeader = [];
@@ -90,6 +94,7 @@ class DiamondController extends Controller
 
     public function data(Request $request)
     {
+        /*
         // $getRecord = Diamond::select(['id', 'growth_type', 'stock_id', 'report_number', 'lab', 'shape', 'ratio', 'color', 'clarity', 'rap_amount', 'discounts', 'total_price', '', 'cut', 'polish', 'symmetry', 'fluorescence_intensity'])->paginnate($request->input('per_page', 10));
 
         // $query = Diamond::select([
@@ -98,9 +103,26 @@ class DiamondController extends Controller
         //     'cut', 'polish', 'symmetry', 'fluorescence_intensity'
         // ]);
 
-        $q = Diamond::latest()->get();
-        
-        return DataTables::of($q)
-                ->make(true);
+        $q = Diamond::get();        
+        return DataTables::of($q)->make(true);
+        */
+
+
+        // Retrieve the parameters for pagination and sorting
+        $page = $request->get('page', 1);
+        $perPage = $request->get('perPage', 10);
+        $sortBy = $request->get('sortBy', 'id');
+        $sortDirection = $request->get('sortDirection', 'asc');
+
+        // Query the database with pagination and sorting
+        $query = Diamond::orderBy($sortBy, $sortDirection);
+
+        // Add any additional filters if needed
+        // For example: 
+        // $query->where('column', $request->get('filter'));
+
+        $data = $query->paginate($perPage, ['*'], 'page', $page);
+
+        return response()->json($data);
     }
 }
