@@ -89,11 +89,15 @@ class DiamondController extends Controller
 
     public function list()
     {
-        $shapes = Diamond::select('shape')->distinct()->pluck('shape');
-        $colors = Diamond::distinct()->pluck('color');
-        $clarities = Diamond::distinct()->pluck('clarity'); // Replace with your actual clarity fetching logic
+        $shapes = Diamond::select('shape')->whereNotNull('shape')->distinct()->pluck('shape');
+        $colors = Diamond::select('color')->whereNotNull('color')->distinct()->pluck('color');
+        $clarities = Diamond::select('clarity')->whereNotNull('clarity')->distinct()->pluck('clarity');
+        $cuts = Diamond::select('cut')->whereNotNull('cut')->distinct()->pluck('cut');
+        $polish = Diamond::select('polish')->whereNotNull('polish')->distinct()->pluck('polish');
+        $symmetries = Diamond::select('symmetry')->whereNotNull('symmetry')->distinct()->pluck('symmetry');
+        $labs = Diamond::select('lab')->whereNotNull('lab')->distinct()->pluck('lab');
 
-        return view("diamond.list",compact('shapes','colors','clarities'));
+        return view("diamond.list",compact('shapes','colors','clarities','cuts','polish','symmetries','labs'));
     }
 
     public function data(Request $request)
@@ -113,23 +117,26 @@ class DiamondController extends Controller
 
 
         // Retrieve the parameters for pagination and sorting
-        $page = $request->get('page', 1);
-        $perPage = $request->get('perPage', 10);
-        $sortBy = $request->get('sortBy', 'id');
-        $sortDirection = $request->get('sortDirection', 'asc');
+        $page = $request->input('page', 1);
+        $perPage = $request->input('perPage', 10);
+        $sortBy = $request->input('sortBy', 'id');
+        $sortDirection = $request->input('sortDirection', 'asc');
         $minCarat = $request->input('minCarat', 0);
         $maxCarat = $request->input('maxCarat', 0);
         $shapes = $request->input('shapes', []);
         $colors = $request->input('colors', []);
         $clarities = $request->input('clarities', []);
+        $cuts = $request->input('cuts', []);
+        $polishes = $request->input('polishes', []);
+        $symmetries = $request->input('symmetries', []);
 
         // Query the database with pagination and sorting
         $query = Diamond::query()
         ->when($minCarat, function ($query, $minCarat) {
-            return $query->where('carat', '>=', $minCarat);
+            return $query->where('weight', '>=', $minCarat);
         })
         ->when($maxCarat, function ($query, $maxCarat) {
-            return $query->where('carat', '<=', $maxCarat);
+            return $query->where('weight', '<=', $maxCarat);
         })
         ->when($shapes, function ($query, $shapes) {
             return $query->whereIn('shape', $shapes);
@@ -139,6 +146,15 @@ class DiamondController extends Controller
         })
         ->when($clarities, function ($query, $clarities) {
             return $query->whereIn('clarity', $clarities);
+        })
+        ->when($cuts, function ($query, $cuts) {
+            return $query->whereIn('cut', $cuts);
+        })
+        ->when($polishes, function ($query, $polishes) {
+            return $query->whereIn('polish', $polishes);
+        })
+        ->when($symmetries, function ($query, $symmetries) {
+            return $query->whereIn('symmetry', $symmetries);
         })
         ->orderBy($sortBy, $sortDirection);
 

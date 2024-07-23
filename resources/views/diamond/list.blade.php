@@ -284,36 +284,64 @@
 					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 				</div>
 				<div class="modal-body">
-            <form id="caratFilter" class="row g-3">
-                <div class="col-md-6 position-relative">
-                    <input type="text" class="form-control" id="minCarat" placeholder=" " />
-                    <label for="minCarat" class="form-label label-on-border">Min Carat</label>
-                </div>
-                <div class="col-md-6 position-relative">
-                    <input type="text" class="form-control" id="maxCarat" placeholder=" " />
-                    <label for="maxCarat" class="form-label label-on-border">Max Carat</label>
-                </div>
-				<div class="col-md-12">
-					<div id="shapeList" class="border p-2 rounded" style="min-height: 50px;">
-						<span id="placeholderMessage" class="text-muted">Please choose one or more diamond shape</span>
-					</div>
-				</div>
-				<!-- Color List Display -->
-				<div class="col-md-12">
-					<div id="colorList" class="border p-2 rounded" style="min-height: 50px;">
-						<span id="colorPlaceholderMessage" class="text-muted">Please choose one or more diamond color</span>
-					</div>
-				</div>
-				<!-- Clarity List Display -->
-				<div class="col-md-12">
-					<div id="clarityList" class="border p-2 rounded" style="min-height: 50px;">
-						<span id="clarityPlaceholderMessage" class="text-muted">Please choose one or more tags</span>
-					</div>
-				</div>
-            </form>
+					<form id="caratFilter" class="row g-3">
+						<div class="col-md-6 position-relative">
+							<input type="text" class="form-control" id="minCarat" placeholder=" " />
+							<label for="minCarat" class="form-label label-on-border">Min Carat</label>
+						</div>
+						<div class="col-md-6 position-relative">
+							<input type="text" class="form-control" id="maxCarat" placeholder=" " />
+							<label for="maxCarat" class="form-label label-on-border">Max Carat</label>
+						</div>
+						<div class="col-md-12">
+							<div id="shapeList" class="border p-2 rounded" style="min-height: 50px;">
+								<span id="placeholderMessage" class="text-muted">Please choose one or more diamond shape</span>
+							</div>
+						</div>
+						<!-- Color List Display -->
+						<div class="col-md-12">
+							<div id="colorList" class="border p-2 rounded" style="min-height: 50px;">
+								<span id="colorPlaceholderMessage" class="text-muted">Please choose one or more diamond color</span>
+							</div>
+						</div>
+						<!-- Clarity List Display -->
+						<div class="col-md-12">
+							<div id="clarityList" class="border p-2 rounded" style="min-height: 50px;">
+								<span id="clarityPlaceholderMessage" class="text-muted">Please choose one or more diamond clarity</span>
+							</div>
+						</div>
+						<!-- Cut List Display -->
+						<div class="col-md-12">
+							<div id="cutList" class="border p-2 rounded" style="min-height: 50px;">
+								<span id="cutPlaceholderMessage" class="text-muted">Please choose one or more diamond cut</span>
+							</div>
+						</div>
+
+						<!-- Polish List Display -->
+						<div class="col-md-12">
+							<div id="polishList" class="border p-2 rounded" style="min-height: 50px;">
+								<span id="polishPlaceholderMessage" class="text-muted">Please choose one or more diamond polish</span>
+							</div>
+						</div>
+
+						<!-- Symmetry List Display -->
+						<div class="col-md-12">
+							<div id="symmetryList" class="border p-2 rounded" style="min-height: 50px;">
+								<span id="symmetryPlaceholderMessage" class="text-muted">Please choose one or more diamond symmetry</span>
+							</div>
+						</div>
+
+						<!-- Lab List Display -->
+						<div class="col-md-12">
+							<div id="labList" class="border p-2 rounded" style="min-height: 50px;">
+								<span id="labPlaceholderMessage" class="text-muted">Please choose one or more diamond lab</span>
+							</div>
+						</div>
+
+					</form>
 				</div>
 				<div class="modal-footer">
-					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Clear Filter</button>
+					<button type="button" class="btn btn-secondary filter-clear-button" data-bs-dismiss="modal">Clear Filter</button>
 					<button type="button" class="btn btn-primary filter-button">Filter</button>
 				</div>
 			</div>
@@ -355,14 +383,14 @@
 					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 				</div>
 				<div class="modal-body">
-					{{-- <div id="fullColorList" class="row"></div> --}}
-					@foreach ($colors as $key=>$value)
-						<div class="form-check me-3">
-							<input class="form-check-input" type="checkbox" value="{{ $value }}" id="shape{{ $key }}">
-							<label class="form-check-label" for="shape{{ $key }}">{{ $value }}</label>
-						</div>
-					@endforeach
-
+					<div id="fullColorList">
+						@foreach ($colors as $key=>$value)
+							<div class="form-check me-3">
+								<input class="form-check-input" type="checkbox" value="{{ $value }}" id="color{{ $key }}">
+								<label class="form-check-label" for="color{{ $key }}">{{ $value }}</label>
+							</div>
+						@endforeach
+					</div>
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -381,12 +409,14 @@
 					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 				</div>
 				<div class="modal-body">
-					@foreach ($clarities as $key=>$value)
-						<div class="form-check me-3">
-							<input class="form-check-input" type="checkbox" value="{{ $value }}" id="shape{{ $key }}">
-							<label class="form-check-label" for="shape{{ $key }}">{{ $value }}</label>
-						</div>
-					@endforeach
+					<div id="fullClarityList">
+						@foreach ($clarities as $key=>$value)
+							<div class="form-check me-3">
+								<input class="form-check-input" type="checkbox" value="{{ $value }}" id="clarity{{ $key }}">
+								<label class="form-check-label" for="clarity{{ $key }}">{{ $value }}</label>
+							</div>
+						@endforeach
+					</div>
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -395,7 +425,115 @@
 			</div>
 		</div>
 	</div>
-	
+
+	<!-- Cut Modal -->
+	<div class="modal fade" id="cutModal" tabindex="-1" aria-labelledby="cutModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-xl">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="cutModalLabel">Cut Filter</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<!-- Cut filter content goes here -->
+					<div id="fullCutList">
+						@foreach ($cuts as $key=>$value)
+							<div class="form-check me-3">
+								<input class="form-check-input" type="checkbox" value="{{ $value }}" id="cut{{ $key }}">
+								<label class="form-check-label" for="cut{{ $key }}">{{ $value }}</label>
+							</div>
+						@endforeach
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+					<button type="button" class="btn btn-primary apply-cut-filter">Apply Filter</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- Polish Modal -->
+	<div class="modal fade" id="polishModal" tabindex="-1" aria-labelledby="polishModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="polishModalLabel">Polish Filter</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<!-- Polish filter content goes here -->
+					<div id="fullPolishList">
+						@foreach ($polish as $key=>$value)
+							<div class="form-check me-3">
+								<input class="form-check-input" type="checkbox" value="{{ $value }}" id="polish{{ $key }}">
+								<label class="form-check-label" for="polish{{ $key }}">{{ $value }}</label>
+							</div>
+						@endforeach
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+					<button type="button" class="btn btn-primary apply-polish-filter">Apply Filter</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- Symmetry Modal -->
+	<div class="modal fade" id="symmetryModal" tabindex="-1" aria-labelledby="symmetryModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="symmetryModalLabel">Symmetry Filter</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<!-- Symmetry filter content goes here -->
+					<div id="fullSymmetryList">
+						@foreach ($symmetries as $key=>$value)
+							<div class="form-check me-3">
+								<input class="form-check-input" type="checkbox" value="{{ $value }}" id="symmetries{{ $key }}">
+								<label class="form-check-label" for="symmetries{{ $key }}">{{ $value }}</label>
+							</div>
+						@endforeach
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+					<button type="button" class="btn btn-primary apply-symmetry-filter">Apply Filter</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="modal fade" id="labModal" tabindex="-1" aria-labelledby="labModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="labModalLabel">Select Lab</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<form id="labFilter" class="row g-3">
+						<div id="fullLabList" class="col-md-12">
+							@foreach ($labs as $key=>$value)
+								<div class="form-check me-3">
+									<input class="form-check-input" type="checkbox" value="{{ $value }}" id="lab{{ $key }}">
+									<label class="form-check-label" for="lab{{ $key }}">{{ $value }}</label>
+								</div>
+							@endforeach
+						</div>
+					</form>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary filter-clear-button" data-bs-dismiss="modal">Clear Filter</button>
+					<button type="button" class="btn btn-primary apply-lab-filter">Apply Filter</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
 </div>
 @endsection
 
@@ -407,165 +545,161 @@
 		let currentSortDirection = 'asc';
 		let totalPage = 0;
 
-		$('#shapeList').on('click', function() {
-			$('#shapeModal').modal('show');
+		// Utility function to clear all filters
+		function clearFilters() {
+			// Clear input fields
+			$('#minCarat').val('');
+			$('#maxCarat').val('');
+
+			// Clear shape tags
+			$('#shapeList').empty().html('<span id="placeholderMessage" class="text-muted">Please choose one or more diamond shape</span>');
+			
+			// Clear color tags
+			$('#colorList').empty().html('<span id="colorPlaceholderMessage" class="text-muted">Please choose one or more diamond color</span>');
+			
+			// Clear clarity tags
+			$('#clarityList').empty().html('<span id="clarityPlaceholderMessage" class="text-muted">Please choose one or more diamond clarity</span>');
+
+			// Clear cut tags
+			$('#cutList').empty().html('<span id="cutPlaceholderMessage" class="text-muted">Please choose one or more diamond cut</span>');
+
+			// Clear polish tags
+			$('#polishList').empty().html('<span id="polishPlaceholderMessage" class="text-muted">Please choose one or more diamond polish</span>');
+
+			// Clear symmetry tags
+			$('#symmetryList').empty().html('<span id="symmetryPlaceholderMessage" class="text-muted">Please choose one or more diamond symmetry</span>');
+
+			// Uncheck all checkboxes in filter lists
+			$('#fullShapeList input').prop('checked', false);
+			$('#fullColorList input').prop('checked', false);
+			$('#fullClarityList input').prop('checked', false);
+			$('#fullCutList input').prop('checked', false);
+			$('#fullPolishList input').prop('checked', false);
+			$('#fullSymmetryList input').prop('checked', false);
+
+			// Trigger filter with updated settings
+			fetchData(currentPage, currentPerPage, currentSortColumn, currentSortDirection);
+		}
+
+		// Attach event listener to Clear Filter button
+		$(document).on('click', '.filter-clear-button', function() {
+			clearFilters();
 		});
 
-		$(document).on('click', '.apply-shape-filter', function() {
-			const selectedShapes = $('#fullShapeList input:checked').map(function() {
+		function applyFilter(modalId, listId, fullListId, placeholderMessage,tagClass) {
+			const selectedItems = $(fullListId + ' input:checked').map(function() {
 				return $(this).val();
 			}).get();
 
-			// Clear existing shapes
-			$('#shapeList').empty();
+			// Clear existing items
+			$(listId).empty();
 
-			if (selectedShapes.length === 0) {
-				// Show placeholder message if no shapes are selected
-				$('#shapeList').html('<span id="placeholderMessage" class="text-muted">Please choose one or more tags</span>');
+			if (selectedItems.length === 0) {
+				// Show placeholder message if no items are selected
+				$(listId).html('<span id="' + placeholderMessage + '" class="text-muted">Please choose one or more tags</span>');
 			} else {
-				// Hide placeholder message if shapes are selected
-				$('#placeholderMessage').remove();
+				// Hide placeholder message if items are selected
+				$('#' + placeholderMessage).remove();
 
-				// Append each shape as a tag
-				$.each(selectedShapes, function(index, shape) {
-					$('#shapeList').append(
-						'<span class="badge bg-primary me-2 mb-1">' + shape + 
-						' <span class="remove-tag" style="cursor:pointer;">&times;</span></span>'
+				// Append each item as a tag
+				$.each(selectedItems, function(index, item) {
+					$(listId).append(
+						'<span class="badge bg-primary me-2 mb-1">' + item +
+						' <span class="' + tagClass + '" style="cursor:pointer;">&times;</span></span>'
 					);
 				});
 			}
 
-			// Trigger filter with the selected shapes
+			// Trigger filter with the selected items
 			fetchData(currentPage, currentPerPage, currentSortColumn, currentSortDirection);
+			$(modalId).modal('hide');
+		}
 
-			$('#shapeModal').modal('hide');
-		});
+		function showModal(modalId) {
+			$(modalId).modal('show');
+		}
 
-		$(document).on('click', '.remove-tag', function() {
-			$(this).closest('.badge').remove();
+		function removeTag(tag, listId, fullListId, placeholderMessage) {
+			var item = $(tag).closest('.badge').text().trim().slice(0, -2);
+			console.log('item--->',item)
+			$(tag).closest('.badge').remove();
+			console.log('fullListId--->',fullListId)
+			console.log('full--->',fullListId + ' input[value="' + item + '"]')
+			$(fullListId + ' input[value="' + item + '"]').prop('checked', false);
 
 			// Show placeholder message if no tags are left
-			if ($('#shapeList .badge').length === 0) {
-				$('#shapeList').html('<span id="placeholderMessage" class="text-muted">Please choose one or more tags</span>');
+			if ($(listId + ' .badge').length === 0) {
+				$(listId).html('<span id="' + placeholderMessage + '" class="text-muted">Please choose one or more tags</span>');
 			}
 
-			// Trigger filter with updated shapes
+			// Trigger filter with updated items
 			fetchData(currentPage, currentPerPage, currentSortColumn, currentSortDirection);
-		});
+		}
 
-		//Color filter js
-		$(document).on('click', '#colorList', function() {
-			// $.ajax({
-			// 	url: '{{ route("diamond.colors") }}',
-			// 	method: 'GET',
-			// 	success: function(colors) {
-			// 		var colorHtml = '';
-			// 		var selectedColors = $('#colorList .badge').map(function() {
-			// 			return $(this).text().trim().slice(0, -2); // Extract text without the '×' character
-			// 		}).get();
+		$('#shapeList').on('click', function() { showModal('#shapeModal'); });
+		$('#colorList').on('click', function() { showModal('#colorModal'); });
+		$('#clarityList').on('click', function() { showModal('#clarityModal'); });
+		$('#cutList').on('click', function() { showModal('#cutModal'); });
+		$('#polishList').on('click', function() { showModal('#polishModal'); });
+		$('#symmetryList').on('click', function() { showModal('#symmetryModal'); });
+		$('#labList').on('click', function() { showModal('#labModal'); });
 
-			// 		$.each(colors, function(index, color) {
-			// 			var checked = selectedColors.includes(color) ? 'checked' : '';
-			// 			colorHtml += '<div class="form-check me-3">';
-			// 			colorHtml += '<input class="form-check-input" type="checkbox" value="' + color + '" id="color' + index + '" ' + checked + '>';
-			// 			colorHtml += '<label class="form-check-label" for="color' + index + '">' + color + '</label>';
-			// 			colorHtml += '</div>';
-			// 		});
-			// 		$('#fullColorList').html(colorHtml);
-			// 	}
-			// });
-			$('#colorModal').modal('show');
+		$(document).on('click', '.apply-shape-filter', function() {
+			applyFilter('#shapeModal', '#shapeList', '#fullShapeList', 'placeholderMessage', 'remove-tag');
 		});
 
 		$(document).on('click', '.apply-color-filter', function() {
-			const selectedColors = $('#fullColorList input:checked').map(function() {
-				return $(this).val();
-			}).get();
+			applyFilter('#colorModal', '#colorList', '#fullColorList', 'colorPlaceholderMessage', 'remove-color-tag');
+		});
 
-			// Clear existing colors
-			$('#colorList').empty();
+		$(document).on('click', '.apply-clarity-filter', function() {
+			applyFilter('#clarityModal', '#clarityList', '#fullClarityList', 'clarityPlaceholderMessage', 'remove-clarity-tag');
+		});
 
-			if (selectedColors.length === 0) {
-				// Show placeholder message if no colors are selected
-				$('#colorList').html('<span id="colorPlaceholderMessage" class="text-muted">Please choose one or more tags</span>');
-			} else {
-				// Hide placeholder message if colors are selected
-				$('#colorPlaceholderMessage').remove();
+		$(document).on('click', '.apply-cut-filter', function() {
+			applyFilter('#cutModal', '#cutList', '#fullCutList', 'cutPlaceholderMessage', 'remove-cut-tag');
+		});
 
-				// Append each color as a tag
-				$.each(selectedColors, function(index, color) {
-					$('#colorList').append(
-						'<span class="badge bg-primary me-2 mb-1">' + color + 
-						' <span class="remove-color-tag" style="cursor:pointer;">&times;</span></span>'
-					);
-				});
-			}
+		$(document).on('click', '.apply-polish-filter', function() {
+			applyFilter('#polishModal', '#polishList', '#fullPolishList', 'polishPlaceholderMessage', 'remove-polish-tag');
+		});
 
-			// Trigger filter with the selected colors
-			fetchData(currentPage, currentPerPage, currentSortColumn, currentSortDirection);
+		$(document).on('click', '.apply-symmetry-filter', function() {
+			applyFilter('#symmetryModal', '#symmetryList', '#fullSymmetryList', 'symmetryPlaceholderMessage', 'remove-symmetry-tag');
+		});
 
-			$('#colorModal').modal('hide');
+		$(document).on('click', '.apply-lab-filter', function() {
+			applyFilter('#labModal', '#labList', '#fullLabList', 'labPlaceholderMessage', 'remove-lab-tag');
+		});
+
+		$(document).on('click', '.remove-tag', function() {
+			removeTag(this, '#shapeList', '#fullShapeList', 'placeholderMessage');
 		});
 
 		// Remove color tag on click
 		$(document).on('click', '.remove-color-tag', function() {
-			$(this).closest('.badge').remove();
-
-			// Show placeholder message if no tags are left
-			if ($('#colorList .badge').length === 0) {
-				$('#colorList').html('<span id="colorPlaceholderMessage" class="text-muted">Please choose one or more tags</span>');
-			}
-
-			// Trigger filter with updated colors
-			fetchData(currentPage, currentPerPage, currentSortColumn, currentSortDirection);
-		});
-
-		//Clarity filter js
-		$(document).on('click', '#clarityList', function() {
-			$('#clarityModal').modal('show');
-		});
-
-		$(document).on('click', '.apply-clarity-filter', function() {
-			const selectedClarities = $('#fullClarityList input:checked').map(function() {
-				return $(this).val();
-			}).get();
-
-			// Clear existing clarities
-			$('#clarityList').empty();
-
-			if (selectedClarities.length === 0) {
-				// Show placeholder message if no clarities are selected
-				$('#clarityList').html('<span id="clarityPlaceholderMessage" class="text-muted">Please choose one or more tags</span>');
-			} else {
-				// Hide placeholder message if clarities are selected
-				$('#clarityPlaceholderMessage').remove();
-
-				// Append each clarity as a tag
-				$.each(selectedClarities, function(index, clarity) {
-					$('#clarityList').append(
-						'<span class="badge bg-primary me-2 mb-1">' + clarity + 
-						' <span class="remove-clarity-tag" style="cursor:pointer;">&times;</span></span>'
-					);
-				});
-			}
-
-			// Trigger filter with the selected clarities
-			fetchData(currentPage, currentPerPage, currentSortColumn, currentSortDirection);
-
-			$('#clarityModal').modal('hide');
+			removeTag(this, '#colorList', '#fullColorList', 'colorPlaceholderMessage');
 		});
 
 		// Remove clarity tag on click
 		$(document).on('click', '.remove-clarity-tag', function() {
-			$(this).closest('.badge').remove();
+			removeTag(this, '#clarityList', '#fullClarityList', 'clarityPlaceholderMessage');
+		});
 
-			// Show placeholder message if no tags are left
-			if ($('#clarityList .badge').length === 0) {
-				$('#clarityList').html('<span id="clarityPlaceholderMessage" class="text-muted">Please choose one or more tags</span>');
-			}
+		$(document).on('click', '.remove-cut-tag', function() {
+			removeTag(this, '#cutList', '#fullCutList', 'cutPlaceholderMessage');
+		});
 
-			// Trigger filter with updated clarities
-			fetchData(currentPage, currentPerPage, currentSortColumn, currentSortDirection);
+		$(document).on('click', '.remove-polish-tag', function() {
+			removeTag(this, '#polishList', '#fullPolishList', 'polishPlaceholderMessage');
+		});
+
+		$(document).on('click', '.remove-symmetry-tag', function() {
+			removeTag(this, '#symmetryList', '#fullSymmetryList', 'symmetryPlaceholderMessage');
+		});
+
+		$(document).on('click', '.remove-lab-tag', function() {
+			removeTag(this, '#labList', '#fullLabList', 'labPlaceholderMessage');
 		});
 
         $(document).ready(function() {
@@ -613,7 +747,7 @@
 				$(".sorting").find(".sorting_icon").addClass("hide");
 				$(".sorting").find(".default").removeClass("hide");
 
-                fetchData(currentPage, currentPerPage, currentSortColumn, currentSortDirection);
+                clearFilters();
             });
             
 			$(document).on('change', '.changeNumberOfPerPage', function(e) {
@@ -739,14 +873,37 @@
 				return $(this).text().trim().slice(0, -2);
 			}).get();
 
-			 // Get selected colors
-			 const selectedColors = $('#colorList .badge').map(function() {
+			// Get selected colors
+			const selectedColors = $('#colorList .badge').map(function() {
 				return $(this).text().trim().slice(0, -2); // Extract the color text, removing the '×'
 			}).get();
 
+			// Get selected colors
+			const selectedclarities = $('#clarityList .badge').map(function() {
+				return $(this).text().trim().slice(0, -2); // Extract the color text, removing the '×'
+			}).get();
+
+			const selectedCuts = $('#cutList .badge').map(function() {
+				return $(this).text().trim().slice(0, -2); // Extract the cut text, removing the '×'
+			}).get();
+
+			// Get selected polishes
+			const selectedPolishes = $('#polishList .badge').map(function() {
+				return $(this).text().trim().slice(0, -2); // Extract the polish text, removing the '×'
+			}).get();
+
+			// Get selected symmetries
+			const selectedSymmetries = $('#symmetryList .badge').map(function() {
+				return $(this).text().trim().slice(0, -2); // Extract the symmetry text, removing the '×'
+			}).get();
+
+			const selectedLabs = $('#labList .badge').map(function() {
+				return $(this).text().trim().slice(0, -2);
+			}).get();
+			
 			$.ajax({
 				url: '{{ route("diamond.data") }}',
-				method: 'GET',
+				method: 'POST',
 				data: {
 					page: page,
 					perPage: perPage,
@@ -755,7 +912,12 @@
 					minCarat: minCarat,
             		maxCarat: maxCarat,
 					shapes: selectedShapes,
-					colors: selectedColors
+					colors: selectedColors,
+					clarities: selectedclarities,
+					cuts: selectedCuts,
+					polishes: selectedPolishes,
+					symmetries: selectedSymmetries,
+					labs: selectedLabs
 				},
 				success: function(response) {
 					var rows = '';
@@ -768,7 +930,7 @@
 						rows += '<td>' + item.report_number + '</td>';
 						rows += '<td>' + item.lab + '</td>';
 						rows += '<td>' + item.shape + '</td>';
-						rows += '<td>' + item.ratio + '</td>';
+						rows += '<td>' + item.weight + '</td>';
 						rows += '<td>' + item.color + '</td>';
 						rows += '<td>' + item.clarity + '</td>';
 						rows += '<td>' + item.rap_amount + '</td>';
