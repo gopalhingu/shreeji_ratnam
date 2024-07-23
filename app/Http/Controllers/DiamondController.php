@@ -72,8 +72,8 @@ class DiamondController extends Controller
                 }
             }
 
-            $file->move(public_path('excel'), $newFileName);
-            $filePath = public_path('excel/'.$newFileName);
+            // $file->move(public_path('excel'), $newFileName);
+            // $filePath = public_path('excel/'.$newFileName);
 
             return redirect()->back()->with('success', 'Excel file imported successfully.');
 
@@ -89,7 +89,11 @@ class DiamondController extends Controller
 
     public function list()
     {
-        return view("diamond.list");
+        $shapes = Diamond::select('shape')->distinct()->pluck('shape');
+        $colors = Diamond::distinct()->pluck('color');
+        $clarities = Diamond::distinct()->pluck('clarity'); // Replace with your actual clarity fetching logic
+
+        return view("diamond.list",compact('shapes','colors','clarities'));
     }
 
     public function data(Request $request)
@@ -113,16 +117,48 @@ class DiamondController extends Controller
         $perPage = $request->get('perPage', 10);
         $sortBy = $request->get('sortBy', 'id');
         $sortDirection = $request->get('sortDirection', 'asc');
+        $minCarat = $request->input('minCarat', 0);
+        $maxCarat = $request->input('maxCarat', 0);
+        $shapes = $request->input('shapes', []);
+        $colors = $request->input('colors', []);
+        $clarities = $request->input('clarities', []);
 
         // Query the database with pagination and sorting
-        $query = Diamond::orderBy($sortBy, $sortDirection);
+        $query = Diamond::query()
+        ->when($minCarat, function ($query, $minCarat) {
+            return $query->where('carat', '>=', $minCarat);
+        })
+        ->when($maxCarat, function ($query, $maxCarat) {
+            return $query->where('carat', '<=', $maxCarat);
+        })
+        ->when($shapes, function ($query, $shapes) {
+            return $query->whereIn('shape', $shapes);
+        })
+        ->when($colors, function ($query, $colors) {
+            return $query->whereIn('color', $colors);
+        })
+        ->when($clarities, function ($query, $clarities) {
+            return $query->whereIn('clarity', $clarities);
+        })
+        ->orderBy($sortBy, $sortDirection);
 
-        // Add any additional filters if needed
-        // For example: 
-        // $query->where('column', $request->get('filter'));
+        $totalStock = $query->count();
+        $totalCarat = $query->sum('weight') ?: 0;
+        $totalAmount = $query->sum('total_price') ?: 0;
+
 
         $data = $query->paginate($perPage, ['*'], 'page', $page);
 
-        return response()->json($data);
+        return response()->json([
+            'data' => $data->items(),
+            'current_page' => $data->currentPage(),
+            'last_page' => $data->lastPage(),
+            'from' => $data->firstItem(),
+            'to' => $data->lastItem(),
+            'total' => $data->total(),
+            'total_stock' => $totalStock,
+            'total_carat' => $totalCarat,
+            'total_amount' => $totalAmount,
+        ]);
     }
 }

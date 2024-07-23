@@ -39,9 +39,9 @@
 		</section>
 		<section>
 			<div class="summary">
-				<div class="summary-item summary-line">Total Stock <br> 3587</div>
-				<div class="summary-item summary-line">Total Carat <br> 3677.05</div>
-				<div class="summary-item summary-line">Total Amount <br> 663118.56</div>
+				<div class="summary-item summary-line summary-total-stock"></div>
+				<div class="summary-item summary-line summary-total-carat"></div>
+				<div class="summary-item summary-line summary-total-amount"></div>
 				<div class="summary-items">
 					<span>
 					<a href="mailto:skdiamond9805@gmail.com">Email: skdiamond9805@gmail.com</a><br>
@@ -62,194 +62,143 @@
 						</th>
 						<th class="sorting" data-column="id" data-order="asc">
 							No.
-							<div class="sort-icons" style="margin-left: 5px; margin-top: 2px;">
+							<span class="sort-icons" style="margin-left: 5px; margin-top: 2px;">
 								<i class="fa-solid fa-sort default hide sorting_icon"></i>
 								<i class="fa-solid fa-sort-up ascending sorting_icon"></i>
 								<i class="fa-solid fa-sort-down decending hide sorting_icon"></i>
-							</div>
+							</span>
 						</th>
                         <th class="sorting" data-column="growth_type" data-order="asc">
 							Type
-							<div class="sort-icons" style="margin-left: 5px; margin-top: 2px;">
+							<span class="sort-icons" style="margin-left: 5px; margin-top: 2px;">
 								<i class="fa-solid fa-sort default sorting_icon"></i>
 								<i class="fa-solid fa-sort-up ascending hide sorting_icon"></i>
 								<i class="fa-solid fa-sort-down decending hide sorting_icon"></i>
-							</div>
+							</span>
 						</th>
                         <th class="sorting" data-column="stock_id" data-order="asc">
 							Stock ID.
-							<div class="sort-icons" style="margin-left: 5px; margin-top: 2px;">
+							<span class="sort-icons" style="margin-left: 5px; margin-top: 2px;">
 								<i class="fa-solid fa-sort default sorting_icon"></i>
 								<i class="fa-solid fa-sort-up ascending hide sorting_icon"></i>
 								<i class="fa-solid fa-sort-down decending hide sorting_icon"></i>
-							</div>
+							</span>
 						</th>
                         <th class="sorting" data-column="report_number" data-order="asc">
 							Report #
-							<div class="sort-icons" style="margin-left: 5px; margin-top: 2px;">
+							<span class="sort-icons" style="margin-left: 5px; margin-top: 2px;">
 								<i class="fa-solid fa-sort default sorting_icon"></i>
 								<i class="fa-solid fa-sort-up ascending hide sorting_icon"></i>
 								<i class="fa-solid fa-sort-down decending hide sorting_icon"></i>
-							</div>
+							</span>
 						</th>
                         <th class="sorting" data-column="lab" data-order="asc">
 							Lab
-							<div class="sort-icons" style="margin-left: 5px; margin-top: 2px;">
+							<span class="sort-icons" style="margin-left: 5px; margin-top: 2px;">
 								<i class="fa-solid fa-sort default sorting_icon"></i>
 								<i class="fa-solid fa-sort-up ascending hide sorting_icon"></i>
 								<i class="fa-solid fa-sort-down decending hide sorting_icon"></i>
-							</div>
+							</span>
 						</th>
                         <th class="sorting" data-column="shape" data-order="asc">
 							Shape
-							<div class="sort-icons" style="margin-left: 5px; margin-top: 2px;">
+							<span class="sort-icons" style="margin-left: 5px; margin-top: 2px;">
 								<i class="fa-solid fa-sort default sorting_icon"></i>
 								<i class="fa-solid fa-sort-up ascending hide sorting_icon"></i>
 								<i class="fa-solid fa-sort-down decending hide sorting_icon"></i>
-							</div>
+							</span>
 						</th>
                         <th class="sorting" data-column="ratio" data-order="asc">
 							Carat
-							<div class="sort-icons" style="margin-left: 5px; margin-top: 2px;">
+							<span class="sort-icons" style="margin-left: 5px; margin-top: 2px;">
 								<i class="fa-solid fa-sort default sorting_icon"></i>
 								<i class="fa-solid fa-sort-up ascending hide sorting_icon"></i>
 								<i class="fa-solid fa-sort-down decending hide sorting_icon"></i>
-							</div>
+							</span>
 						</th>
                         <th class="sorting" data-column="color" data-order="asc">
 							Color
-							<div class="sort-icons" style="margin-left: 5px; margin-top: 2px;">
+							<span class="sort-icons" style="margin-left: 5px; margin-top: 2px;">
 								<i class="fa-solid fa-sort default sorting_icon"></i>
 								<i class="fa-solid fa-sort-up ascending hide sorting_icon"></i>
 								<i class="fa-solid fa-sort-down decending hide sorting_icon"></i>
-							</div>
+							</span>
 						</th>
                         <th class="sorting" data-column="clarity" data-order="asc">
 							Clarity
-							<div class="sort-icons" style="margin-left: 5px; margin-top: 2px;">
+							<span class="sort-icons" style="margin-left: 5px; margin-top: 2px;">
 								<i class="fa-solid fa-sort default sorting_icon"></i>
 								<i class="fa-solid fa-sort-up ascending hide sorting_icon"></i>
 								<i class="fa-solid fa-sort-down decending hide sorting_icon"></i>
-							</div>
+							</span>
 						</th>
                         <th class="sorting" data-column="rap_amount" data-order="asc">
 							Rap Rate
-							<div class="sort-icons" style="margin-left: 5px; margin-top: 2px;">
+							<span class="sort-icons" style="margin-left: 5px; margin-top: 2px;">
 								<i class="fa-solid fa-sort default sorting_icon"></i>
 								<i class="fa-solid fa-sort-up ascending hide sorting_icon"></i>
 								<i class="fa-solid fa-sort-down decending hide sorting_icon"></i>
-							</div>
+							</span>
 						</th>
                         <th class="sorting" data-column="discounts" data-order="asc">
 							Dis %
-							<div class="sort-icons" style="margin-left: 5px; margin-top: 2px;">
+							<span class="sort-icons" style="margin-left: 5px; margin-top: 2px;">
 								<i class="fa-solid fa-sort default sorting_icon"></i>
 								<i class="fa-solid fa-sort-up ascending hide sorting_icon"></i>
 								<i class="fa-solid fa-sort-down decending hide sorting_icon"></i>
-							</div>
+							</span>
 						</th>
                         <th class="sorting" data-column="total_price" data-order="asc">
 							$ Price
-							<div class="sort-icons" style="margin-left: 5px; margin-top: 2px;">
+							<span class="sort-icons" style="margin-left: 5px; margin-top: 2px;">
 								<i class="fa-solid fa-sort default sorting_icon"></i>
 								<i class="fa-solid fa-sort-up ascending hide sorting_icon"></i>
 								<i class="fa-solid fa-sort-down decending hide sorting_icon"></i>
-							</div>
+							</span>
 						</th>
                         <th class="sorting" data-column="total_price" data-order="asc">
 							$ Amount
-							<div class="sort-icons" style="margin-left: 5px; margin-top: 2px;">
+							<span class="sort-icons" style="margin-left: 5px; margin-top: 2px;">
 								<i class="fa-solid fa-sort default sorting_icon"></i>
 								<i class="fa-solid fa-sort-up ascending hide sorting_icon"></i>
 								<i class="fa-solid fa-sort-down decending hide sorting_icon"></i>
-							</div>
+							</span>
 						</th>
                         <th class="sorting" data-column="cut" data-order="asc">
 							Cut
-							<div class="sort-icons" style="margin-left: 5px; margin-top: 2px;">
+							<span class="sort-icons" style="margin-left: 5px; margin-top: 2px;">
 								<i class="fa-solid fa-sort default sorting_icon"></i>
 								<i class="fa-solid fa-sort-up ascending hide sorting_icon"></i>
 								<i class="fa-solid fa-sort-down decending hide sorting_icon"></i>
-							</div>
+							</span>
 						</th>
                         <th class="sorting" data-column="polish" data-order="asc">
 							Polish
-							<div class="sort-icons" style="margin-left: 5px; margin-top: 2px;">
+							<span class="sort-icons" style="margin-left: 5px; margin-top: 2px;">
 								<i class="fa-solid fa-sort default sorting_icon"></i>
 								<i class="fa-solid fa-sort-up ascending hide sorting_icon"></i>
 								<i class="fa-solid fa-sort-down decending hide sorting_icon"></i>
-							</div>
+							</span>
 						</th>
                         <th class="sorting" data-column="symmetry" data-order="asc">
 							Symmetry
-							<div class="sort-icons" style="margin-left: 5px; margin-top: 2px;">
+							<span class="sort-icons" style="margin-left: 5px; margin-top: 2px;">
 								<i class="fa-solid fa-sort default sorting_icon"></i>
 								<i class="fa-solid fa-sort-up ascending hide sorting_icon"></i>
 								<i class="fa-solid fa-sort-down decending hide sorting_icon"></i>
-							</div>
+							</span>
 						</th>
                         <th class="sorting" data-column="fluorescence_intensity" data-order="asc">
 							Flo.
-							<div class="sort-icons" style="margin-left: 5px; margin-top: 2px;">
+							<span class="sort-icons" style="margin-left: 5px; margin-top: 2px;">
 								<i class="fa-solid fa-sort default sorting_icon"></i>
 								<i class="fa-solid fa-sort-up ascending hide sorting_icon"></i>
 								<i class="fa-solid fa-sort-down decending hide sorting_icon"></i>
-							</div>
+							</span>
 						</th>						
 					</tr>
 				</thead>
-				<tbody>
-					<tr class="">
-						<td>
-							<div class="checkbox">
-								<input type="checkbox" />
-								<span class=""></span>
-							</div>
-						</td>
-						<td>1</td>
-						<td>sbardwell0</td>
-						<td>Sarajane</td>
-						<td>Bardwell</td>
-						<td>sbardwell</td>
-						<td>+62 347</td>
-						<td>Pagedangan</td>
-						<td>2</td>
-						<td>3</td>
-						<td>4</td>
-						<td>5</td>
-						<td>6</td>
-						<td>7</td>
-						<td>8</td>
-						<td>9</td>
-						<td>10</td>
-						<td>11</td>
-					</tr>
-					<tr class="selected">
-						<td>
-							<div class="checkbox">
-								<input type="checkbox" checked />
-								<span class="checkmark"></span>
-							</div>
-						</td>
-						<td>1</td>
-						<td>sbardwell0</td>
-						<td>Sarajane</td>
-						<td>Bardwell</td>
-						<td>sbardwell</td>
-						<td>+62 347</td>
-						<td>Pagedangan</td>
-						<td>2</td>
-						<td>3</td>
-						<td>4</td>
-						<td>5</td>
-						<td>6</td>
-						<td>7</td>
-						<td>8</td>
-						<td>9</td>
-						<td>10</td>
-						<td>11</td>
-					</tr>
-				</tbody>
+				<tbody></tbody>
 			</table>
 		</div>
 		<section class="table-footer grid">
@@ -328,22 +277,125 @@
 
 	<!-- filter Modal -->
 	<div class="modal fade" id="filterModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-		<div class="modal-dialog modal-fullscreen">
+		<div class="modal-dialog modal-xl">
 			<div class="modal-content">
 				<div class="modal-header">
 					<h5 class="modal-title" id="exampleModalLabel">Filter Option</h5>
 					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 				</div>
 				<div class="modal-body">
-					Your content here...
+            <form id="caratFilter" class="row g-3">
+                <div class="col-md-6 position-relative">
+                    <input type="text" class="form-control" id="minCarat" placeholder=" " />
+                    <label for="minCarat" class="form-label label-on-border">Min Carat</label>
+                </div>
+                <div class="col-md-6 position-relative">
+                    <input type="text" class="form-control" id="maxCarat" placeholder=" " />
+                    <label for="maxCarat" class="form-label label-on-border">Max Carat</label>
+                </div>
+				<div class="col-md-12">
+					<div id="shapeList" class="border p-2 rounded" style="min-height: 50px;">
+						<span id="placeholderMessage" class="text-muted">Please choose one or more diamond shape</span>
+					</div>
+				</div>
+				<!-- Color List Display -->
+				<div class="col-md-12">
+					<div id="colorList" class="border p-2 rounded" style="min-height: 50px;">
+						<span id="colorPlaceholderMessage" class="text-muted">Please choose one or more diamond color</span>
+					</div>
+				</div>
+				<!-- Clarity List Display -->
+				<div class="col-md-12">
+					<div id="clarityList" class="border p-2 rounded" style="min-height: 50px;">
+						<span id="clarityPlaceholderMessage" class="text-muted">Please choose one or more tags</span>
+					</div>
+				</div>
+            </form>
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Clear Filter</button>
-					<button type="button" class="btn btn-primary">Filter</button>
+					<button type="button" class="btn btn-primary filter-button">Filter</button>
 				</div>
 			</div>
 		</div>
 	</div>
+	
+	<!--Shape filter Modal -->
+	<div class="modal fade" id="shapeModal" tabindex="-1" aria-labelledby="shapeModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="shapeModalLabel">Select Diamond Shapes</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<div id="fullShapeList">
+						@foreach ($shapes as $key=>$value)
+							<div class="form-check me-3">
+								<input class="form-check-input" type="checkbox" value="{{ $value }}" id="shape{{ $key }}">
+								<label class="form-check-label" for="shape{{ $key }}">{{ $value }}</label>
+							</div>
+						@endforeach
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+					<button type="button" class="btn btn-primary apply-shape-filter">Apply</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- Color Modal -->
+	<div class="modal fade" id="colorModal" tabindex="-1" aria-labelledby="colorModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="colorModalLabel">Select Diamond Colors</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					{{-- <div id="fullColorList" class="row"></div> --}}
+					@foreach ($colors as $key=>$value)
+						<div class="form-check me-3">
+							<input class="form-check-input" type="checkbox" value="{{ $value }}" id="shape{{ $key }}">
+							<label class="form-check-label" for="shape{{ $key }}">{{ $value }}</label>
+						</div>
+					@endforeach
+
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+					<button type="button" class="btn btn-primary apply-color-filter">Apply Filter</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- Clarity Modal -->
+	<div class="modal fade" id="clarityModal" tabindex="-1" aria-labelledby="clarityModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="clarityModalLabel">Select Diamond Clarity</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					@foreach ($clarities as $key=>$value)
+						<div class="form-check me-3">
+							<input class="form-check-input" type="checkbox" value="{{ $value }}" id="shape{{ $key }}">
+							<label class="form-check-label" for="shape{{ $key }}">{{ $value }}</label>
+						</div>
+					@endforeach
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+					<button type="button" class="btn btn-primary apply-clarity-filter">Apply Filter</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	
 </div>
 @endsection
 
@@ -355,7 +407,175 @@
 		let currentSortDirection = 'asc';
 		let totalPage = 0;
 
+		$('#shapeList').on('click', function() {
+			$('#shapeModal').modal('show');
+		});
+
+		$(document).on('click', '.apply-shape-filter', function() {
+			const selectedShapes = $('#fullShapeList input:checked').map(function() {
+				return $(this).val();
+			}).get();
+
+			// Clear existing shapes
+			$('#shapeList').empty();
+
+			if (selectedShapes.length === 0) {
+				// Show placeholder message if no shapes are selected
+				$('#shapeList').html('<span id="placeholderMessage" class="text-muted">Please choose one or more tags</span>');
+			} else {
+				// Hide placeholder message if shapes are selected
+				$('#placeholderMessage').remove();
+
+				// Append each shape as a tag
+				$.each(selectedShapes, function(index, shape) {
+					$('#shapeList').append(
+						'<span class="badge bg-primary me-2 mb-1">' + shape + 
+						' <span class="remove-tag" style="cursor:pointer;">&times;</span></span>'
+					);
+				});
+			}
+
+			// Trigger filter with the selected shapes
+			fetchData(currentPage, currentPerPage, currentSortColumn, currentSortDirection);
+
+			$('#shapeModal').modal('hide');
+		});
+
+		$(document).on('click', '.remove-tag', function() {
+			$(this).closest('.badge').remove();
+
+			// Show placeholder message if no tags are left
+			if ($('#shapeList .badge').length === 0) {
+				$('#shapeList').html('<span id="placeholderMessage" class="text-muted">Please choose one or more tags</span>');
+			}
+
+			// Trigger filter with updated shapes
+			fetchData(currentPage, currentPerPage, currentSortColumn, currentSortDirection);
+		});
+
+		//Color filter js
+		$(document).on('click', '#colorList', function() {
+			// $.ajax({
+			// 	url: '{{ route("diamond.colors") }}',
+			// 	method: 'GET',
+			// 	success: function(colors) {
+			// 		var colorHtml = '';
+			// 		var selectedColors = $('#colorList .badge').map(function() {
+			// 			return $(this).text().trim().slice(0, -2); // Extract text without the '×' character
+			// 		}).get();
+
+			// 		$.each(colors, function(index, color) {
+			// 			var checked = selectedColors.includes(color) ? 'checked' : '';
+			// 			colorHtml += '<div class="form-check me-3">';
+			// 			colorHtml += '<input class="form-check-input" type="checkbox" value="' + color + '" id="color' + index + '" ' + checked + '>';
+			// 			colorHtml += '<label class="form-check-label" for="color' + index + '">' + color + '</label>';
+			// 			colorHtml += '</div>';
+			// 		});
+			// 		$('#fullColorList').html(colorHtml);
+			// 	}
+			// });
+			$('#colorModal').modal('show');
+		});
+
+		$(document).on('click', '.apply-color-filter', function() {
+			const selectedColors = $('#fullColorList input:checked').map(function() {
+				return $(this).val();
+			}).get();
+
+			// Clear existing colors
+			$('#colorList').empty();
+
+			if (selectedColors.length === 0) {
+				// Show placeholder message if no colors are selected
+				$('#colorList').html('<span id="colorPlaceholderMessage" class="text-muted">Please choose one or more tags</span>');
+			} else {
+				// Hide placeholder message if colors are selected
+				$('#colorPlaceholderMessage').remove();
+
+				// Append each color as a tag
+				$.each(selectedColors, function(index, color) {
+					$('#colorList').append(
+						'<span class="badge bg-primary me-2 mb-1">' + color + 
+						' <span class="remove-color-tag" style="cursor:pointer;">&times;</span></span>'
+					);
+				});
+			}
+
+			// Trigger filter with the selected colors
+			fetchData(currentPage, currentPerPage, currentSortColumn, currentSortDirection);
+
+			$('#colorModal').modal('hide');
+		});
+
+		// Remove color tag on click
+		$(document).on('click', '.remove-color-tag', function() {
+			$(this).closest('.badge').remove();
+
+			// Show placeholder message if no tags are left
+			if ($('#colorList .badge').length === 0) {
+				$('#colorList').html('<span id="colorPlaceholderMessage" class="text-muted">Please choose one or more tags</span>');
+			}
+
+			// Trigger filter with updated colors
+			fetchData(currentPage, currentPerPage, currentSortColumn, currentSortDirection);
+		});
+
+		//Clarity filter js
+		$(document).on('click', '#clarityList', function() {
+			$('#clarityModal').modal('show');
+		});
+
+		$(document).on('click', '.apply-clarity-filter', function() {
+			const selectedClarities = $('#fullClarityList input:checked').map(function() {
+				return $(this).val();
+			}).get();
+
+			// Clear existing clarities
+			$('#clarityList').empty();
+
+			if (selectedClarities.length === 0) {
+				// Show placeholder message if no clarities are selected
+				$('#clarityList').html('<span id="clarityPlaceholderMessage" class="text-muted">Please choose one or more tags</span>');
+			} else {
+				// Hide placeholder message if clarities are selected
+				$('#clarityPlaceholderMessage').remove();
+
+				// Append each clarity as a tag
+				$.each(selectedClarities, function(index, clarity) {
+					$('#clarityList').append(
+						'<span class="badge bg-primary me-2 mb-1">' + clarity + 
+						' <span class="remove-clarity-tag" style="cursor:pointer;">&times;</span></span>'
+					);
+				});
+			}
+
+			// Trigger filter with the selected clarities
+			fetchData(currentPage, currentPerPage, currentSortColumn, currentSortDirection);
+
+			$('#clarityModal').modal('hide');
+		});
+
+		// Remove clarity tag on click
+		$(document).on('click', '.remove-clarity-tag', function() {
+			$(this).closest('.badge').remove();
+
+			// Show placeholder message if no tags are left
+			if ($('#clarityList .badge').length === 0) {
+				$('#clarityList').html('<span id="clarityPlaceholderMessage" class="text-muted">Please choose one or more tags</span>');
+			}
+
+			// Trigger filter with updated clarities
+			fetchData(currentPage, currentPerPage, currentSortColumn, currentSortDirection);
+		});
+
         $(document).ready(function() {
+
+          $(document).on('click', '.filter-button', function(e) {
+			e.preventDefault();
+			currentPage = 1; // Reset to first page on filter
+			fetchData(currentPage, currentPerPage, currentSortColumn, currentSortDirection);
+			$('#filterModal').modal('hide');
+          });
             
 			// Initial data fetch
             fetchData(currentPage, currentPerPage, currentSortColumn, currentSortDirection);
@@ -504,6 +724,26 @@
         });
 
 		function fetchData(page, perPage, sortBy, sortDirection) {
+			var minCarat = $('#minCarat').val();
+			var maxCarat = $('#maxCarat').val();
+
+			if(!minCarat) {
+				minCarat = 0;
+			}
+
+			if(!maxCarat) {
+				maxCarat = 0;
+			}
+
+			const selectedShapes = $('#shapeList .badge').map(function() {
+				return $(this).text().trim().slice(0, -2);
+			}).get();
+
+			 // Get selected colors
+			 const selectedColors = $('#colorList .badge').map(function() {
+				return $(this).text().trim().slice(0, -2); // Extract the color text, removing the '×'
+			}).get();
+
 			$.ajax({
 				url: '{{ route("diamond.data") }}',
 				method: 'GET',
@@ -511,7 +751,11 @@
 					page: page,
 					perPage: perPage,
 					sortBy: sortBy,
-					sortDirection: sortDirection
+					sortDirection: sortDirection,
+					minCarat: minCarat,
+            		maxCarat: maxCarat,
+					shapes: selectedShapes,
+					colors: selectedColors
 				},
 				success: function(response) {
 					var rows = '';
@@ -537,7 +781,11 @@
 						rows += '<td>' + item.fluorescence_intensity + '</td>';
 						rows += '</tr>';
 					});
+
 					$('#data-table tbody').html(rows);
+					$(".summary-item.summary-line").eq(0).html('Total Stock <br>' + response.total_stock);
+					$(".summary-item.summary-line").eq(1).html('Total Carat <br>' + Number(response.total_carat).toFixed(2));
+					$(".summary-item.summary-line").eq(2).html('Total Amount <br>' + Number(response.total_amount).toFixed(2));
 
 					$("#fromRec").html(response.from);
 					$("#toRec").html(response.to);

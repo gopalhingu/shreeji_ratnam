@@ -10,7 +10,7 @@ class Diamond extends Model
     use HasFactory;
 
     protected $table = 'diamonds';
-    protected $primaryKey = 'stock_id';
+    protected $primaryKey = 'id';
     public $timestamps = true;
 
     protected $fillable = [

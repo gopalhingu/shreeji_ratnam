@@ -255,7 +255,6 @@ input[type="text"] {
     height: 3rem;
     margin: 0 .5rem;
     padding: 0 1rem;
-    width: 5rem;
 }
 
 .colors {
@@ -337,11 +336,11 @@ th {
 }
 
 th {
-    padding: 6px 4px;
+    padding: 1.5rem 1rem;
 }
 
 td {
-    padding: 4px;
+    padding: 1rem;
 }
 
 tbody tr {
@@ -478,4 +477,29 @@ tbody tr.hover:not(.selected) td {
     .summary-items {
         flex-direction: column;
     }
+}
+
+.label-on-border {
+    position: absolute;
+    top: 0;
+    left: 1.75rem;
+    background: white;
+    padding: 0 0.25rem;
+    transform: translateY(-50%);
+    font-size: 0.85rem;
+    color: #6c757d;
+}
+
+#shapeList {
+    border: 1px solid #ccc;
+    padding: 5px;
+    border-radius: 4px;
+    display: flex;
+    flex-wrap: wrap;
+    min-height: 40px;
+}
+
+.badge {
+    padding: 0.5em;
+    font-size: 0.9em;
 }

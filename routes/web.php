@@ -22,4 +22,9 @@ Route::get('/', function () {
 Route::get('/list', [DiamondController::class, 'list'])->name('diamond.list');
 Route::get('/data', [DiamondController::class, 'data'])->name('diamond.data');
 Route::get('/import', [DiamondController::class, 'import'])->name('diamond.import');
+
+Route::get('/colors', [DiamondController::class, 'getColors'])->name('diamond.colors');
+Route::get('/clarity', [DiamondController::class, 'getClarity'])->name('diamond.clarity');
+
+
 Route::post('/import-save', [DiamondController::class, 'importSave'])->name('diamond.import.save');
