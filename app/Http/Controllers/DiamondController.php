@@ -177,4 +177,10 @@ class DiamondController extends Controller
             'total_amount' => $totalAmount,
         ]);
     }
+
+    public function jsonData()
+    {
+        $record = Diamond::all()->toArray();
+        return response()->json($record);
+    }
 }
