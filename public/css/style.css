@@ -244,8 +244,7 @@ select {
     width: 100%;
 }
 
-input[type="number"],
-input[type="text"] {
+.changePage {
     background: var(--color-white);
     border: 1px solid var(--color-neutral);
     border-radius: .25rem;
@@ -255,6 +254,15 @@ input[type="text"] {
     height: 3rem;
     margin: 0 .5rem;
     padding: 0 1rem;
+}
+
+#caratFilter input[type="number"],
+#caratFilter input[type="text"] {
+    border-radius: .25rem;
+    color: var(--color-black);
+    display: inline-block;
+    font: inherit;
+    height: 3rem;
 }
 
 .colors {
@@ -490,13 +498,32 @@ tbody tr.hover:not(.selected) td {
     color: #6c757d;
 }
 
-#shapeList {
-    border: 1px solid #ccc;
-    padding: 5px;
-    border-radius: 4px;
-    display: flex;
-    flex-wrap: wrap;
-    min-height: 40px;
+#shapeList, #colorList, #clarityList, #cutList, #polishList, #symmetryList, #labList {
+    cursor: pointer;
+}
+
+.bg-primary {
+    --bs-bg-opacity: 1;
+    background-color: var(--color-primary) !important;
+}
+.btn-primary{
+    background-color: var(--color-primary) !important;
+    --bs-btn-border-color: var(--color-primary) !important;
+}
+.form-control:focus {
+    color: var(--bs-body-color);
+    background-color: var(--bs-body-bg);
+    border-color: var(--color-primary-300) !important;
+    outline: 0;
+    box-shadow: 0 0 0 .25rem var(--color-primary-300) !important;
+}
+
+.focusable:focus {
+    color: var(--bs-body-color);
+    background-color: var(--bs-body-bg);
+    border-color: var(--color-primary-300) !important;
+    outline: 0;
+    box-shadow: 0 0 0 .25rem var(--color-primary-300) !important;
 }
 
 .badge {

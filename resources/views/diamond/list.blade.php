@@ -25,15 +25,15 @@
 			<div class="action-button">
 				<button class="button" title="Download Options" data-bs-toggle="modal" data-bs-target="#downloadModal">
 					<i class="fa-solid fa-download icon-size"></i>
-					<!-- <span>Download Options</span> -->
 				</button>
-				<button class="button" title="Contact us" data-bs-toggle="modal" data-bs-target="#contactModal">
+				<button class="button contact-button"" title="Contact us" data-bs-toggle="modal" data-bs-target="#contactModal">
 					<i class="fa-solid fa-phone-volume icon-size"></i>
-					<!-- <span>Contact us</span> -->
+				</button>
+				<button class="button whatsapp-button" title="Whawhatsapp" data-bs-toggle="modal" data-bs-target="#whatsappModal" style="display:none">
+					<i class="fa-solid fa-brands fa-whatsapp icon-size"></i>
 				</button>
 				<button class="button" title="Filter Data" data-bs-toggle="modal" data-bs-target="#filterModal">
 					<i class="fa-solid fa-filter icon-size"></i>
-					<!-- <span>Filter Data</span> -->
 				</button>
 			</div>
 		</section>
@@ -224,15 +224,15 @@
 					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 				</div>
 				<div class="modal-body">
-					<div class="contactform">
+					<div class="contactform" id="downloadCsv">
 						<i class="fa-solid fa-file-csv" style="font-size: xx-large;"></i><span style="margin-left: 10px;">CSV</span>
 					</div>
 					<hr>
-					<div class="contactform">
+					<div class="contactform" id="downloadExcel">
 						<i class="fa-solid fa-file-excel" style="font-size: xx-large;"></i><span style="margin-left: 10px;">EXCEL</span>
 					</div>
 					<hr>
-					<div class="contactform">
+					<div class="contactform" id="downloadBoth">
 						<i class="fa-solid fa-file-csv" style="font-size: xx-large;"></i> <span style="margin-left: 10px;">& </span> <i class="fa-solid fa-file-excel" style="font-size: xx-large; margin-left: 10px;"></i><span style="margin-left: 10px;">Both</span>
 					</div>
 				</div>
@@ -253,19 +253,27 @@
 				</div>
 				<div class="modal-body">
 					<div class="contactform">
-						<i class="fa-brands fa-whatsapp" style="margin-top: 5px; font-size: larger;"></i><span style="margin-left: 10px;">Lav meruliya</span>
+						<a href="https://api.whatsapp.com/send/?phone=%2B916352743508&text&type=phone_number&app_absent=0" target="_blank"> 
+							<i class="fa-brands fa-whatsapp" style="margin-top: 5px; font-size: larger;"></i><span style="margin-left: 10px;">Lav meruliya</span>
+						</a>
 					</div>
 					<hr>
 					<div class="contactform">
-						<i class="fa-brands fa-whatsapp" style="margin-top: 5px; "></i><span style="margin-left: 10px;">Vasant Narola</span>
+						<a href="https://api.whatsapp.com/send/?phone=%2B916352743508&text&type=phone_number&app_absent=0" target="_blank">
+							<i class="fa-brands fa-whatsapp" style="margin-top: 5px; "></i><span style="margin-left: 10px;">Vasant Narola</span>
+						</a>
 					</div>
 					<hr>
 					<div class="contactform">
-						<i class="fa-solid fa-phone-volume" style="margin-top: 5px;"></i><span style="margin-left: 10px;">Call:- Lav meruliya</span>
+						<a href="tel:+916352743508">
+							<i class="fa-solid fa-phone-volume" style="margin-top: 5px;"></i><span style="margin-left: 10px;">Call:- Lav meruliya</span>
+						</a>
 					</div>
 					<hr>
 					<div class="contactform">
-						<i class="fa-solid fa-phone-volume" style="margin-top: 5px;"></i><span style="margin-left: 10px;">Call:- Vasant Narola</span>
+						<a href="tel:+916352743508">
+							<i class="fa-solid fa-phone-volume" style="margin-top: 5px;"></i><span style="margin-left: 10px;">Call:- Vasant Narola</span>
+						</a>
 					</div>
 				</div>
 				<div class="modal-footer">
@@ -283,7 +291,7 @@
 					<h5 class="modal-title" id="exampleModalLabel">Filter Option</h5>
 					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 				</div>
-				<div class="modal-body">
+				<div class="modal-body" style="max-height: 70vh; overflow-y: auto;">
 					<form id="caratFilter" class="row g-3">
 						<div class="col-md-6 position-relative">
 							<input type="text" class="form-control" id="minCarat" placeholder=" " />
@@ -294,7 +302,7 @@
 							<label for="maxCarat" class="form-label label-on-border">Max Carat</label>
 						</div>
 						<div class="col-md-12">
-							<div id="shapeList" class="border p-2 rounded" style="min-height: 50px;">
+							<div id="shapeList" class="border p-2 rounded focusable" tabindex="0" style="min-height: 50px;">
 								<span id="placeholderMessage" class="text-muted">Please choose one or more diamond shape</span>
 							</div>
 						</div>
@@ -336,6 +344,19 @@
 							<div id="labList" class="border p-2 rounded" style="min-height: 50px;">
 								<span id="labPlaceholderMessage" class="text-muted">Please choose one or more diamond lab</span>
 							</div>
+						</div>
+
+						<div class="col-md-12 position-relative">
+							<input type="text" class="form-control" id="stockId" placeholder=" " />
+							<label for="stockId" class="form-label label-on-border">Stock ID</label>
+						</div>
+						<div class="col-md-12 position-relative">
+							<input type="text" class="form-control" id="reportNumber" placeholder=" " />
+							<label for="reportNumber" class="form-label label-on-border">Report Number</label>
+						</div>
+						<div class="col-md-12 position-relative">
+							<input type="text" class="form-control" id="type" placeholder=" " />
+							<label for="type" class="form-label label-on-border">Type</label>
 						</div>
 
 					</form>
@@ -534,6 +555,29 @@
 		</div>
 	</div>
 
+	<div class="modal fade" id="whatsappModal" tabindex="-1" aria-labelledby="whatsappModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="whatsappModalLabel">WhatsApp Contacts</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<div class="whatsappform">
+						<i class="fa-brands fa-whatsapp" style="margin-top: 5px; font-size: larger;"></i><span style="margin-left: 10px;">Lav meruliya</span>
+					</div>
+					<hr>
+					<div class="whatsappform">
+						<i class="fa-brands fa-whatsapp" style="margin-top: 5px; font-size: larger;"></i><span style="margin-left: 10px;">Vasant Narola</span>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
 </div>
 @endsection
 
@@ -550,6 +594,12 @@
 			// Clear input fields
 			$('#minCarat').val('');
 			$('#maxCarat').val('');
+
+			$('#stockId').val('');
+
+			$('#reportNumber').val('');
+
+			$('#type').val('');
 
 			// Clear shape tags
 			$('#shapeList').empty().html('<span id="placeholderMessage" class="text-muted">Please choose one or more diamond shape</span>');
@@ -621,10 +671,7 @@
 
 		function removeTag(tag, listId, fullListId, placeholderMessage) {
 			var item = $(tag).closest('.badge').text().trim().slice(0, -2);
-			console.log('item--->',item)
 			$(tag).closest('.badge').remove();
-			console.log('fullListId--->',fullListId)
-			console.log('full--->',fullListId + ' input[value="' + item + '"]')
 			$(fullListId + ' input[value="' + item + '"]').prop('checked', false);
 
 			// Show placeholder message if no tags are left
@@ -702,7 +749,52 @@
 			removeTag(this, '#labList', '#fullLabList', 'labPlaceholderMessage');
 		});
 
+		document.querySelectorAll('.focusable').forEach(element => {
+			element.addEventListener('click', () => {
+				element.focus();
+			});
+		});
+
+		document.addEventListener('DOMContentLoaded', function () {
+			document.getElementById('downloadCsv').addEventListener('click', function () {
+				exportToCSV();
+			});
+
+			document.getElementById('downloadExcel').addEventListener('click', function () {
+				exportToExcel();
+			});
+
+			document.getElementById('downloadBoth').addEventListener('click', function () {
+				exportToCSV();
+				exportToExcel();
+			});
+		});
+
         $(document).ready(function() {
+
+			$('.whatsappform').on('click', function() {
+				// Get the contact name and phone number
+				var contactName = $(this).text().trim();
+				var phoneNumber = contactName === "Lav meruliya" ? "+917567364426" : "+919876543210";
+
+				// Get selected stock IDs
+				var selectedStockIDs = [];
+				$('.selectSingle input[type="checkbox"]:checked').each(function() {
+					var stockID = $(this).closest('tr').find('.stock-id').text();
+					selectedStockIDs.push(stockID);
+				});
+
+				// Format the stock IDs into the message
+				var stockIDText = selectedStockIDs.join('\n');
+
+				const encodedText = encodeURIComponent(stockIDText);
+
+				// Create the WhatsApp URL
+				const whatsappURL = `https://api.whatsapp.com/send/?phone=%2B916352743508&text=I%20Want%20To%20Select%20This%20Stock%20IDs%3A%0A${encodedText}&type=phone_number&app_absent=0`;
+
+				// Redirect to WhatsApp URL
+				window.open(whatsappURL, '_blank');
+			});
 
           $(document).on('click', '.filter-button', function(e) {
 			e.preventDefault();
@@ -785,6 +877,7 @@
 					$checkmarkSingle.addClass("checkmark");
 					$row.addClass("selected");
 				}
+				toggleButtons();
             });
 
 			$(document).on('click', '.selectSingle', function(e) {
@@ -805,7 +898,20 @@
 				}
 
 				checkSingleSelect();
+				toggleButtons();
             });
+
+			function toggleButtons() {
+				const anyChecked = $('.selectSingle input:checked').length > 0 || $('.selectAll input:checked').length > 0;
+
+				if (anyChecked) {
+					$('.contact-button').hide();
+					$('.whatsapp-button').show();
+				} else {
+					$('.contact-button').show();
+					$('.whatsapp-button').hide();
+				}
+			}
 
 			$(document).on('click', '.previousPage', function(e) {
                 e.preventDefault();
@@ -869,6 +975,10 @@
 				maxCarat = 0;
 			}
 
+			var stockId = $('#stockId').val();
+			var reportNumber = $('#reportNumber').val();
+			var type = $('#type').val();
+
 			const selectedShapes = $('#shapeList .badge').map(function() {
 				return $(this).text().trim().slice(0, -2);
 			}).get();
@@ -917,7 +1027,10 @@
 					cuts: selectedCuts,
 					polishes: selectedPolishes,
 					symmetries: selectedSymmetries,
-					labs: selectedLabs
+					labs: selectedLabs,
+					stockId,
+					reportNumber,
+					type
 				},
 				success: function(response) {
 					var rows = '';
@@ -926,7 +1039,7 @@
 						rows += '<td><div class="checkbox selectSingle"><input type="checkbox" data-id="' + item.id + '" /><span class=""></span></div></td>';
 						rows += '<td>' + item.id + '</td>';
 						rows += '<td>' + item.growth_type + '</td>';
-						rows += '<td>' + item.stock_id + '</td>';
+						rows += '<td class="stock-id">' + item.stock_id + '</td>';
 						rows += '<td>' + item.report_number + '</td>';
 						rows += '<td>' + item.lab + '</td>';
 						rows += '<td>' + item.shape + '</td>';
@@ -984,6 +1097,144 @@
 				$selectAllCheckmark.addClass("checkmark");
 				$selectAllCheckmark.addClass("minus");
 			}
+
+
+		}
+
+
+		// Fetch data for export
+		function fetchDataForExport() {
+			var minCarat = $('#minCarat').val() || 0;
+			var maxCarat = $('#maxCarat').val() || 0;
+			var stockId = $('#stockId').val();
+			var reportNumber = $('#reportNumber').val();
+			var type = $('#type').val();
+
+			const selectedShapes = $('#shapeList .badge').map(function() {
+				return $(this).text().trim().slice(0, -2);
+			}).get();
+
+			const selectedColors = $('#colorList .badge').map(function() {
+				return $(this).text().trim().slice(0, -2);
+			}).get();
+
+			const selectedClarity = $('#clarityList .badge').map(function() {
+				return $(this).text().trim().slice(0, -2);
+			}).get();
+
+			const selectedCuts = $('#cutList .badge').map(function() {
+				return $(this).text().trim().slice(0, -2);
+			}).get();
+
+			const selectedPolishes = $('#polishList .badge').map(function() {
+				return $(this).text().trim().slice(0, -2);
+			}).get();
+
+			const selectedSymmetries = $('#symmetryList .badge').map(function() {
+				return $(this).text().trim().slice(0, -2);
+			}).get();
+
+			const selectedLabs = $('#labList .badge').map(function() {
+				return $(this).text().trim().slice(0, -2);
+			}).get();
+			
+			return $.ajax({
+				url: '{{ route("diamond.data") }}',
+				method: 'POST',
+				data: {
+					page: 1, // Page number for export can be set to 1 as we're exporting all data
+					perPage: 1084, // Large number to ensure all data is retrieved
+					sortBy: currentSortColumn,
+					sortDirection: currentSortDirection,
+					minCarat: minCarat,
+					maxCarat: maxCarat,
+					shapes: selectedShapes,
+					colors: selectedColors,
+					clarities: selectedClarity,
+					cuts: selectedCuts,
+					polishes: selectedPolishes,
+					symmetries: selectedSymmetries,
+					labs: selectedLabs,
+					stockId,
+					reportNumber,
+					type
+				},
+			});
+		}
+
+		// Export data to CSV
+		function exportToCSV() {
+			fetchDataForExport().done(function(response) {
+				let csvContent = "data:text/csv;charset=utf-8,";
+				const headers = "ID, Growth Type, Stock ID, Report Number, Lab, Shape, Weight, Color, Clarity, Rap Amount, Discounts, Total Price, Cut, Polish, Symmetry, Fluorescence Intensity\n";
+				csvContent += headers;
+
+				response.data.forEach(item => {
+					const row = [
+						item.id,
+						item.growth_type,
+						item.stock_id,
+						item.report_number,
+						item.lab,
+						item.shape,
+						item.weight,
+						item.color,
+						item.clarity,
+						item.rap_amount,
+						item.discounts,
+						item.total_price,
+						item.cut,
+						item.polish,
+						item.symmetry,
+						item.fluorescence_intensity
+					].join(",");
+					csvContent += row + "\n";
+				});
+
+				const encodedUri = encodeURI(csvContent);
+				const link = document.createElement("a");
+				link.setAttribute("href", encodedUri);
+				link.setAttribute("download", "data.csv");
+				document.body.appendChild(link);
+				link.click();
+				document.body.removeChild(link);
+			});
+		}
+
+		// Export data to Excel
+		function exportToExcel() {
+			fetchDataForExport().done(function(response) {
+				const workbook = XLSX.utils.book_new();
+				const ws_data = [
+					["ID", "Growth Type", "Stock ID", "Report Number", "Lab", "Shape", "Weight", "Color", "Clarity", "Rap Amount", "Discounts", "Total Price", "Cut", "Polish", "Symmetry", "Fluorescence Intensity"]
+				];
+
+				response.data.forEach(item => {
+					ws_data.push([
+						item.id,
+						item.growth_type,
+						item.stock_id,
+						item.report_number,
+						item.lab,
+						item.shape,
+						item.weight,
+						item.color,
+						item.clarity,
+						item.rap_amount,
+						item.discounts,
+						item.total_price,
+						item.cut,
+						item.polish,
+						item.symmetry,
+						item.fluorescence_intensity
+					]);
+				});
+
+				const ws = XLSX.utils.aoa_to_sheet(ws_data);
+				XLSX.utils.book_append_sheet(workbook, ws, "Sheet1");
+
+				XLSX.writeFile(workbook, "data.xlsx");
+			});
 		}
 
     </script>

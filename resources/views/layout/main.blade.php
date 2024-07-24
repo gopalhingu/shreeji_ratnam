@@ -7,6 +7,7 @@
     <title>SHREEJI RATNAM DIAMOND</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.2/xlsx.full.min.js"></script>
     @yield("css")
 
 </head>

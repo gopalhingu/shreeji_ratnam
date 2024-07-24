@@ -129,6 +129,9 @@ class DiamondController extends Controller
         $cuts = $request->input('cuts', []);
         $polishes = $request->input('polishes', []);
         $symmetries = $request->input('symmetries', []);
+        $stockId = $request->input('stockId', '');
+        $reportNumber = $request->input('reportNumber', '');
+        $type = $request->input('type', '');
 
         // Query the database with pagination and sorting
         $query = Diamond::query()
@@ -155,6 +158,15 @@ class DiamondController extends Controller
         })
         ->when($symmetries, function ($query, $symmetries) {
             return $query->whereIn('symmetry', $symmetries);
+        })
+        ->when($stockId, function ($query, $stockId) {
+            return $query->where('stock_id', $stockId);
+        })
+        ->when($reportNumber, function ($query, $reportNumber) {
+            return $query->where('report_number', $reportNumber);
+        })
+        ->when($type, function ($query, $type) {
+            return $query->where('growth_type', $type);
         })
         ->orderBy($sortBy, $sortDirection);
 
