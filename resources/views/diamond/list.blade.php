@@ -44,8 +44,8 @@
 				<div class="summary-item summary-line summary-total-amount"></div>
 				<div class="summary-items">
 					<span>
-					<a href="mailto:skdiamond9805@gmail.com">Email: skdiamond9805@gmail.com</a><br>
-					<a href="tel:+916352743508">Call: +916352743508</a>
+					<a href="mailto:xxdiamond@gmail.com">Email: xxdiamond@gmail.com</a><br>
+					<a href="tel:+917567XXXXXX">Call: +917567XXXXXX</a>
 					</span>
 				</div>
 			</div>
@@ -253,26 +253,26 @@
 				</div>
 				<div class="modal-body">
 					<div class="contactform">
-						<a href="https://api.whatsapp.com/send/?phone=%2B916352743508&text&type=phone_number&app_absent=0" target="_blank"> 
-							<i class="fa-brands fa-whatsapp" style="margin-top: 5px; font-size: larger;"></i><span style="margin-left: 10px;">Lav meruliya</span>
+						<a href="https://api.whatsapp.com/send/?phone=%2B917567364426&text&type=phone_number&app_absent=0" target="_blank"> 
+							<i class="fa-brands fa-whatsapp" style="margin-top: 5px; font-size: larger;"></i><span style="margin-left: 10px;">Navin Test</span>
 						</a>
 					</div>
 					<hr>
 					<div class="contactform">
-						<a href="https://api.whatsapp.com/send/?phone=%2B916352743508&text&type=phone_number&app_absent=0" target="_blank">
-							<i class="fa-brands fa-whatsapp" style="margin-top: 5px; "></i><span style="margin-left: 10px;">Vasant Narola</span>
+						<a href="https://api.whatsapp.com/send/?phone=%2B917567364426&text&type=phone_number&app_absent=0" target="_blank">
+							<i class="fa-brands fa-whatsapp" style="margin-top: 5px; "></i><span style="margin-left: 10px;">Yogesh Test</span>
 						</a>
 					</div>
 					<hr>
 					<div class="contactform">
-						<a href="tel:+916352743508">
-							<i class="fa-solid fa-phone-volume" style="margin-top: 5px;"></i><span style="margin-left: 10px;">Call:- Lav meruliya</span>
+						<a href="tel:+917567364426">
+							<i class="fa-solid fa-phone-volume" style="margin-top: 5px;"></i><span style="margin-left: 10px;">Call:- Navin Test</span>
 						</a>
 					</div>
 					<hr>
 					<div class="contactform">
-						<a href="tel:+916352743508">
-							<i class="fa-solid fa-phone-volume" style="margin-top: 5px;"></i><span style="margin-left: 10px;">Call:- Vasant Narola</span>
+						<a href="tel:+917567364426">
+							<i class="fa-solid fa-phone-volume" style="margin-top: 5px;"></i><span style="margin-left: 10px;">Call:- Yogesh Test</span>
 						</a>
 					</div>
 				</div>
@@ -449,7 +449,7 @@
 
 	<!-- Cut Modal -->
 	<div class="modal fade" id="cutModal" tabindex="-1" aria-labelledby="cutModalLabel" aria-hidden="true">
-		<div class="modal-dialog modal-xl">
+		<div class="modal-dialog modal-lg">
 			<div class="modal-content">
 				<div class="modal-header">
 					<h5 class="modal-title" id="cutModalLabel">Cut Filter</h5>
@@ -564,11 +564,11 @@
 				</div>
 				<div class="modal-body">
 					<div class="whatsappform">
-						<i class="fa-brands fa-whatsapp" style="margin-top: 5px; font-size: larger;"></i><span style="margin-left: 10px;">Lav meruliya</span>
+						<i class="fa-brands fa-whatsapp" style="margin-top: 5px; font-size: larger;"></i><span style="margin-left: 10px;">Navin Test</span>
 					</div>
 					<hr>
 					<div class="whatsappform">
-						<i class="fa-brands fa-whatsapp" style="margin-top: 5px; font-size: larger;"></i><span style="margin-left: 10px;">Vasant Narola</span>
+						<i class="fa-brands fa-whatsapp" style="margin-top: 5px; font-size: larger;"></i><span style="margin-left: 10px;">Yogesh Test</span>
 					</div>
 				</div>
 				<div class="modal-footer">
@@ -579,6 +579,8 @@
 	</div>
 
 </div>
+
+<div id="loader" style="display: none;"></div>
 @endsection
 
 @section("script")
@@ -775,7 +777,8 @@
 			$('.whatsappform').on('click', function() {
 				// Get the contact name and phone number
 				var contactName = $(this).text().trim();
-				var phoneNumber = contactName === "Lav meruliya" ? "+917567364426" : "+919876543210";
+				// var phoneNumber = contactName === "Lav meruliya" ? "+917567364426" : "+919876543210";
+				var phoneNumber = "+917567364426";
 
 				// Get selected stock IDs
 				var selectedStockIDs = [];
@@ -964,6 +967,8 @@
         });
 
 		function fetchData(page, perPage, sortBy, sortDirection) {
+			$('#loader').show();
+
 			var minCarat = $('#minCarat').val();
 			var maxCarat = $('#maxCarat').val();
 
@@ -1070,6 +1075,20 @@
 					$(".changePage").val(response.current_page);
 					$(".changePage").attr("max", response.last_page);
 					$("#totalPage").html(response.last_page);
+
+					if(currentPage <= 1) {
+						$(".previousPage").addClass("hide");
+					}
+					if(currentPage >= totalPage) {
+						$(".nextPage").addClass("hide");
+					}
+					if(currentPage > 1) {
+						$(".previousPage").removeClass("hide");
+					}
+					if(currentPage < totalPage) {
+						$(".nextPage").removeClass("hide");
+					}
+					$('#loader').hide();
 				}
 			});
 		}
@@ -1100,7 +1119,6 @@
 
 
 		}
-
 
 		// Fetch data for export
 		function fetchDataForExport() {
