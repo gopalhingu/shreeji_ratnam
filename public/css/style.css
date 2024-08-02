@@ -15,6 +15,10 @@ th {
     cursor: pointer;
 }
 
+.contactform {
+    cursor: pointer;
+}
+
 :root {
     --color-black: #41423d;
     --color-neutral-100: #f5f4f0;

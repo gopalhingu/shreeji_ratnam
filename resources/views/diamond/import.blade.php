@@ -32,7 +32,7 @@
                 <div class="p-2">
                     <div class="form-group p-1">
                         <label for="">Import File: </label>
-                        <input type="file" class="form-control" name="import_file" accept="">
+                        <input type="file" class="form-control" name="import_file" accept=".xlsx, .xls">
                         @if($errors->has('import_file'))
                             <div class="text-danger">{{ $errors->first('import_file') }}</div>
                         @endif

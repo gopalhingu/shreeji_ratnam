@@ -102,20 +102,6 @@ class DiamondController extends Controller
 
     public function data(Request $request)
     {
-        /*
-        // $getRecord = Diamond::select(['id', 'growth_type', 'stock_id', 'report_number', 'lab', 'shape', 'ratio', 'color', 'clarity', 'rap_amount', 'discounts', 'total_price', '', 'cut', 'polish', 'symmetry', 'fluorescence_intensity'])->paginnate($request->input('per_page', 10));
-
-        // $query = Diamond::select([
-        //     'id', 'growth_type', 'stock_id', 'report_number', 'lab', 'shape', 
-        //     'ratio', 'color', 'clarity', 'rap_amount', 'discounts', 'total_price', 
-        //     'cut', 'polish', 'symmetry', 'fluorescence_intensity'
-        // ]);
-
-        $q = Diamond::get();        
-        return DataTables::of($q)->make(true);
-        */
-
-
         // Retrieve the parameters for pagination and sorting
         $page = $request->input('page', 1);
         $perPage = $request->input('perPage', 10);

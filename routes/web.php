@@ -14,12 +14,12 @@ use App\Http\Controllers\DiamondController;
 |
 */
 
-Route::get('/', function () {
+Route::get('/welcome', function () {
     return view('welcome');
 });
 
 // Corrected route for importing diamond data
-Route::get('/list', [DiamondController::class, 'list'])->name('diamond.list');
+Route::get('/', [DiamondController::class, 'list'])->name('diamond.list');
 Route::post('/data', [DiamondController::class, 'data'])->name('diamond.data');
 Route::get('/import', [DiamondController::class, 'import'])->name('diamond.import');
 Route::post('/import-save', [DiamondController::class, 'importSave'])->name('diamond.import.save');
