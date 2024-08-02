@@ -38,8 +38,8 @@ class CreateDiamondsTable extends Migration
             $table->string('discounts', 8, 2)->nullable();
             $table->string('live_rap', 8, 2)->nullable();
             $table->string('rap_amount', 8, 2)->nullable();
-            $table->string('price_per_carat', 10, 2)->nullable();
-            $table->string('total_price', 10, 2)->nullable();
+            $table->decimal('price_per_carat', 10, 2)->nullable();
+            $table->decimal('total_price', 10, 2)->nullable();
             $table->string('depth_percentage', 5, 2)->nullable();
             $table->string('table_percentage', 5, 2)->nullable();
             $table->string('crown_height', 5, 2)->nullable();
