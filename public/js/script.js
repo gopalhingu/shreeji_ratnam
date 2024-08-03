@@ -1,49 +1,101 @@
-let currentPage = 1;
-let currentPerPage = 10;
-let currentSortColumn = 'id';
-let currentSortDirection = 'asc';
-let totalPage = 0;
+
+let defaultFilter = {
+    currentPage: 1,
+    currentPerPage: 10,
+    currentSortColumn: 'id',
+    currentSortDirection: 'asc',
+    totalPage: 0,
+    indexID: 0,
+};
+
+let singleFilter = {
+    minCarat: '',
+    maxCarat: '',
+    minLength: '',
+    maxLength: '',
+    minWidth: '',
+    maxWidth: '',
+    minHeight: '',
+    maxHeight: '',
+    minDepth: '',
+    maxDepth: '',
+    minRatio: '',
+    maxRatio: '',
+    minTable: '',
+    maxTable: '',
+    stockId: '',
+    reportNumber: '',
+    type: '',
+};
+
+let multipleFilter = {
+    shapeList: [],
+    colorList: [],
+    clarityList: [],
+    cutList: [],
+    polishList: [],
+    symmetryList: [],
+    labList: [],
+};
+
+let placeholder = {
+    shapeList: '<span class="text-muted"><b>Shape</b></span><br><span class="text-muted">Please choose one or more diamond shape</span>',
+    colorList: '<span class="text-muted"><b>Color</b></span><br><span class="text-muted">Please choose one or more diamond color</span>',
+    clarityList: '<span class="text-muted"><b>Clarity</b></span><br><span class="text-muted">Please choose one or more diamond clarity</span>',
+    cutList: '<span class="text-muted"><b>Cut</b></span><br><span class="text-muted">Please choose one or more diamond cut</span>',
+    polishList: '<span class="text-muted"><b>Polish</b></span><br><span class="text-muted">Please choose one or more diamond polish</span>',
+    symmetryList: '<span class="text-muted"><b>Symmetry</b></span><br><span class="text-muted">Please choose one or more diamond symmetry</span>',
+    labList: '<span class="text-muted"><b>Lab</b></span><br><span class="text-muted">Please choose one or more diamond lab</span>',
+};
+
+let checkInput = [
+    "fullShapeList",
+    "fullColorList",
+    "fullClarityList",
+    "fullCutList",
+    "fullPolishList",
+    "fullSymmetryList",
+    "fullLabList",
+];
 
 // Utility function to clear all filters
 function clearFilters() {
+
+    // Set Default Value
+    defaultFilter['currentPage'] = 1;
+    defaultFilter['currentPerPage'] = 10;
+    defaultFilter['currentSortColumn'] = 'id';
+    defaultFilter['currentSortDirection'] = 'asc';
+    defaultFilter['totalPage'] = 0;
+    defaultFilter['indexID'] = 0;
+    
+    // Clear single filter
+    $.each(singleFilter, function(k, v) {
+        singleFilter[k] = '';
+    });
+
     // Clear input fields
-    $('#minCarat').val('');
-    $('#maxCarat').val('');
+    $.each(singleFilter, function(k, v) {
+        $("#"+k).val('');
+    });
 
-    $('#stockId').val('');
+    // Clear multiple filter
+    $.each(multipleFilter, function(k, v) {
+        multipleFilter[k] = '';
+    });
 
-    $('#reportNumber').val('');
-
-    $('#type').val('');
-
-    // Clear shape tags
-    $('#shapeList').empty().html('<span id="placeholderMessage" class="text-muted">Please choose one or more diamond shape</span>');
-
-    // Clear color tags
-    $('#colorList').empty().html('<span id="colorPlaceholderMessage" class="text-muted">Please choose one or more diamond color</span>');
-
-    // Clear clarity tags
-    $('#clarityList').empty().html('<span id="clarityPlaceholderMessage" class="text-muted">Please choose one or more diamond clarity</span>');
-
-    // Clear cut tags
-    $('#cutList').empty().html('<span id="cutPlaceholderMessage" class="text-muted">Please choose one or more diamond cut</span>');
-
-    // Clear polish tags
-    $('#polishList').empty().html('<span id="polishPlaceholderMessage" class="text-muted">Please choose one or more diamond polish</span>');
-
-    // Clear symmetry tags
-    $('#symmetryList').empty().html('<span id="symmetryPlaceholderMessage" class="text-muted">Please choose one or more diamond symmetry</span>');
+    // Clear Array tags
+    $.each(placeholder, function(k, v) {
+        $("#"+k).empty().html(v);
+    });
 
     // Uncheck all checkboxes in filter lists
-    $('#fullShapeList input').prop('checked', false);
-    $('#fullColorList input').prop('checked', false);
-    $('#fullClarityList input').prop('checked', false);
-    $('#fullCutList input').prop('checked', false);
-    $('#fullPolishList input').prop('checked', false);
-    $('#fullSymmetryList input').prop('checked', false);
+    $.each(checkInput, function(k, v) {
+        $('#'+v+' input').prop('checked', false);
+    });
 
     // Trigger filter with updated settings
-    fetchData(currentPage, currentPerPage, currentSortColumn, currentSortDirection);
+    fetchData();
 }
 
 // Attach event listener to Clear Filter button
@@ -51,51 +103,8 @@ $(document).on('click', '.filter-clear-button', function () {
     clearFilters();
 });
 
-function applyFilter(modalId, listId, fullListId, placeholderMessage, tagClass) {
-    const selectedItems = $(fullListId + ' input:checked').map(function () {
-        return $(this).val();
-    }).get();
-
-    // Clear existing items
-    $(listId).empty();
-
-    if (selectedItems.length === 0) {
-        // Show placeholder message if no items are selected
-        $(listId).html('<span id="' + placeholderMessage + '" class="text-muted">Please choose one or more tags</span>');
-    } else {
-        // Hide placeholder message if items are selected
-        $('#' + placeholderMessage).remove();
-
-        // Append each item as a tag
-        $.each(selectedItems, function (index, item) {
-            $(listId).append(
-                '<span class="badge bg-primary me-2 mb-1">' + item +
-                ' <span class="' + tagClass + '" style="cursor:pointer;">&times;</span></span>'
-            );
-        });
-    }
-
-    // Trigger filter with the selected items
-    fetchData(currentPage, currentPerPage, currentSortColumn, currentSortDirection);
-    $(modalId).modal('hide');
-}
-
 function showModal(modalId) {
     $(modalId).modal('show');
-}
-
-function removeTag(tag, listId, fullListId, placeholderMessage) {
-    var item = $(tag).closest('.badge').text().trim().slice(0, -2);
-    $(tag).closest('.badge').remove();
-    $(fullListId + ' input[value="' + item + '"]').prop('checked', false);
-
-    // Show placeholder message if no tags are left
-    if ($(listId + ' .badge').length === 0) {
-        $(listId).html('<span id="' + placeholderMessage + '" class="text-muted">Please choose one or more tags</span>');
-    }
-
-    // Trigger filter with updated items
-    fetchData(currentPage, currentPerPage, currentSortColumn, currentSortDirection);
 }
 
 $('#shapeList').on('click', function () { showModal('#shapeModal'); });
@@ -106,62 +115,98 @@ $('#polishList').on('click', function () { showModal('#polishModal'); });
 $('#symmetryList').on('click', function () { showModal('#symmetryModal'); });
 $('#labList').on('click', function () { showModal('#labModal'); });
 
+function applyFilter(modalId, fullListId, placeholderMessage, tagClass, id) {
+
+    const selectedItems = $(fullListId + ' input:checked').map(function () {
+        return $(this).val();
+    }).get();
+
+    multipleFilter[id] = selectedItems;
+
+    $("#"+id).empty();
+    if (selectedItems.length === 0) {
+        $("#"+id).html(placeholder[id]);
+    } else {
+        $('#'+placeholderMessage).remove();
+
+        $.each(selectedItems, function (index, item) {
+            $("#"+id).append(
+                '<span class="badge bg-primary me-2 mb-1">' + item +
+                ' <span class="' + tagClass + '" style="cursor:pointer;">&times;</span></span>'
+            );
+        });
+    }
+    $(modalId).modal('hide');
+    defaultFilter['indexID'] = 0;
+    fetchData();
+}
+
 $(document).on('click', '.apply-shape-filter', function () {
-    applyFilter('#shapeModal', '#shapeList', '#fullShapeList', 'placeholderMessage', 'remove-tag');
+    applyFilter('#shapeModal', '#fullShapeList', 'placeholderMessage', 'remove-tag', 'shapeList');
 });
 
 $(document).on('click', '.apply-color-filter', function () {
-    applyFilter('#colorModal', '#colorList', '#fullColorList', 'colorPlaceholderMessage', 'remove-color-tag');
+    applyFilter('#colorModal', '#fullColorList', 'colorPlaceholderMessage', 'remove-color-tag', 'colorList');
 });
 
 $(document).on('click', '.apply-clarity-filter', function () {
-    applyFilter('#clarityModal', '#clarityList', '#fullClarityList', 'clarityPlaceholderMessage', 'remove-clarity-tag');
+    applyFilter('#clarityModal', '#fullClarityList', 'clarityPlaceholderMessage', 'remove-clarity-tag', 'clarityList');
 });
 
 $(document).on('click', '.apply-cut-filter', function () {
-    applyFilter('#cutModal', '#cutList', '#fullCutList', 'cutPlaceholderMessage', 'remove-cut-tag');
+    applyFilter('#cutModal', '#fullCutList', 'cutPlaceholderMessage', 'remove-cut-tag', 'cutList');
 });
 
 $(document).on('click', '.apply-polish-filter', function () {
-    applyFilter('#polishModal', '#polishList', '#fullPolishList', 'polishPlaceholderMessage', 'remove-polish-tag');
+    applyFilter('#polishModal', '#fullPolishList', 'polishPlaceholderMessage', 'remove-polish-tag', 'polishList');
 });
 
 $(document).on('click', '.apply-symmetry-filter', function () {
-    applyFilter('#symmetryModal', '#symmetryList', '#fullSymmetryList', 'symmetryPlaceholderMessage', 'remove-symmetry-tag');
+    applyFilter('#symmetryModal', '#fullSymmetryList', 'symmetryPlaceholderMessage', 'remove-symmetry-tag', 'symmetryList');
 });
 
 $(document).on('click', '.apply-lab-filter', function () {
-    applyFilter('#labModal', '#labList', '#fullLabList', 'labPlaceholderMessage', 'remove-lab-tag');
+    applyFilter('#labModal', '#fullLabList', 'labPlaceholderMessage', 'remove-lab-tag', 'labList');
 });
+
+function removeTag(tag, id, fullListId, placeholderMessage) {
+    var item = $(tag).closest('.badge').text().trim().slice(0, -2);
+    $(tag).closest('.badge').remove();
+    $(fullListId + ' input[value="' + item + '"]').prop('checked', false);
+
+    if ($(id + ' .badge').length === 0) {
+        $("#"+id).html(placeholder[id]);
+    }
+    defaultFilter['indexID'] = 0;
+    fetchData();
+}
 
 $(document).on('click', '.remove-tag', function () {
-    removeTag(this, '#shapeList', '#fullShapeList', 'placeholderMessage');
+    removeTag(this, 'shapeList', '#fullShapeList', 'placeholderMessage');
 });
 
-// Remove color tag on click
 $(document).on('click', '.remove-color-tag', function () {
-    removeTag(this, '#colorList', '#fullColorList', 'colorPlaceholderMessage');
+    removeTag(this, 'colorList', '#fullColorList', 'colorPlaceholderMessage');
 });
 
-// Remove clarity tag on click
 $(document).on('click', '.remove-clarity-tag', function () {
-    removeTag(this, '#clarityList', '#fullClarityList', 'clarityPlaceholderMessage');
+    removeTag(this, 'clarityList', '#fullClarityList', 'clarityPlaceholderMessage');
 });
 
 $(document).on('click', '.remove-cut-tag', function () {
-    removeTag(this, '#cutList', '#fullCutList', 'cutPlaceholderMessage');
+    removeTag(this, 'cutList', '#fullCutList', 'cutPlaceholderMessage');
 });
 
 $(document).on('click', '.remove-polish-tag', function () {
-    removeTag(this, '#polishList', '#fullPolishList', 'polishPlaceholderMessage');
+    removeTag(this, 'polishList', '#fullPolishList', 'polishPlaceholderMessage');
 });
 
 $(document).on('click', '.remove-symmetry-tag', function () {
-    removeTag(this, '#symmetryList', '#fullSymmetryList', 'symmetryPlaceholderMessage');
+    removeTag(this, 'symmetryList', '#fullSymmetryList', 'symmetryPlaceholderMessage');
 });
 
 $(document).on('click', '.remove-lab-tag', function () {
-    removeTag(this, '#labList', '#fullLabList', 'labPlaceholderMessage');
+    removeTag(this, 'labList', '#fullLabList', 'labPlaceholderMessage');
 });
 
 document.querySelectorAll('.focusable').forEach(element => {
@@ -214,47 +259,42 @@ $(document).ready(function () {
 
     $(document).on('click', '.filter-button', function (e) {
         e.preventDefault();
-        currentPage = 1; // Reset to first page on filter
-        fetchData(currentPage, currentPerPage, currentSortColumn, currentSortDirection);
+        defaultFilter['currentPage'] = 1;
+        defaultFilter['indexID'] = 0;
+        fetchData();
         $('#filterModal').modal('hide');
     });
 
     // Initial data fetch
-    fetchData(currentPage, currentPerPage, currentSortColumn, currentSortDirection);
-
     $(".previousPage").addClass("hide");
+    fetchData();
 
     $(document).on('click', '.sorting', function (e) {
         e.preventDefault();
 
-        currentSortColumn = $(this).data('column');
-        currentSortDirection = ($(this).data("order") == 'asc') ? 'desc' : 'asc';
+        defaultFilter['currentSortColumn'] = $(this).data('column');
+        defaultFilter['currentSortDirection'] = ($(this).data("order") == 'asc') ? 'desc' : 'asc';
 
         $(".sorting_icon").addClass("hide");
         $(".sorting_icon.default").removeClass("hide");
 
-        $(this).data("order", currentSortDirection);
+        $(this).data("order", defaultFilter['currentSortDirection']);
         $(this).find(".sorting_icon").addClass("hide");
 
-        if (currentSortDirection == 'asc') {
+        if (defaultFilter['currentSortDirection'] == 'asc') {
             $(this).find(".ascending").removeClass("hide");
         }
-        if (currentSortDirection == 'desc') {
+        if (defaultFilter['currentSortDirection'] == 'desc') {
             $(this).find(".decending").removeClass("hide");
         }
 
-        fetchData(currentPage, currentPerPage, currentSortColumn, currentSortDirection);
+        fetchData();
     });
 
     $(document).on('click', '.reloadPage', function (e) {
         e.preventDefault();
 
-        currentPage = 1;
-        currentPerPage = 10;
-        currentSortColumn = 'id';
-        currentSortDirection = 'asc';
-
-        $(".changeNumberOfPerPage").val(currentPerPage);
+        $(".changeNumberOfPerPage").val(defaultFilter['currentPerPage']);
         $(".sorting").find(".sorting_icon").addClass("hide");
         $(".sorting").find(".default").removeClass("hide");
 
@@ -267,9 +307,10 @@ $(document).ready(function () {
     $(document).on('change', '.changeNumberOfPerPage', function (e) {
         e.preventDefault();
 
-        currentPage = 1;
-        currentPerPage = $(this).val();
-        fetchData(currentPage, currentPerPage, currentSortColumn, currentSortDirection);
+        defaultFilter['currentPage'] = 1;
+        defaultFilter['currentPerPage'] = $(this).val();
+        defaultFilter['indexID'] = 0;
+        fetchData();
     });
 
     $(document).on('click', '.selectAll', function (e) {
@@ -338,13 +379,13 @@ $(document).ready(function () {
     $(document).on('click', '.previousPage', function (e) {
         e.preventDefault();
 
-        currentPage--;
-        fetchData(currentPage, currentPerPage, currentSortColumn, currentSortDirection);
+        defaultFilter['currentPage']--;
+        fetchData();
 
-        if (currentPage <= 1) {
+        if (defaultFilter['currentPage'] <= 1) {
             $(this).addClass("hide");
         }
-        if (currentPage < totalPage) {
+        if (defaultFilter['currentPage'] < defaultFilter['totalPage']) {
             $(".nextPage").removeClass("hide");
         }
     });
@@ -352,13 +393,13 @@ $(document).ready(function () {
     $(document).on('click', '.nextPage', function (e) {
         e.preventDefault();
 
-        currentPage++;
-        fetchData(currentPage, currentPerPage, currentSortColumn, currentSortDirection);
+        defaultFilter['currentPage']++;
+        fetchData();
 
-        if (currentPage > 1) {
+        if (defaultFilter['currentPage'] > 1) {
             $(".previousPage").removeClass("hide");
         }
-        if (currentPage >= totalPage) {
+        if (defaultFilter['currentPage'] >= defaultFilter['totalPage']) {
             $(this).addClass("hide");
         }
     });
@@ -366,123 +407,55 @@ $(document).ready(function () {
     $(document).on('change', '.changePage', function (e) {
         e.preventDefault();
 
-        currentPage = $(this).val();
-        fetchData(currentPage, currentPerPage, currentSortColumn, currentSortDirection);
+        defaultFilter['currentPage'] = $(this).val();
+        fetchData();
 
-        if (currentPage <= 1) {
+        if (defaultFilter['currentPage'] <= 1) {
             $(".previousPage").addClass("hide");
         }
-        if (currentPage >= totalPage) {
+        if (defaultFilter['currentPage'] >= defaultFilter['totalPage']) {
             $(".nextPage").addClass("hide");
         }
-        if (currentPage > 1) {
+        if (defaultFilter['currentPage'] > 1) {
             $(".previousPage").removeClass("hide");
         }
-        if (currentPage < totalPage) {
+        if (defaultFilter['currentPage'] < defaultFilter['totalPage']) {
             $(".nextPage").removeClass("hide");
         }
     });
 
 });
 
-function fetchData(page, perPage, sortBy, sortDirection) {
+function fetchData() {
+
+    $.each(singleFilter, function(k, v) {
+        singleFilter[k] = $("#"+k).val();
+    });
+
     $('#loader').show();
-
-    var minCarat = $('#minCarat').val();
-    var maxCarat = $('#maxCarat').val();
-
-    if (!minCarat) {
-        minCarat = 0;
-    }
-
-    if (!maxCarat) {
-        maxCarat = 0;
-    }
-
-    var stockId = $('#stockId').val();
-    var reportNumber = $('#reportNumber').val();
-    var type = $('#type').val();
-
-    const selectedShapes = $('#shapeList .badge').map(function () {
-        return $(this).text().trim().slice(0, -2);
-    }).get();
-
-    // Get selected colors
-    const selectedColors = $('#colorList .badge').map(function () {
-        return $(this).text().trim().slice(0, -2); // Extract the color text, removing the '×'
-    }).get();
-
-    // Get selected colors
-    const selectedclarities = $('#clarityList .badge').map(function () {
-        return $(this).text().trim().slice(0, -2); // Extract the color text, removing the '×'
-    }).get();
-
-    const selectedCuts = $('#cutList .badge').map(function () {
-        return $(this).text().trim().slice(0, -2); // Extract the cut text, removing the '×'
-    }).get();
-
-    // Get selected polishes
-    const selectedPolishes = $('#polishList .badge').map(function () {
-        return $(this).text().trim().slice(0, -2); // Extract the polish text, removing the '×'
-    }).get();
-
-    // Get selected symmetries
-    const selectedSymmetries = $('#symmetryList .badge').map(function () {
-        return $(this).text().trim().slice(0, -2); // Extract the symmetry text, removing the '×'
-    }).get();
-
-    const selectedLabs = $('#labList .badge').map(function () {
-        return $(this).text().trim().slice(0, -2);
-    }).get();
-
+    let postData = {
+        ...defaultFilter,
+        ...singleFilter,
+        ...multipleFilter,
+    };
     $.ajax({
         url: urlData,
         method: 'POST',
-        data: {
-            page: page,
-            perPage: perPage,
-            sortBy: sortBy,
-            sortDirection: sortDirection,
-            minCarat: minCarat,
-            maxCarat: maxCarat,
-            shapes: selectedShapes,
-            colors: selectedColors,
-            clarities: selectedclarities,
-            cuts: selectedCuts,
-            polishes: selectedPolishes,
-            symmetries: selectedSymmetries,
-            labs: selectedLabs,
-            stockId,
-            reportNumber,
-            type
-        },
+        data: postData,
         success: function (response) {
             var rows = '';
             $.each(response.data, function (index, item) {
                 rows += '<tr class="">';
                 rows += '<td><div class="checkbox selectSingle"><input type="checkbox" data-id="' + item.id + '" /><span class=""></span></div></td>';
-                rows += '<td>' + ((item.id != null) ? item.id : '-') + '</td>';
-                rows += '<td>' + ((item.growth_type != null) ? item.growth_type : '-') + '</td>';
-                rows += '<td class="stock-id">' + ((item.stock_id != null) ? item.stock_id : '-') + '</td>';
-                rows += '<td>' + ((item.report_number != null) ? item.report_number : '-') + '</td>';
-                rows += '<td>' + ((item.lab != null) ? item.lab : '-') + '</td>';
-                rows += '<td>' + ((item.shape != null) ? item.shape : '-') + '</td>';
-                rows += '<td>' + ((item.weight != null) ? item.weight : '-') + '</td>';
-                rows += '<td>' + ((item.color != null) ? item.color : '-') + '</td>';
-                rows += '<td>' + ((item.clarity != null) ? item.clarity : '-') + '</td>';
-                rows += '<td>' + ((item.rap_amount != null) ? item.rap_amount : '-') + '</td>';
-                rows += '<td>' + ((item.discounts != null) ? item.discounts : '-') + '</td>';
-                rows += '<td>' + ((item.total_price != null) ? item.total_price : '-') + '</td>';
-                rows += '<td>' + ((item.total_price != null) ? item.total_price : '-') + '</td>';
-                rows += '<td>' + ((item.cut != null) ? item.cut : '-') + '</td>';
-                rows += '<td>' + ((item.polish != null) ? item.polish : '-') + '</td>';
-                rows += '<td>' + ((item.symmetry != null) ? item.symmetry : '-') + '</td>';
-                rows += '<td>' + ((item.fluorescence_intensity != null) ? item.fluorescence_intensity : '') + '</td>';
+                rows += '<td>' + (defaultFilter['indexID'] += 1) + '</td>';
+                $.each(columns, function(k, v) {                    
+                    rows += '<td>' + ((item[v] != null) ? item[v] : '-') + '</td>';
+                });
                 rows += '</tr>';
             });
 
             if (response.data.length == 0) {
-                rows += '<tr class=""><td class="text-center" colspan="18">No Record Found</td></tr>';
+                rows += '<tr class=""><td class="text-center" colspan="' + (columns.length + 1) + '">No Record Found</td></tr>';
             }
 
             $('#data-table tbody').html(rows);
@@ -494,21 +467,21 @@ function fetchData(page, perPage, sortBy, sortDirection) {
             $("#toRec").html(response.to);
             $("#totalRec").html(response.total);
 
-            totalPage = response.last_page;
+            defaultFilter['totalPage'] = response.last_page;
             $(".changePage").val(response.current_page);
             $(".changePage").attr("max", response.last_page);
             $("#totalPage").html(response.last_page);
 
-            if (currentPage <= 1) {
+            if (defaultFilter['currentPage'] <= 1) {
                 $(".previousPage").addClass("hide");
             }
-            if (currentPage >= totalPage) {
+            if (defaultFilter['currentPage'] >= defaultFilter['totalPage']) {
                 $(".nextPage").addClass("hide");
             }
-            if (currentPage > 1) {
+            if (defaultFilter['currentPage'] > 1) {
                 $(".previousPage").removeClass("hide");
             }
-            if (currentPage < totalPage) {
+            if (defaultFilter['currentPage'] < defaultFilter['totalPage']) {
                 $(".nextPage").removeClass("hide");
             }
             $('#loader').hide();

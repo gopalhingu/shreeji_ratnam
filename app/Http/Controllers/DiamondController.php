@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use App\Models\Diamond;
-use Yajra\DataTables\Facades\DataTables;
+use Illuminate\Support\Facades\Schema;
 
 class DiamondController extends Controller
 {
@@ -34,10 +34,6 @@ class DiamondController extends Controller
             $spreadsheet = IOFactory::load($file->path());
             $sheet = $spreadsheet->getActiveSheet();
             $data = $sheet->toArray();
-
-            // echo "<pre>";
-			// print_r($data);
-			// die;
 
             // Use the first row as keys
             $header = array_shift($data);
@@ -89,6 +85,11 @@ class DiamondController extends Controller
         return strtolower(str_replace(" ", "_", str_replace('%', 'percentage', str_replace('#', 'number', $column))));
     }
 
+    public function format_column_reverse($column)
+    {
+        return ucwords(str_replace("_", " ", str_replace('percentage', '%', str_replace('number', '#', $column))));
+    }
+
     public function list()
     {
         $shapes = Diamond::select('shape')->whereNotNull('shape')->distinct()->pluck('shape');
@@ -98,54 +99,91 @@ class DiamondController extends Controller
         $polish = Diamond::select('polish')->whereNotNull('polish')->distinct()->pluck('polish');
         $symmetries = Diamond::select('symmetry')->whereNotNull('symmetry')->distinct()->pluck('symmetry');
         $labs = Diamond::select('lab')->whereNotNull('lab')->distinct()->pluck('lab');
+        $columns = Schema::getColumnListing('diamonds');
+        $columnWithValue = [];
+        foreach ($columns as $key => $value) {
+            $columnWithValue[$value] = $this->format_column_reverse($value);
+        }
 
-        return view("diamond.list",compact('shapes','colors','clarities','cuts','polish','symmetries','labs'));
+        return view("diamond.list",compact('shapes','colors','clarities','cuts','polish','symmetries','labs', 'columnWithValue'));
     }
 
     public function data(Request $request)
-    {
-        // Retrieve the parameters for pagination and sorting
-        $page = $request->input('page', 1);
-        $perPage = $request->input('perPage', 10);
-        $sortBy = $request->input('sortBy', 'id');
-        $sortDirection = $request->input('sortDirection', 'asc');
-        $minCarat = $request->input('minCarat', 0);
-        $maxCarat = $request->input('maxCarat', 0);
-        $shapes = $request->input('shapes', []);
-        $colors = $request->input('colors', []);
-        $clarities = $request->input('clarities', []);
-        $cuts = $request->input('cuts', []);
-        $polishes = $request->input('polishes', []);
-        $symmetries = $request->input('symmetries', []);
+    {       
+        $currentPage = $request->input('currentPage', 1);
+        $currentPerPage = $request->input('currentPerPage', 10);
+        $currentSortColumn = $request->input('currentSortColumn', 'id');
+        $currentSortDirection = $request->input('currentSortDirection', 'asc');
+        $totalPage = $request->input('totalPage', '');
+        $indexID = $request->input('indexID', '');
+        $minCarat = $request->input('minCarat', '');
+        $maxCarat = $request->input('maxCarat', '');
+        $minLength = $request->input('minLength', '');
+        $maxLength = $request->input('maxLength', '');
+        $minWidth = $request->input('minWidth', '');
+        $maxWidth = $request->input('maxWidth', '');
+        $minHeight = $request->input('minHeight', '');
+        $maxHeight = $request->input('maxHeight', '');
+        $minDepth = $request->input('minDepth', '');
+        $maxDepth = $request->input('maxDepth', '');
+        $minRatio = $request->input('minRatio', '');
+        $maxRatio = $request->input('maxRatio', '');
+        $minTable = $request->input('minTable', '');
+        $maxTable = $request->input('maxTable', '');
         $stockId = $request->input('stockId', '');
         $reportNumber = $request->input('reportNumber', '');
         $type = $request->input('type', '');
+        $shapeList = $request->input('shapeList', []);
+        $colorList = $request->input('colorList', []);
+        $clarityList = $request->input('clarityList', []);
+        $cutList = $request->input('cutList', []);
+        $polishList = $request->input('polishList', []);
+        $symmetryList = $request->input('symmetryList', []);
+        $labList = $request->input('labList', []);
 
         // Query the database with pagination and sorting
         $query = Diamond::query()
         ->when($minCarat, function ($query, $minCarat) {
-            return $query->where('weight', '>=', $minCarat);
+            return $query->where('price_per_carat', '>=', $minCarat);
         })
         ->when($maxCarat, function ($query, $maxCarat) {
-            return $query->where('weight', '<=', $maxCarat);
+            return $query->where('price_per_carat', '<=', $maxCarat);
         })
-        ->when($shapes, function ($query, $shapes) {
-            return $query->whereIn('shape', $shapes);
+        ->when($minLength, function ($query, $minLength) {
+            return $query->where('length', '>=', $minLength);
         })
-        ->when($colors, function ($query, $colors) {
-            return $query->whereIn('color', $colors);
+        ->when($maxLength, function ($query, $maxLength) {
+            return $query->where('length', '<=', $maxLength);
         })
-        ->when($clarities, function ($query, $clarities) {
-            return $query->whereIn('clarity', $clarities);
+        ->when($minWidth, function ($query, $minWidth) {
+            return $query->where('width', '>=', $minWidth);
         })
-        ->when($cuts, function ($query, $cuts) {
-            return $query->whereIn('cut', $cuts);
+        ->when($maxWidth, function ($query, $maxWidth) {
+            return $query->where('width', '<=', $maxWidth);
         })
-        ->when($polishes, function ($query, $polishes) {
-            return $query->whereIn('polish', $polishes);
+        ->when($minHeight, function ($query, $minHeight) {
+            return $query->where('height', '>=', $minHeight);
         })
-        ->when($symmetries, function ($query, $symmetries) {
-            return $query->whereIn('symmetry', $symmetries);
+        ->when($maxHeight, function ($query, $maxHeight) {
+            return $query->where('height', '<=', $maxHeight);
+        })
+        ->when($minDepth, function ($query, $minDepth) {
+            return $query->where('depth_percentage', '>=', $minDepth);
+        })
+        ->when($maxDepth, function ($query, $maxDepth) {
+            return $query->where('depth_percentage', '<=', $maxDepth);
+        })
+        ->when($minRatio, function ($query, $minRatio) {
+            return $query->where('ratio', '>=', $minRatio);
+        })
+        ->when($maxRatio, function ($query, $maxRatio) {
+            return $query->where('ratio', '<=', $maxRatio);
+        })
+        ->when($minTable, function ($query, $minTable) {
+            return $query->where('table_percentage', '>=', $minTable);
+        })
+        ->when($maxTable, function ($query, $maxTable) {
+            return $query->where('table_percentage', '<=', $maxTable);
         })
         ->when($stockId, function ($query, $stockId) {
             return $query->where('stock_id', $stockId);
@@ -156,14 +194,34 @@ class DiamondController extends Controller
         ->when($type, function ($query, $type) {
             return $query->where('growth_type', $type);
         })
-        ->orderBy($sortBy, $sortDirection);
+        ->when($shapeList, function ($query, $shapeList) {
+            return $query->whereIn('shape', $shapeList);
+        })
+        ->when($colorList, function ($query, $colorList) {
+            return $query->whereIn('color', $colorList);
+        })
+        ->when($clarityList, function ($query, $clarityList) {
+            return $query->whereIn('clarity', $clarityList);
+        })
+        ->when($cutList, function ($query, $cutList) {
+            return $query->whereIn('cut', $cutList);
+        })
+        ->when($polishList, function ($query, $polishList) {
+            return $query->whereIn('polish', $polishList);
+        })
+        ->when($symmetryList, function ($query, $symmetryList) {
+            return $query->whereIn('symmetry', $symmetryList);
+        })
+        ->when($labList, function ($query, $labList) {
+            return $query->whereIn('lab', $labList);
+        })
+        ->orderBy($currentSortColumn, $currentSortDirection);
 
         $totalStock = $query->count();
         $totalCarat = $query->sum('weight') ?: 0;
         $totalAmount = $query->sum('total_price') ?: 0;
 
-
-        $data = $query->paginate($perPage, ['*'], 'page', $page);
+        $data = $query->paginate($currentPerPage, ['*'], 'page', $currentPage);
 
         return response()->json([
             'data' => $data->items(),

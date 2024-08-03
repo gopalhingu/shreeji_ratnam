@@ -6,6 +6,14 @@
 
 @section("content")
 
+@php
+	$columns = array_keys($columnWithValue);
+	array_shift($columns);
+	array_pop($columns);
+	array_pop($columns);
+	$columns = json_encode($columns);
+@endphp
+
 <div>
 	<div class="content">
 		<section class="table-header grid">
@@ -60,142 +68,35 @@
 								<span class=""></span>
 							</div>
 						</th>
-						<th class="sorting" data-column="id" data-order="asc">
-							No.
-							<span class="sort-icons" style="margin-left: 5px; margin-top: 2px;">
-								<i class="fa-solid fa-sort default hide sorting_icon"></i>
-								<i class="fa-solid fa-sort-up ascending sorting_icon"></i>
-								<i class="fa-solid fa-sort-down decending hide sorting_icon"></i>
-							</span>
-						</th>
-                        <th class="sorting" data-column="growth_type" data-order="asc">
-							Type
-							<span class="sort-icons" style="margin-left: 5px; margin-top: 2px;">
-								<i class="fa-solid fa-sort default sorting_icon"></i>
-								<i class="fa-solid fa-sort-up ascending hide sorting_icon"></i>
-								<i class="fa-solid fa-sort-down decending hide sorting_icon"></i>
-							</span>
-						</th>
-                        <th class="sorting" data-column="stock_id" data-order="asc">
-							Stock ID.
-							<span class="sort-icons" style="margin-left: 5px; margin-top: 2px;">
-								<i class="fa-solid fa-sort default sorting_icon"></i>
-								<i class="fa-solid fa-sort-up ascending hide sorting_icon"></i>
-								<i class="fa-solid fa-sort-down decending hide sorting_icon"></i>
-							</span>
-						</th>
-                        <th class="sorting" data-column="report_number" data-order="asc">
-							Report #
-							<span class="sort-icons" style="margin-left: 5px; margin-top: 2px;">
-								<i class="fa-solid fa-sort default sorting_icon"></i>
-								<i class="fa-solid fa-sort-up ascending hide sorting_icon"></i>
-								<i class="fa-solid fa-sort-down decending hide sorting_icon"></i>
-							</span>
-						</th>
-                        <th class="sorting" data-column="lab" data-order="asc">
-							Lab
-							<span class="sort-icons" style="margin-left: 5px; margin-top: 2px;">
-								<i class="fa-solid fa-sort default sorting_icon"></i>
-								<i class="fa-solid fa-sort-up ascending hide sorting_icon"></i>
-								<i class="fa-solid fa-sort-down decending hide sorting_icon"></i>
-							</span>
-						</th>
-                        <th class="sorting" data-column="shape" data-order="asc">
-							Shape
-							<span class="sort-icons" style="margin-left: 5px; margin-top: 2px;">
-								<i class="fa-solid fa-sort default sorting_icon"></i>
-								<i class="fa-solid fa-sort-up ascending hide sorting_icon"></i>
-								<i class="fa-solid fa-sort-down decending hide sorting_icon"></i>
-							</span>
-						</th>
-                        <th class="sorting" data-column="ratio" data-order="asc">
-							Carat
-							<span class="sort-icons" style="margin-left: 5px; margin-top: 2px;">
-								<i class="fa-solid fa-sort default sorting_icon"></i>
-								<i class="fa-solid fa-sort-up ascending hide sorting_icon"></i>
-								<i class="fa-solid fa-sort-down decending hide sorting_icon"></i>
-							</span>
-						</th>
-                        <th class="sorting" data-column="color" data-order="asc">
-							Color
-							<span class="sort-icons" style="margin-left: 5px; margin-top: 2px;">
-								<i class="fa-solid fa-sort default sorting_icon"></i>
-								<i class="fa-solid fa-sort-up ascending hide sorting_icon"></i>
-								<i class="fa-solid fa-sort-down decending hide sorting_icon"></i>
-							</span>
-						</th>
-                        <th class="sorting" data-column="clarity" data-order="asc">
-							Clarity
-							<span class="sort-icons" style="margin-left: 5px; margin-top: 2px;">
-								<i class="fa-solid fa-sort default sorting_icon"></i>
-								<i class="fa-solid fa-sort-up ascending hide sorting_icon"></i>
-								<i class="fa-solid fa-sort-down decending hide sorting_icon"></i>
-							</span>
-						</th>
-                        <th class="sorting" data-column="rap_amount" data-order="asc">
-							Rap Rate
-							<span class="sort-icons" style="margin-left: 5px; margin-top: 2px;">
-								<i class="fa-solid fa-sort default sorting_icon"></i>
-								<i class="fa-solid fa-sort-up ascending hide sorting_icon"></i>
-								<i class="fa-solid fa-sort-down decending hide sorting_icon"></i>
-							</span>
-						</th>
-                        <th class="sorting" data-column="discounts" data-order="asc">
-							Dis %
-							<span class="sort-icons" style="margin-left: 5px; margin-top: 2px;">
-								<i class="fa-solid fa-sort default sorting_icon"></i>
-								<i class="fa-solid fa-sort-up ascending hide sorting_icon"></i>
-								<i class="fa-solid fa-sort-down decending hide sorting_icon"></i>
-							</span>
-						</th>
-                        <th class="sorting" data-column="total_price" data-order="asc">
-							$ Price
-							<span class="sort-icons" style="margin-left: 5px; margin-top: 2px;">
-								<i class="fa-solid fa-sort default sorting_icon"></i>
-								<i class="fa-solid fa-sort-up ascending hide sorting_icon"></i>
-								<i class="fa-solid fa-sort-down decending hide sorting_icon"></i>
-							</span>
-						</th>
-                        <th class="sorting" data-column="total_price" data-order="asc">
-							$ Amount
-							<span class="sort-icons" style="margin-left: 5px; margin-top: 2px;">
-								<i class="fa-solid fa-sort default sorting_icon"></i>
-								<i class="fa-solid fa-sort-up ascending hide sorting_icon"></i>
-								<i class="fa-solid fa-sort-down decending hide sorting_icon"></i>
-							</span>
-						</th>
-                        <th class="sorting" data-column="cut" data-order="asc">
-							Cut
-							<span class="sort-icons" style="margin-left: 5px; margin-top: 2px;">
-								<i class="fa-solid fa-sort default sorting_icon"></i>
-								<i class="fa-solid fa-sort-up ascending hide sorting_icon"></i>
-								<i class="fa-solid fa-sort-down decending hide sorting_icon"></i>
-							</span>
-						</th>
-                        <th class="sorting" data-column="polish" data-order="asc">
-							Polish
-							<span class="sort-icons" style="margin-left: 5px; margin-top: 2px;">
-								<i class="fa-solid fa-sort default sorting_icon"></i>
-								<i class="fa-solid fa-sort-up ascending hide sorting_icon"></i>
-								<i class="fa-solid fa-sort-down decending hide sorting_icon"></i>
-							</span>
-						</th>
-                        <th class="sorting" data-column="symmetry" data-order="asc">
-							Symmetry
-							<span class="sort-icons" style="margin-left: 5px; margin-top: 2px;">
-								<i class="fa-solid fa-sort default sorting_icon"></i>
-								<i class="fa-solid fa-sort-up ascending hide sorting_icon"></i>
-								<i class="fa-solid fa-sort-down decending hide sorting_icon"></i>
-							</span>
-						</th>
-                        <th class="sorting" data-column="fluorescence_intensity" data-order="asc">
-							Flo.
-							<span class="sort-icons" style="margin-left: 5px; margin-top: 2px;">
-								<i class="fa-solid fa-sort default sorting_icon"></i>
-								<i class="fa-solid fa-sort-up ascending hide sorting_icon"></i>
-								<i class="fa-solid fa-sort-down decending hide sorting_icon"></i>
-							</span>
-						</th>						
+						@php
+							$exception = ['created_at', 'updated_at'];
+						@endphp
+						@foreach ($columnWithValue as $key => $value)
+							@if (in_array($key, $exception))
+								@php
+									continue;
+								@endphp
+							@endif
+							@if ($key == "id")
+								<th class="sorting-hide" data-column="id" data-order="asc">
+									No.
+									<span class="sort-icons" style="margin-left: 5px; margin-top: 2px;">
+										<i class="fa-solid fa-sort default hide sorting_icon"></i>
+										{{-- <i class="fa-solid fa-sort-up ascending sorting_icon"></i> --}}
+										<i class="fa-solid fa-sort-down decending hide sorting_icon"></i>
+									</span>
+								</th>
+							@else
+								<th class="sorting" data-column="{{ $key }}" data-order="asc">
+									{{ $value }}
+									<span class="sort-icons" style="margin-left: 5px; margin-top: 2px;">
+										<i class="fa-solid fa-sort default sorting_icon"></i>
+										<i class="fa-solid fa-sort-up ascending hide sorting_icon"></i>
+										<i class="fa-solid fa-sort-down decending hide sorting_icon"></i>
+									</span>
+								</th>
+							@endif
+						@endforeach
 					</tr>
 				</thead>
 				<tbody></tbody>
@@ -293,72 +194,142 @@
 				</div>
 				<div class="modal-body" style="max-height: 70vh; overflow-y: auto;">
 					<form id="caratFilter" class="row g-3">
-						<div class="col-md-6 position-relative">
-							<input type="text" class="form-control" id="minCarat" placeholder=" " />
-							<label for="minCarat" class="form-label label-on-border">Min Carat</label>
+						<!-- Min Carat Filter -->
+						<div class="col-md-6 form-floating">
+							<input type="text" class="form-control" id="minCarat" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');" placeholder=" " />
+							<label for="minCarat">Min Carat</label>
 						</div>
-						<div class="col-md-6 position-relative">
-							<input type="text" class="form-control" id="maxCarat" placeholder=" " />
-							<label for="maxCarat" class="form-label label-on-border">Max Carat</label>
+						<!-- Max Carat Filter -->
+						<div class="col-md-6 form-floating">
+							<input type="text" class="form-control" id="maxCarat" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');" placeholder=" " />
+							<label for="maxCarat">Max Carat</label>
 						</div>
+						<!-- Min Length Filter -->
+						<div class="col-md-6 form-floating">
+							<input type="text" class="form-control" id="minLength" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');" placeholder=" " />
+							<label for="minLength">Min Length</label>
+						</div>
+						<!-- Max Length Filter -->
+						<div class="col-md-6 form-floating">
+							<input type="text" class="form-control" id="maxLength" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');" placeholder=" " />
+							<label for="maxLength">Max Length</label>
+						</div>
+						<!-- Min Width Filter -->
+						<div class="col-md-6 form-floating">
+							<input type="text" class="form-control" id="minWidth" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');" placeholder=" " />
+							<label for="minWidth">Min Width</label>
+						</div>
+						<!-- Max Width Filter -->
+						<div class="col-md-6 form-floating">
+							<input type="text" class="form-control" id="maxWidth" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');" placeholder=" " />
+							<label for="maxWidth">Max Width</label>
+						</div>
+						<!-- Min Height Filter -->
+						<div class="col-md-6 form-floating">
+							<input type="text" class="form-control" id="minHeight" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');" placeholder=" " />
+							<label for="minHeight">Min Height</label>
+						</div>
+						<!-- Max Height Filter -->
+						<div class="col-md-6 form-floating">
+							<input type="text" class="form-control" id="maxHeight" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');" placeholder=" " />
+							<label for="maxHeight">Max Height</label>
+						</div>
+						<!-- Min Depth Filter -->
+						<div class="col-md-6 form-floating">
+							<input type="text" class="form-control" id="minDepth" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');" placeholder=" " />
+							<label for="minDepth">Min Depth</label>
+						</div>
+						<!-- Max Depth Filter -->
+						<div class="col-md-6 form-floating">
+							<input type="text" class="form-control" id="maxDepth" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');" placeholder=" " />
+							<label for="maxDepth">Max Depth</label>
+						</div>
+						<!-- Min Ratio Filter -->
+						<div class="col-md-6 form-floating">
+							<input type="text" class="form-control" id="minRatio" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');" placeholder=" " />
+							<label for="minRatio">Min Ratio</label>
+						</div>
+						<!-- Max Ratio Filter -->
+						<div class="col-md-6 form-floating">
+							<input type="text" class="form-control" id="maxRatio" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');" placeholder=" " />
+							<label for="maxRatio">Max Ratio</label>
+						</div>
+						<!-- Min Table Filter -->
+						<div class="col-md-6 form-floating">
+							<input type="text" class="form-control" id="minTable" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');" placeholder=" " />
+							<label for="minTable">Min Table</label>
+						</div>
+						<!-- Max Table Filter -->
+						<div class="col-md-6 form-floating">
+							<input type="text" class="form-control" id="maxTable" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');" placeholder=" " />
+							<label for="maxTable">Max Table</label>
+						</div>
+
+						<!-- Shape List Display -->
 						<div class="col-md-12">
 							<div id="shapeList" class="border p-2 rounded focusable" tabindex="0" style="min-height: 50px;">
-								<span id="placeholderMessage" class="text-muted">Please choose one or more diamond shape</span>
+								<span class="text-muted"><b>Shape</b></span><br>
+								<span class="text-muted">Please choose one or more diamond shape</span>
 							</div>
 						</div>
 						<!-- Color List Display -->
 						<div class="col-md-12">
 							<div id="colorList" class="border p-2 rounded" style="min-height: 50px;">
-								<span id="colorPlaceholderMessage" class="text-muted">Please choose one or more diamond color</span>
+								<span class="text-muted"><b>Color</b></span><br>
+								<span class="text-muted">Please choose one or more diamond color</span>
 							</div>
 						</div>
 						<!-- Clarity List Display -->
 						<div class="col-md-12">
 							<div id="clarityList" class="border p-2 rounded" style="min-height: 50px;">
-								<span id="clarityPlaceholderMessage" class="text-muted">Please choose one or more diamond clarity</span>
+								<span class="text-muted"><b>clarity</b></span><br>
+								<span class="text-muted">Please choose one or more diamond clarity</span>
 							</div>
 						</div>
 						<!-- Cut List Display -->
 						<div class="col-md-12">
 							<div id="cutList" class="border p-2 rounded" style="min-height: 50px;">
-								<span id="cutPlaceholderMessage" class="text-muted">Please choose one or more diamond cut</span>
+								<span class="text-muted"><b>Cut</b></span><br>
+								<span class="text-muted">Please choose one or more diamond cut</span>
 							</div>
 						</div>
-
 						<!-- Polish List Display -->
 						<div class="col-md-12">
 							<div id="polishList" class="border p-2 rounded" style="min-height: 50px;">
-								<span id="polishPlaceholderMessage" class="text-muted">Please choose one or more diamond polish</span>
+								<span class="text-muted"><b>Polish</b></span><br>
+								<span class="text-muted">Please choose one or more diamond polish</span>
 							</div>
 						</div>
-
 						<!-- Symmetry List Display -->
 						<div class="col-md-12">
 							<div id="symmetryList" class="border p-2 rounded" style="min-height: 50px;">
-								<span id="symmetryPlaceholderMessage" class="text-muted">Please choose one or more diamond symmetry</span>
+								<span class="text-muted"><b>Symmetry</b></span><br>
+								<span class="text-muted">Please choose one or more diamond symmetry</span>
 							</div>
 						</div>
-
 						<!-- Lab List Display -->
 						<div class="col-md-12">
 							<div id="labList" class="border p-2 rounded" style="min-height: 50px;">
-								<span id="labPlaceholderMessage" class="text-muted">Please choose one or more diamond lab</span>
+								<span class="text-muted"><b>Lab</b></span><br>
+								<span class="text-muted">Please choose one or more diamond lab</span>
 							</div>
 						</div>
 
-						<div class="col-md-12 position-relative">
+						<!-- Stock ID Filter -->
+						<div class="col-md-6 form-floating">
 							<input type="text" class="form-control" id="stockId" placeholder=" " />
-							<label for="stockId" class="form-label label-on-border">Stock ID</label>
+							<label for="stockId">Stock ID</label>
 						</div>
-						<div class="col-md-12 position-relative">
+						<!-- Report Number Filter -->
+						<div class="col-md-6 form-floating">
 							<input type="text" class="form-control" id="reportNumber" placeholder=" " />
-							<label for="reportNumber" class="form-label label-on-border">Report Number</label>
+							<label for="reportNumber">Report Number</label>
 						</div>
-						<div class="col-md-12 position-relative">
+						<!-- Type Filter -->
+						<div class="col-md-12 form-floating">
 							<input type="text" class="form-control" id="type" placeholder=" " />
-							<label for="type" class="form-label label-on-border">Type</label>
+							<label for="type">Type</label>
 						</div>
-
 					</form>
 				</div>
 				<div class="modal-footer">
@@ -586,6 +557,7 @@
 @section("script")
 	<script>
 		const urlData = '{{ route("diamond.data") }}';
+		const columns = <?php echo $columns; ?>;
 	</script>
 	<script src="{{ url('js/script.js') }}"></script>
 @endsection
