@@ -1,4 +1,6 @@
 
+let postData = {};
+
 let defaultFilter = {
     currentPage: 1,
     currentPerPage: 10,
@@ -295,12 +297,6 @@ $(document).ready(function () {
         e.preventDefault();
 
         $(".changeNumberOfPerPage").val(defaultFilter['currentPerPage']);
-        $(".sorting").find(".sorting_icon").addClass("hide");
-        $(".sorting").find(".default").removeClass("hide");
-
-        $(".sorting_icon.default").first().addClass("hide");
-        $(".sorting_icon.ascending").first().removeClass("hide");
-
         clearFilters();
     });
 
@@ -431,9 +427,8 @@ function fetchData() {
     $.each(singleFilter, function(k, v) {
         singleFilter[k] = $("#"+k).val();
     });
-
     $('#loader').show();
-    let postData = {
+    postData = {
         ...defaultFilter,
         ...singleFilter,
         ...multipleFilter,
@@ -455,7 +450,7 @@ function fetchData() {
             });
 
             if (response.data.length == 0) {
-                rows += '<tr class=""><td class="text-center" colspan="' + (columns.length + 1) + '">No Record Found</td></tr>';
+                rows += '<tr class=""><td class="text-center" colspan="' + (columns.length + 2) + '">No Record Found</td></tr>';
             }
 
             $('#data-table tbody').html(rows);
@@ -512,141 +507,51 @@ function checkSingleSelect() {
         $selectAllCheckmark.addClass("checkmark");
         $selectAllCheckmark.addClass("minus");
     }
-
-
-}
-
-// Fetch data for export
-function fetchDataForExport() {
-    var minCarat = $('#minCarat').val() || 0;
-    var maxCarat = $('#maxCarat').val() || 0;
-    var stockId = $('#stockId').val();
-    var reportNumber = $('#reportNumber').val();
-    var type = $('#type').val();
-
-    const selectedShapes = $('#shapeList .badge').map(function () {
-        return $(this).text().trim().slice(0, -2);
-    }).get();
-
-    const selectedColors = $('#colorList .badge').map(function () {
-        return $(this).text().trim().slice(0, -2);
-    }).get();
-
-    const selectedClarity = $('#clarityList .badge').map(function () {
-        return $(this).text().trim().slice(0, -2);
-    }).get();
-
-    const selectedCuts = $('#cutList .badge').map(function () {
-        return $(this).text().trim().slice(0, -2);
-    }).get();
-
-    const selectedPolishes = $('#polishList .badge').map(function () {
-        return $(this).text().trim().slice(0, -2);
-    }).get();
-
-    const selectedSymmetries = $('#symmetryList .badge').map(function () {
-        return $(this).text().trim().slice(0, -2);
-    }).get();
-
-    const selectedLabs = $('#labList .badge').map(function () {
-        return $(this).text().trim().slice(0, -2);
-    }).get();
-
-    return $.ajax({
-        url: urlData,
-        method: 'POST',
-        data: {
-            page: 1, // Page number for export can be set to 1 as we're exporting all data
-            perPage: 1084, // Large number to ensure all data is retrieved
-            sortBy: currentSortColumn,
-            sortDirection: currentSortDirection,
-            minCarat: minCarat,
-            maxCarat: maxCarat,
-            shapes: selectedShapes,
-            colors: selectedColors,
-            clarities: selectedClarity,
-            cuts: selectedCuts,
-            polishes: selectedPolishes,
-            symmetries: selectedSymmetries,
-            labs: selectedLabs,
-            stockId,
-            reportNumber,
-            type
-        },
-    });
 }
 
 // Export data to CSV
 function exportToCSV() {
-    fetchDataForExport().done(function (response) {
-        let csvContent = "data:text/csv;charset=utf-8,";
-        const headers = "ID, Growth Type, Stock ID, Report Number, Lab, Shape, Weight, Color, Clarity, Rap Amount, Discounts, Total Price, Cut, Polish, Symmetry, Fluorescence Intensity\n";
-        csvContent += headers;
-
-        response.data.forEach(item => {
-            const row = [
-                item.id,
-                item.growth_type,
-                item.stock_id,
-                item.report_number,
-                item.lab,
-                item.shape,
-                item.weight,
-                item.color,
-                item.clarity,
-                item.rap_amount,
-                item.discounts,
-                item.total_price,
-                item.cut,
-                item.polish,
-                item.symmetry,
-                item.fluorescence_intensity
-            ].join(",");
-            csvContent += row + "\n";
-        });
-
-        const encodedUri = encodeURI(csvContent);
-        const link = document.createElement("a");
-        link.setAttribute("href", encodedUri);
-        link.setAttribute("download", "data.csv");
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
+    $.ajax({
+        type: 'POST',
+        url: exportCsv,
+        data: postData,
+        xhrFields: {
+            responseType: 'blob'
+        },
+        success: function(blob) {
+            var link = document.createElement('a');
+            link.href = window.URL.createObjectURL(blob);
+            link.download = "export.csv";
+            link.click();
+            $("#downloadModal").modal('hide');
+        },
+        error: function(response) {
+            console.error("An error occurred while exporting the data.");
+            console.error(xhr.responseText);
+        }
     });
 }
 
 // Export data to Excel
 function exportToExcel() {
-    fetchDataForExport().done(function (response) {
-        const workbook = XLSX.utils.book_new();
-        const ws_data = [
-            ["ID", "Growth Type", "Stock ID", "Report Number", "Lab", "Shape", "Weight", "Color", "Clarity", "Rap Amount", "Discounts", "Total Price", "Cut", "Polish", "Symmetry", "Fluorescence Intensity"]
-        ];
-
-        response.data.forEach(item => {
-            ws_data.push([
-                item.id,
-                item.growth_type,
-                item.stock_id,
-                item.report_number,
-                item.lab,
-                item.shape,
-                item.weight,
-                item.color,
-                item.clarity,
-                item.rap_amount,
-                item.discounts,
-                item.total_price,
-                item.cut,
-                item.polish,
-                item.symmetry,
-                item.fluorescence_intensity
-            ]);
-        });
-
-        const ws = XLSX.utils.aoa_to_sheet(ws_data);
-        XLSX.utils.book_append_sheet(workbook, ws, "Sheet1");
-
-        XLSX.writeFile(workbook, "data.xlsx");
+    $.ajax({
+        type: 'POST',
+        url: urlExportXlsx,
+        data: postData,
+        xhrFields: {
+            responseType: 'blob'
+        },
+        success: function(response) {
+            var blob = new Blob([response], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+            var link = document.createElement('a');
+            link.href = window.URL.createObjectURL(blob);
+            link.download = 'export.xlsx';
+            link.click();
+            $("#downloadModal").modal('hide');
+        },
+        error: function(xhr, status, error) {
+            console.error("An error occurred while exporting the data.");
+            console.error(xhr.responseText);
+        }
     });
 }

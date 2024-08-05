@@ -81,9 +81,9 @@
 								<th class="sorting-hide" data-column="id" data-order="asc">
 									No.
 									<span class="sort-icons" style="margin-left: 5px; margin-top: 2px;">
-										<i class="fa-solid fa-sort default hide sorting_icon"></i>
+										{{-- <i class="fa-solid fa-sort default hide sorting_icon"></i> --}}
 										{{-- <i class="fa-solid fa-sort-up ascending sorting_icon"></i> --}}
-										<i class="fa-solid fa-sort-down decending hide sorting_icon"></i>
+										{{-- <i class="fa-solid fa-sort-down decending hide sorting_icon"></i> --}}
 									</span>
 								</th>
 							@else
@@ -125,16 +125,18 @@
 					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 				</div>
 				<div class="modal-body">
-					<div class="contactform" id="downloadCsv">
-						<i class="fa-solid fa-file-csv" style="font-size: xx-large;"></i><span style="margin-left: 10px;">CSV</span>
-					</div>
-					<hr>
-					<div class="contactform" id="downloadExcel">
-						<i class="fa-solid fa-file-excel" style="font-size: xx-large;"></i><span style="margin-left: 10px;">EXCEL</span>
-					</div>
-					<hr>
-					<div class="contactform" id="downloadBoth">
-						<i class="fa-solid fa-file-csv" style="font-size: xx-large;"></i> <span style="margin-left: 10px;">& </span> <i class="fa-solid fa-file-excel" style="font-size: xx-large; margin-left: 10px;"></i><span style="margin-left: 10px;">Both</span>
+					<div class="download_wrapper">
+						<div class="contactform" id="downloadCsv">
+							<i class="fa-solid fa-file-csv" style="font-size: xx-large;"></i><span style="margin-left: 10px;">CSV</span>
+						</div>
+						<hr>
+						<div class="contactform" id="downloadExcel">
+							<i class="fa-solid fa-file-excel" style="font-size: xx-large;"></i><span style="margin-left: 10px;">EXCEL</span>
+						</div>
+						<hr>
+						<div class="contactform" id="downloadBoth">
+							<i class="fa-solid fa-file-csv" style="font-size: xx-large;"></i> <span style="margin-left: 10px;">& </span> <i class="fa-solid fa-file-excel" style="font-size: xx-large; margin-left: 10px;"></i><span style="margin-left: 10px;">Both</span>
+						</div>
 					</div>
 				</div>
 				<div class="modal-footer">
@@ -155,25 +157,25 @@
 				<div class="modal-body">
 					<div class="contactform">
 						<a href="https://api.whatsapp.com/send/?phone=%2B917567364426&text&type=phone_number&app_absent=0" target="_blank"> 
-							<i class="fa-brands fa-whatsapp" style="margin-top: 5px; font-size: larger;"></i><span style="margin-left: 10px;">Navin Test</span>
+							<i class="fa-brands fa-whatsapp" style="margin-top: 5px; font-size: larger;"></i><span style="margin-left: 10px;">+91 75673 64426</span>
 						</a>
 					</div>
 					<hr>
 					<div class="contactform">
 						<a href="https://api.whatsapp.com/send/?phone=%2B917567364426&text&type=phone_number&app_absent=0" target="_blank">
-							<i class="fa-brands fa-whatsapp" style="margin-top: 5px; "></i><span style="margin-left: 10px;">Yogesh Test</span>
+							<i class="fa-brands fa-whatsapp" style="margin-top: 5px; "></i><span style="margin-left: 10px;">+91 75673 64426</span>
 						</a>
 					</div>
 					<hr>
 					<div class="contactform">
 						<a href="tel:+917567364426">
-							<i class="fa-solid fa-phone-volume" style="margin-top: 5px;"></i><span style="margin-left: 10px;">Call:- Navin Test</span>
+							<i class="fa-solid fa-phone-volume" style="margin-top: 5px;"></i><span style="margin-left: 10px;">Call:- +91 75673 64426</span>
 						</a>
 					</div>
 					<hr>
 					<div class="contactform">
 						<a href="tel:+917567364426">
-							<i class="fa-solid fa-phone-volume" style="margin-top: 5px;"></i><span style="margin-left: 10px;">Call:- Yogesh Test</span>
+							<i class="fa-solid fa-phone-volume" style="margin-top: 5px;"></i><span style="margin-left: 10px;">Call:- +91 75673 64426</span>
 						</a>
 					</div>
 				</div>
@@ -349,13 +351,24 @@
 					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 				</div>
 				<div class="modal-body">
+					<!-- <div class="shape_select_wrapper">
+						<div class="form-check custom_checkbox me-2">
+							<input class="form-check-input" type="checkbox" value="Round" id="round">
+							<label class="form-check-label" for="round"><img src="" alt=""> Round</label>
+						</div>
+					</div> -->
 					<div id="fullShapeList">
-						@foreach ($shapes as $key=>$value)
-							<div class="form-check me-3">
-								<input class="form-check-input" type="checkbox" value="{{ $value }}" id="shape{{ $key }}">
-								<label class="form-check-label" for="shape{{ $key }}">{{ $value }}</label>
-							</div>
-						@endforeach
+						<div class="shape_select_wrapper">
+							@foreach ($shapes as $key=>$value)
+								@php
+									$iconPath = asset('image/shape/' . strtoupper($value) . '.svg');
+								@endphp
+								<div class="form-check custom_checkbox me-2">
+									<input class="form-check-input" type="checkbox" value="{{ $value }}" id="shape{{ $key }}">
+									<label class="form-check-label" for="shape{{ $key }}"><img src="{{ $iconPath }}" alt="">  {{ $value }}</label>
+								</div>
+							@endforeach
+						</div>
 					</div>
 				</div>
 				<div class="modal-footer">
@@ -377,7 +390,7 @@
 				<div class="modal-body">
 					<div id="fullColorList">
 						@foreach ($colors as $key=>$value)
-							<div class="form-check me-3">
+							<div class="form-check custom_checkbox me-2">
 								<input class="form-check-input" type="checkbox" value="{{ $value }}" id="color{{ $key }}">
 								<label class="form-check-label" for="color{{ $key }}">{{ $value }}</label>
 							</div>
@@ -403,7 +416,7 @@
 				<div class="modal-body">
 					<div id="fullClarityList">
 						@foreach ($clarities as $key=>$value)
-							<div class="form-check me-3">
+							<div class="form-check custom_checkbox me-2">
 								<input class="form-check-input" type="checkbox" value="{{ $value }}" id="clarity{{ $key }}">
 								<label class="form-check-label" for="clarity{{ $key }}">{{ $value }}</label>
 							</div>
@@ -430,7 +443,7 @@
 					<!-- Cut filter content goes here -->
 					<div id="fullCutList">
 						@foreach ($cuts as $key=>$value)
-							<div class="form-check me-3">
+							<div class="form-check custom_checkbox me-2">
 								<input class="form-check-input" type="checkbox" value="{{ $value }}" id="cut{{ $key }}">
 								<label class="form-check-label" for="cut{{ $key }}">{{ $value }}</label>
 							</div>
@@ -457,7 +470,7 @@
 					<!-- Polish filter content goes here -->
 					<div id="fullPolishList">
 						@foreach ($polish as $key=>$value)
-							<div class="form-check me-3">
+							<div class="form-check custom_checkbox me-2">
 								<input class="form-check-input" type="checkbox" value="{{ $value }}" id="polish{{ $key }}">
 								<label class="form-check-label" for="polish{{ $key }}">{{ $value }}</label>
 							</div>
@@ -484,7 +497,7 @@
 					<!-- Symmetry filter content goes here -->
 					<div id="fullSymmetryList">
 						@foreach ($symmetries as $key=>$value)
-							<div class="form-check me-3">
+							<div class="form-check custom_checkbox me-2">
 								<input class="form-check-input" type="checkbox" value="{{ $value }}" id="symmetries{{ $key }}">
 								<label class="form-check-label" for="symmetries{{ $key }}">{{ $value }}</label>
 							</div>
@@ -510,7 +523,7 @@
 					<form id="labFilter" class="row g-3">
 						<div id="fullLabList" class="col-md-12">
 							@foreach ($labs as $key=>$value)
-								<div class="form-check me-3">
+								<div class="form-check custom_checkbox me-2">
 									<input class="form-check-input" type="checkbox" value="{{ $value }}" id="lab{{ $key }}">
 									<label class="form-check-label" for="lab{{ $key }}">{{ $value }}</label>
 								</div>
@@ -557,6 +570,8 @@
 @section("script")
 	<script>
 		const urlData = '{{ route("diamond.data") }}';
+		const exportCsv = '{{ route("diamond.export.csv") }}';
+		const urlExportXlsx = '{{ route("diamond.export.xlsx") }}';
 		const columns = <?php echo $columns; ?>;
 	</script>
 	<script src="{{ url('js/script.js') }}"></script>

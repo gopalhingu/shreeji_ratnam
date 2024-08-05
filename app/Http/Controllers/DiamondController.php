@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Csv;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use App\Models\Diamond;
 use Illuminate\Support\Facades\Schema;
@@ -80,16 +83,6 @@ class DiamondController extends Controller
         }
     }
 
-    public function format_column($column)
-    {
-        return strtolower(str_replace(" ", "_", str_replace('%', 'percentage', str_replace('#', 'number', $column))));
-    }
-
-    public function format_column_reverse($column)
-    {
-        return ucwords(str_replace("_", " ", str_replace('percentage', '%', str_replace('number', '#', $column))));
-    }
-
     public function list()
     {
         $shapes = Diamond::select('shape')->whereNotNull('shape')->distinct()->pluck('shape');
@@ -99,11 +92,7 @@ class DiamondController extends Controller
         $polish = Diamond::select('polish')->whereNotNull('polish')->distinct()->pluck('polish');
         $symmetries = Diamond::select('symmetry')->whereNotNull('symmetry')->distinct()->pluck('symmetry');
         $labs = Diamond::select('lab')->whereNotNull('lab')->distinct()->pluck('lab');
-        $columns = Schema::getColumnListing('diamonds');
-        $columnWithValue = [];
-        foreach ($columns as $key => $value) {
-            $columnWithValue[$value] = $this->format_column_reverse($value);
-        }
+        $columnWithValue = $this->columnWithValue();
 
         return view("diamond.list",compact('shapes','colors','clarities','cuts','polish','symmetries','labs', 'columnWithValue'));
     }
@@ -114,8 +103,8 @@ class DiamondController extends Controller
         $currentPerPage = $request->input('currentPerPage', 10);
         $currentSortColumn = $request->input('currentSortColumn', 'id');
         $currentSortDirection = $request->input('currentSortDirection', 'asc');
-        $totalPage = $request->input('totalPage', '');
-        $indexID = $request->input('indexID', '');
+        // $totalPage = $request->input('totalPage', '');
+        // $indexID = $request->input('indexID', '');
         $minCarat = $request->input('minCarat', '');
         $maxCarat = $request->input('maxCarat', '');
         $minLength = $request->input('minLength', '');
@@ -240,5 +229,201 @@ class DiamondController extends Controller
     {
         $record = Diamond::all()->toArray();
         return response()->json($record);
+    }
+
+    public function exportCsv(Request $request) {
+
+        $columnWithValue = $this->columnWithValue();
+        $columns_values = array_values($columnWithValue);
+        // array_shift($columns_values);
+        // array_pop($columns_values);
+        // array_pop($columns_values);
+
+        $data = $this->getDataForExport($request);
+
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+
+        // Set headers
+        $sheet->fromArray($columns_values, null, 'A1');
+        // Insert data
+        $sheet->fromArray($data['data'], null, 'A2');
+
+        // Set response headers
+        $filename = 'export.csv';
+        $writer = new Csv($spreadsheet);
+        $temp_file = tempnam(sys_get_temp_dir(), $filename);
+        $writer->save($temp_file);
+
+        return response()->download($temp_file, $filename)->deleteFileAfterSend(true);
+    }
+
+    public function exportXlsx(Request $request) {
+
+        $columnWithValue = $this->columnWithValue();
+        $columns_values = array_values($columnWithValue);
+        // array_shift($columns_values);
+        // array_pop($columns_values);
+        // array_pop($columns_values);
+
+        $data = $this->getDataForExport($request);
+
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+
+        // Set headers
+        $sheet->fromArray($columns_values, null, 'A1');
+        // Insert data
+        $sheet->fromArray($data['data'], null, 'A2');
+
+        // Set response headers
+        $filename = 'export.xlsx';
+        $writer = new Xlsx($spreadsheet);
+        $temp_file = tempnam(sys_get_temp_dir(), $filename);
+        $writer->save($temp_file);
+
+        return response()->download($temp_file, $filename)->deleteFileAfterSend(true);
+    }
+
+    private function format_column($column)
+    {
+        return strtolower(str_replace(" ", "_", str_replace('%', 'percentage', str_replace('#', 'number', $column))));
+    }
+
+    private function format_column_reverse($column)
+    {
+        return ucwords(str_replace("_", " ", str_replace('percentage', '%', str_replace('number', '#', $column))));
+    }
+
+    private function columnWithValue()
+    {
+        $columns = Schema::getColumnListing('diamonds');
+        $columnWithValue = [];
+        foreach ($columns as $key => $value) {
+            $columnWithValue[$value] = $this->format_column_reverse($value);
+        }
+        return $columnWithValue;
+    }
+
+    private function getDataForExport(Request $request)
+    {
+        // $currentPage = $request->input('currentPage', 1);
+        // $currentPerPage = $request->input('currentPerPage', 10);
+        $currentSortColumn = $request->input('currentSortColumn', 'id');
+        $currentSortDirection = $request->input('currentSortDirection', 'asc');
+        // $totalPage = $request->input('totalPage', '');
+        // $indexID = $request->input('indexID', '');
+        $minCarat = $request->input('minCarat', '');
+        $maxCarat = $request->input('maxCarat', '');
+        $minLength = $request->input('minLength', '');
+        $maxLength = $request->input('maxLength', '');
+        $minWidth = $request->input('minWidth', '');
+        $maxWidth = $request->input('maxWidth', '');
+        $minHeight = $request->input('minHeight', '');
+        $maxHeight = $request->input('maxHeight', '');
+        $minDepth = $request->input('minDepth', '');
+        $maxDepth = $request->input('maxDepth', '');
+        $minRatio = $request->input('minRatio', '');
+        $maxRatio = $request->input('maxRatio', '');
+        $minTable = $request->input('minTable', '');
+        $maxTable = $request->input('maxTable', '');
+        $stockId = $request->input('stockId', '');
+        $reportNumber = $request->input('reportNumber', '');
+        $type = $request->input('type', '');
+        $shapeList = $request->input('shapeList', []);
+        $colorList = $request->input('colorList', []);
+        $clarityList = $request->input('clarityList', []);
+        $cutList = $request->input('cutList', []);
+        $polishList = $request->input('polishList', []);
+        $symmetryList = $request->input('symmetryList', []);
+        $labList = $request->input('labList', []);
+
+        // Query the database with pagination and sorting
+        $query = Diamond::query()
+        ->when($minCarat, function ($query, $minCarat) {
+            return $query->where('price_per_carat', '>=', $minCarat);
+        })
+        ->when($maxCarat, function ($query, $maxCarat) {
+            return $query->where('price_per_carat', '<=', $maxCarat);
+        })
+        ->when($minLength, function ($query, $minLength) {
+            return $query->where('length', '>=', $minLength);
+        })
+        ->when($maxLength, function ($query, $maxLength) {
+            return $query->where('length', '<=', $maxLength);
+        })
+        ->when($minWidth, function ($query, $minWidth) {
+            return $query->where('width', '>=', $minWidth);
+        })
+        ->when($maxWidth, function ($query, $maxWidth) {
+            return $query->where('width', '<=', $maxWidth);
+        })
+        ->when($minHeight, function ($query, $minHeight) {
+            return $query->where('height', '>=', $minHeight);
+        })
+        ->when($maxHeight, function ($query, $maxHeight) {
+            return $query->where('height', '<=', $maxHeight);
+        })
+        ->when($minDepth, function ($query, $minDepth) {
+            return $query->where('depth_percentage', '>=', $minDepth);
+        })
+        ->when($maxDepth, function ($query, $maxDepth) {
+            return $query->where('depth_percentage', '<=', $maxDepth);
+        })
+        ->when($minRatio, function ($query, $minRatio) {
+            return $query->where('ratio', '>=', $minRatio);
+        })
+        ->when($maxRatio, function ($query, $maxRatio) {
+            return $query->where('ratio', '<=', $maxRatio);
+        })
+        ->when($minTable, function ($query, $minTable) {
+            return $query->where('table_percentage', '>=', $minTable);
+        })
+        ->when($maxTable, function ($query, $maxTable) {
+            return $query->where('table_percentage', '<=', $maxTable);
+        })
+        ->when($stockId, function ($query, $stockId) {
+            return $query->where('stock_id', $stockId);
+        })
+        ->when($reportNumber, function ($query, $reportNumber) {
+            return $query->where('report_number', $reportNumber);
+        })
+        ->when($type, function ($query, $type) {
+            return $query->where('growth_type', $type);
+        })
+        ->when($shapeList, function ($query, $shapeList) {
+            return $query->whereIn('shape', $shapeList);
+        })
+        ->when($colorList, function ($query, $colorList) {
+            return $query->whereIn('color', $colorList);
+        })
+        ->when($clarityList, function ($query, $clarityList) {
+            return $query->whereIn('clarity', $clarityList);
+        })
+        ->when($cutList, function ($query, $cutList) {
+            return $query->whereIn('cut', $cutList);
+        })
+        ->when($polishList, function ($query, $polishList) {
+            return $query->whereIn('polish', $polishList);
+        })
+        ->when($symmetryList, function ($query, $symmetryList) {
+            return $query->whereIn('symmetry', $symmetryList);
+        })
+        ->when($labList, function ($query, $labList) {
+            return $query->whereIn('lab', $labList);
+        })
+        ->orderBy($currentSortColumn, $currentSortDirection);
+
+        $totalCarat = $query->sum('weight') ?: 0;
+        $totalAmount = $query->sum('total_price') ?: 0;
+
+        $record = $query->get()->toArray();
+
+        return [
+            'data' => $record,
+            'total_record' => count($record),
+            'total_carat' => $totalCarat,
+            'total_amount' => $totalAmount,
+        ];
     }
 }

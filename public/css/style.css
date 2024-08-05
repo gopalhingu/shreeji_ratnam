@@ -452,19 +452,80 @@ tbody tr.hover:not(.selected) td {
 
 .contactform {
     display: flex;
-    justify-content: center;
+    justify-content: flex-start;
     font-size: larger;
+    align-items: center;
+}
+.contactform  a{
+    display: flex;
+    align-items: center;
+}
+
+.contactform i{
+    font-size: 20px !important;
+    width: 50px;
+    height: 50px;
+    text-align: center;
+    line-height: 50px;
+    border-radius: 50%;
+    background: var(--color-primary-200);
+    color: var(--color-primary-500);
+}
+#contactModal .modal-dialog,
+#downloadModal .modal-dialog {
+    max-width: 350px;
+    margin: 0 auto;
+}
+.custom_checkbox{
+    display: inline-block;
+    padding: 0;
+}
+.custom_checkbox .form-check-input{
+    display: none;
+}
+.custom_checkbox  .form-check-label{
+    padding: 5px 20px;
+    border: 1px solid #ddd;
+    border-radius: 40px;
+}
+.custom_checkbox .form-check-input:checked + .form-check-label{
+    background: var(--color-primary-500);
+    color: #fff;
+}
+
+.shape_select_wrapper .custom_checkbox .form-check-label {
+    padding: 5px 15px;
+    border: 1px solid #ddd;
+    border-radius: 7px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-size: 12px;
+}
+.shape_select_wrapper .custom_checkbox .form-check-label img{
+    width: 50px;
+    height: 50px;
+    object-fit: contain;
+    margin: 0 0 5px;
+    filter: grayscale(1);
+}
+.shape_select_wrapper .custom_checkbox .form-check-input:checked + .form-check-label img{
+    filter: inherit;
 }
 
 @media (max-width: 767px) {
     .main-header {
         display: block;
     }
+    .content {
+        padding: 15px;
+    }
 
     .action-buttons,
     .action-button {
         display: flex;
-        flex-direction: column;
+        /* flex-direction: column; */
         gap: .5rem;
     }
 
@@ -488,6 +549,43 @@ tbody tr.hover:not(.selected) td {
 
     .summary-items {
         flex-direction: column;
+    }
+
+    .table-footer.grid {
+        align-items: center;
+        display: grid;
+        grid-auto-flow: column;
+        justify-content: space-between;
+    }
+    .table-footer.grid > span{
+        text-align: center;
+        margin: 0 15px 0 0;
+    }
+    .table-footer.grid  .paging.grid{
+        align-items: center;
+        display: grid;
+        gap: .75rem;
+        grid-auto-flow: column;
+    }
+    .table-footer.grid  .paging.grid > span{
+        display: none;
+    }
+    .card:has(table){
+        padding: 0;
+    }
+    .summary {
+        background-color: transparent;
+        padding: 10px 0;
+    }
+    .summary-line {
+        border-bottom: 0;
+        background: var(--color-primary-200);
+    }
+    .summary-items {
+        background: var(--color-primary-200);
+    }
+    .action-button button, .action-buttons select {
+        margin-left: 0;
     }
 }
 
