@@ -13,7 +13,6 @@
 	array_pop($columns);
 	$columns = json_encode($columns);
 @endphp
-
 <div>
 	<div class="content">
 		<section class="table-header grid">
@@ -34,7 +33,7 @@
 				<button class="button" title="Download Options" data-bs-toggle="modal" data-bs-target="#downloadModal">
 					<i class="fa-solid fa-download icon-size"></i>
 				</button>
-				<button class="button contact-button"" title="Contact us" data-bs-toggle="modal" data-bs-target="#contactModal">
+				<button class="button contact-button" title="Contact us" data-bs-toggle="modal" data-bs-target="#contactModal">
 					<i class="fa-solid fa-phone-volume icon-size"></i>
 				</button>
 				<button class="button whatsapp-button" title="Whawhatsapp" data-bs-toggle="modal" data-bs-target="#whatsappModal" style="display:none">
@@ -52,8 +51,8 @@
 				<div class="summary-item summary-line summary-total-amount"></div>
 				<div class="summary-items">
 					<span>
-					<a href="mailto:xxdiamond@gmail.com">Email: xxdiamond@gmail.com</a><br>
-					<a href="tel:+917567XXXXXX">Call: +917567XXXXXX</a>
+					<a href="mailto:shreejiratnam@yahoo.com">Email: shreejiratnam@yahoo.com</a><br>
+					<a href="tel:+919662868968">Call: +919662868968</a>
 					</span>
 				</div>
 			</div>
@@ -156,26 +155,62 @@
 				</div>
 				<div class="modal-body">
 					<div class="contactform">
-						<a href="https://api.whatsapp.com/send/?phone=%2B917567364426&text&type=phone_number&app_absent=0" target="_blank"> 
-							<i class="fa-brands fa-whatsapp" style="margin-top: 5px; font-size: larger;"></i><span style="margin-left: 10px;">+91 75673 64426</span>
+					<a href="https://api.whatsapp.com/send/?phone=%2B919662868968&text&type=phone_number&app_absent=0" target="_blank">
+						<i class="fa-solid fa-brands fa-whatsapp" style="margin-top: 5px;"></i>
+						<div class="contact-info">
+							<span class="contact-name">Shailesh</span>
+							<span class="contact-number">+91 9662868968</span>
+						</div>
+					</a>
+					</div>
+					<hr>
+					<div class="contactform">
+						<a href="https://api.whatsapp.com/send/?phone=%2B918238615800&text&type=phone_number&app_absent=0" target="_blank">
+							<i class="fa-solid fa-brands fa-whatsapp" ></i>
+							<div class="contact-info">
+								<span class="contact-name">Kaushal</span>
+								<span class="contact-number">+91 8238615800</span>
+							</div>
 						</a>
 					</div>
 					<hr>
 					<div class="contactform">
-						<a href="https://api.whatsapp.com/send/?phone=%2B917567364426&text&type=phone_number&app_absent=0" target="_blank">
-							<i class="fa-brands fa-whatsapp" style="margin-top: 5px; "></i><span style="margin-left: 10px;">+91 75673 64426</span>
+						<a href="https://api.whatsapp.com/send/?phone=%2B919727408511&text&type=phone_number&app_absent=0" target="_blank">
+							<i class="fa-solid fa-brands fa-whatsapp" ></i>
+							<div class="contact-info">
+								<span class="contact-name">Drashti</span>
+								<span class="contact-number">+91 9727408511</span>
+							</div>
 						</a>
 					</div>
 					<hr>
 					<div class="contactform">
-						<a href="tel:+917567364426">
-							<i class="fa-solid fa-phone-volume" style="margin-top: 5px;"></i><span style="margin-left: 10px;">Call:- +91 75673 64426</span>
+						<a href="tel:+919662868968">
+							<i class="fa-solid fa-phone-volume" ></i>
+							<div class="contact-info">
+								<span class="contact-name">Shailesh</span>
+								<span class="contact-number">Call:- +91 9662868968</span>
+							</div>
 						</a>
 					</div>
 					<hr>
 					<div class="contactform">
-						<a href="tel:+917567364426">
-							<i class="fa-solid fa-phone-volume" style="margin-top: 5px;"></i><span style="margin-left: 10px;">Call:- +91 75673 64426</span>
+						<a href="tel:+918238615800">
+							<i class="fa-solid fa-phone-volume" ></i>
+							<div class="contact-info">
+								<span class="contact-name">Kaushal</span>
+								<span class="contact-number">Call:- +91 8238615800</span>
+							</div>
+						</a>
+					</div>
+					<hr>
+					<div class="contactform">
+						<a href="tel:+9727408511">
+							<i class="fa-solid fa-phone-volume" ></i>
+							<div class="contact-info">
+								<span class="contact-name">Drashti</span>
+								<span class="contact-number">Call:- +91 9727408511</span>
+							</div>
 						</a>
 					</div>
 				</div>
@@ -547,6 +582,10 @@
 					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 				</div>
 				<div class="modal-body">
+					<div class="whatsappform">
+						<i class="fa-brands fa-whatsapp" style="margin-top: 5px; font-size: larger;"></i><span style="margin-left: 10px;">Navin Test</span>
+					</div>
+					<hr>
 					<div class="whatsappform">
 						<i class="fa-brands fa-whatsapp" style="margin-top: 5px; font-size: larger;"></i><span style="margin-left: 10px;">Navin Test</span>
 					</div>

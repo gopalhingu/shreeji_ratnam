@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Csv;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use PhpOffice\PhpSpreadsheet\Style\Fill;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use App\Models\Diamond;
 use Illuminate\Support\Facades\Schema;
@@ -104,7 +105,6 @@ class DiamondController extends Controller
         $currentSortColumn = $request->input('currentSortColumn', 'id');
         $currentSortDirection = $request->input('currentSortDirection', 'asc');
         // $totalPage = $request->input('totalPage', '');
-        // $indexID = $request->input('indexID', '');
         $minCarat = $request->input('minCarat', '');
         $maxCarat = $request->input('maxCarat', '');
         $minLength = $request->input('minLength', '');
@@ -231,23 +231,27 @@ class DiamondController extends Controller
         return response()->json($record);
     }
 
-    public function exportCsv(Request $request) {
-
-        $columnWithValue = $this->columnWithValue();
-        $columns_values = array_values($columnWithValue);
-        // array_shift($columns_values);
-        // array_pop($columns_values);
-        // array_pop($columns_values);
-
+    public function exportCsv(Request $request) 
+    {
+        $column = $this->columnWithValue();
         $data = $this->getDataForExport($request);
+        $excelData = $this->excelData($column, $data);
 
         $spreadsheet = new Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
 
         // Set headers
-        $sheet->fromArray($columns_values, null, 'A1');
+        $sheet->fromArray($excelData['header'], null, 'A1');
+
         // Insert data
-        $sheet->fromArray($data['data'], null, 'A2');
+        $sheet->fromArray($excelData['data'], null, 'A2');
+
+        // Add custom row at the end
+        $lastRow = $sheet->getHighestRow() + 2;
+        $sheet->setCellValue("G{$lastRow}", $excelData['totalWeight']);
+        $sheet->setCellValue("Y{$lastRow}", $excelData['averageAmount']);
+        $sheet->setCellValue("Z{$lastRow}", $excelData['totalAmount']);
+        $sheet->getStyle("A{$lastRow}:AY{$lastRow}")->getFont()->setBold(true);
 
         // Set response headers
         $filename = 'export.csv';
@@ -258,23 +262,64 @@ class DiamondController extends Controller
         return response()->download($temp_file, $filename)->deleteFileAfterSend(true);
     }
 
-    public function exportXlsx(Request $request) {
-
-        $columnWithValue = $this->columnWithValue();
-        $columns_values = array_values($columnWithValue);
-        // array_shift($columns_values);
-        // array_pop($columns_values);
-        // array_pop($columns_values);
-
+    public function exportXlsx(Request $request) 
+    {
+        $column = $this->columnWithValue();
         $data = $this->getDataForExport($request);
-
+        $excelData = $this->excelData($column, $data);
+        
         $spreadsheet = new Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
 
         // Set headers
-        $sheet->fromArray($columns_values, null, 'A1');
+        $sheet->fromArray($excelData['header'], null, 'A1');
+
         // Insert data
-        $sheet->fromArray($data['data'], null, 'A2');
+        $sheet->fromArray($excelData['data'], null, 'A2');
+
+        // Make the first row bold
+        $sheet->getStyle('A1:' . $sheet->getHighestColumn() . '1')->getFont()->setBold(true);
+
+        // Freeze the first column
+        $sheet->freezePane('A2');
+
+        // Set auto column widths
+        foreach (range('A', $sheet->getHighestColumn()) as $columnID) {
+            $sheet->getColumnDimension($columnID)->setAutoSize(true);
+        }
+
+        // Manually set column widths
+        $columnIndex = 0;
+        foreach ($excelData['header'] as $header) {
+            $maxLength = strlen($header);
+            foreach ($excelData['data'] as $row) {
+                if (isset($row[$columnIndex])) {
+                    $length = strlen($row[$columnIndex]);
+                    if ($length > $maxLength) {
+                        $maxLength = $length;
+                    }
+                }
+            }
+            $sheet->getColumnDimensionByColumn($columnIndex + 1)->setWidth($maxLength + 2);
+            $columnIndex++;
+        }
+
+        // Add custom row at the end
+        $lastRow = $sheet->getHighestRow() + 2;
+        $sheet->setCellValue("G{$lastRow}", $excelData['totalWeight']);
+        $sheet->setCellValue("Y{$lastRow}", $excelData['averageAmount']);
+        $sheet->setCellValue("Z{$lastRow}", $excelData['totalAmount']);
+        $sheet->getStyle("A{$lastRow}:{$sheet->getHighestColumn()}{$lastRow}")->getFont()->setBold(true);
+
+        // Set background color for a specific column 
+        $colorColumn = ['G', 'Y', 'Z'];
+        foreach ($colorColumn as $key => $value) {
+            $sheet->getStyle($value . '1:' . $value . $sheet->getHighestRow())
+                ->getFill()
+                ->setFillType(Fill::FILL_SOLID)
+                ->getStartColor()
+                ->setARGB('FFFF00'); // Yellow color
+        }
 
         // Set response headers
         $filename = 'export.xlsx';
@@ -283,6 +328,41 @@ class DiamondController extends Controller
         $writer->save($temp_file);
 
         return response()->download($temp_file, $filename)->deleteFileAfterSend(true);
+    }
+
+    private function excelData($column, $data) 
+    {
+        $exception = ['id', 'created_at', 'updated_at'];
+        $header = ['Serial No.'];
+        $totalWeight = 0;
+        $totalAmount = 0;
+        $averageAmount = 0;
+        $excelArray = [];
+        $i = 0;
+        foreach ($data as $key => $value) {
+            $array = [];
+            $array['id'] = $i += 1;
+            $totalWeight += (float)$value['weight'];
+            $totalAmount += (float)$value['total_price'];
+            foreach ($column as $k => $v) {
+                if(in_array($k, $exception)) {
+                    continue;
+                }
+                if ($key == 0) {
+                    $header[] = $v;
+                }
+                $array[$k] = $value[$k];
+            }
+            $excelArray[] = $array;
+        }
+        $averageAmount = round(($totalAmount / $totalWeight), 2);
+        return [
+            'header' => $header,
+            'data' => $excelArray,
+            'totalWeight' => $totalWeight,
+            'totalAmount' => $totalAmount,
+            'averageAmount' => $averageAmount,
+        ];
     }
 
     private function format_column($column)
@@ -312,7 +392,6 @@ class DiamondController extends Controller
         $currentSortColumn = $request->input('currentSortColumn', 'id');
         $currentSortDirection = $request->input('currentSortDirection', 'asc');
         // $totalPage = $request->input('totalPage', '');
-        // $indexID = $request->input('indexID', '');
         $minCarat = $request->input('minCarat', '');
         $maxCarat = $request->input('maxCarat', '');
         $minLength = $request->input('minLength', '');
@@ -414,16 +493,7 @@ class DiamondController extends Controller
         })
         ->orderBy($currentSortColumn, $currentSortDirection);
 
-        $totalCarat = $query->sum('weight') ?: 0;
-        $totalAmount = $query->sum('total_price') ?: 0;
-
         $record = $query->get()->toArray();
-
-        return [
-            'data' => $record,
-            'total_record' => count($record),
-            'total_carat' => $totalCarat,
-            'total_amount' => $totalAmount,
-        ];
+        return  $record;
     }
 }

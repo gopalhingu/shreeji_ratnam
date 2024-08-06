@@ -7,7 +7,6 @@ let defaultFilter = {
     currentSortColumn: 'id',
     currentSortDirection: 'asc',
     totalPage: 0,
-    indexID: 0,
 };
 
 let singleFilter = {
@@ -69,7 +68,6 @@ function clearFilters() {
     defaultFilter['currentSortColumn'] = 'id';
     defaultFilter['currentSortDirection'] = 'asc';
     defaultFilter['totalPage'] = 0;
-    defaultFilter['indexID'] = 0;
     
     // Clear single filter
     $.each(singleFilter, function(k, v) {
@@ -139,7 +137,6 @@ function applyFilter(modalId, fullListId, placeholderMessage, tagClass, id) {
         });
     }
     $(modalId).modal('hide');
-    defaultFilter['indexID'] = 0;
     fetchData();
 }
 
@@ -179,7 +176,6 @@ function removeTag(tag, id, fullListId, placeholderMessage) {
     if ($(id + ' .badge').length === 0) {
         $("#"+id).html(placeholder[id]);
     }
-    defaultFilter['indexID'] = 0;
     fetchData();
 }
 
@@ -262,7 +258,6 @@ $(document).ready(function () {
     $(document).on('click', '.filter-button', function (e) {
         e.preventDefault();
         defaultFilter['currentPage'] = 1;
-        defaultFilter['indexID'] = 0;
         fetchData();
         $('#filterModal').modal('hide');
     });
@@ -305,7 +300,6 @@ $(document).ready(function () {
 
         defaultFilter['currentPage'] = 1;
         defaultFilter['currentPerPage'] = $(this).val();
-        defaultFilter['indexID'] = 0;
         fetchData();
     });
 
@@ -404,6 +398,14 @@ $(document).ready(function () {
         e.preventDefault();
 
         defaultFilter['currentPage'] = $(this).val();
+
+        if(defaultFilter['currentPage'] > defaultFilter['totalPage']) {
+            alert("Please Enter less than total page");
+            defaultFilter['currentPage'] = '';
+            $(this).val('');
+            return;
+        }
+
         fetchData();
 
         if (defaultFilter['currentPage'] <= 1) {
@@ -438,15 +440,17 @@ function fetchData() {
         method: 'POST',
         data: postData,
         success: function (response) {
+            var i = response.from;
             var rows = '';
             $.each(response.data, function (index, item) {
                 rows += '<tr class="">';
                 rows += '<td><div class="checkbox selectSingle"><input type="checkbox" data-id="' + item.id + '" /><span class=""></span></div></td>';
-                rows += '<td>' + (defaultFilter['indexID'] += 1) + '</td>';
+                rows += '<td>' + i + '</td>';
                 $.each(columns, function(k, v) {                    
                     rows += '<td>' + ((item[v] != null) ? item[v] : '-') + '</td>';
                 });
                 rows += '</tr>';
+                i++;
             });
 
             if (response.data.length == 0) {
