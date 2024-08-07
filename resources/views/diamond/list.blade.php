@@ -631,5 +631,5 @@
 		const urlExportXlsx = '{{ route("diamond.export.xlsx") }}';
 		const columns = <?php echo $columns; ?>;
 	</script>
-	<script src="{{ url('js/script.js') }}"></script>
+	<script src="{{ url('js/script.js') }}?t={{ time() }}"></script>
 @endsection
