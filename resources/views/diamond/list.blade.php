@@ -232,72 +232,72 @@
 				<div class="modal-body" style="max-height: 70vh; overflow-y: auto;">
 					<form id="caratFilter" class="row g-3">
 						<!-- Min Carat Filter -->
-						<div class="col-md-6 form-floating">
+						<div class="col-6 form-floating">
 							<input type="text" class="form-control" id="minCarat" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');" placeholder=" " />
 							<label for="minCarat">Min Carat</label>
 						</div>
 						<!-- Max Carat Filter -->
-						<div class="col-md-6 form-floating">
+						<div class="col-6 form-floating">
 							<input type="text" class="form-control" id="maxCarat" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');" placeholder=" " />
 							<label for="maxCarat">Max Carat</label>
 						</div>
 						<!-- Min Length Filter -->
-						<div class="col-md-6 form-floating">
+						<div class="col-6 form-floating">
 							<input type="text" class="form-control" id="minLength" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');" placeholder=" " />
 							<label for="minLength">Min Length</label>
 						</div>
 						<!-- Max Length Filter -->
-						<div class="col-md-6 form-floating">
+						<div class="col-6 form-floating">
 							<input type="text" class="form-control" id="maxLength" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');" placeholder=" " />
 							<label for="maxLength">Max Length</label>
 						</div>
 						<!-- Min Width Filter -->
-						<div class="col-md-6 form-floating">
+						<div class="col-6 form-floating">
 							<input type="text" class="form-control" id="minWidth" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');" placeholder=" " />
 							<label for="minWidth">Min Width</label>
 						</div>
 						<!-- Max Width Filter -->
-						<div class="col-md-6 form-floating">
+						<div class="col-6 form-floating">
 							<input type="text" class="form-control" id="maxWidth" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');" placeholder=" " />
 							<label for="maxWidth">Max Width</label>
 						</div>
 						<!-- Min Height Filter -->
-						<div class="col-md-6 form-floating">
+						<div class="col-6 form-floating">
 							<input type="text" class="form-control" id="minHeight" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');" placeholder=" " />
 							<label for="minHeight">Min Height</label>
 						</div>
 						<!-- Max Height Filter -->
-						<div class="col-md-6 form-floating">
+						<div class="col-6 form-floating">
 							<input type="text" class="form-control" id="maxHeight" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');" placeholder=" " />
 							<label for="maxHeight">Max Height</label>
 						</div>
 						<!-- Min Depth Filter -->
-						<div class="col-md-6 form-floating">
+						<div class="col-6 form-floating">
 							<input type="text" class="form-control" id="minDepth" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');" placeholder=" " />
 							<label for="minDepth">Min Depth</label>
 						</div>
 						<!-- Max Depth Filter -->
-						<div class="col-md-6 form-floating">
+						<div class="col-6 form-floating">
 							<input type="text" class="form-control" id="maxDepth" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');" placeholder=" " />
 							<label for="maxDepth">Max Depth</label>
 						</div>
 						<!-- Min Ratio Filter -->
-						<div class="col-md-6 form-floating">
+						<div class="col-6 form-floating">
 							<input type="text" class="form-control" id="minRatio" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');" placeholder=" " />
 							<label for="minRatio">Min Ratio</label>
 						</div>
 						<!-- Max Ratio Filter -->
-						<div class="col-md-6 form-floating">
+						<div class="col-6 form-floating">
 							<input type="text" class="form-control" id="maxRatio" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');" placeholder=" " />
 							<label for="maxRatio">Max Ratio</label>
 						</div>
 						<!-- Min Table Filter -->
-						<div class="col-md-6 form-floating">
+						<div class="col-6 form-floating">
 							<input type="text" class="form-control" id="minTable" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');" placeholder=" " />
 							<label for="minTable">Min Table</label>
 						</div>
 						<!-- Max Table Filter -->
-						<div class="col-md-6 form-floating">
+						<div class="col-6 form-floating">
 							<input type="text" class="form-control" id="maxTable" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');" placeholder=" " />
 							<label for="maxTable">Max Table</label>
 						</div>
@@ -582,16 +582,34 @@
 					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 				</div>
 				<div class="modal-body">
-					<div class="whatsappform">
-						<i class="fa-brands fa-whatsapp" style="margin-top: 5px; font-size: larger;"></i><span style="margin-left: 10px;">Navin Test</span>
+					<div class="contactform whatsappform">
+						<a href="#">
+							<i class="fa-solid fa-brands fa-whatsapp" style="margin-top: 5px;"></i>
+							<div class="contact-info">
+								<span class="contact-name">Shailesh</span>
+								<span class="contact-number">+91 9662868968</span>
+							</div>
+						</a>
 					</div>
 					<hr>
-					<div class="whatsappform">
-						<i class="fa-brands fa-whatsapp" style="margin-top: 5px; font-size: larger;"></i><span style="margin-left: 10px;">Navin Test</span>
+					<div class="contactform whatsappform">
+						<a href="#">
+							<i class="fa-solid fa-brands fa-whatsapp" ></i>
+							<div class="contact-info">
+								<span class="contact-name">Kaushal</span>
+								<span class="contact-number">+91 8238615800</span>
+							</div>
+						</a>
 					</div>
 					<hr>
-					<div class="whatsappform">
-						<i class="fa-brands fa-whatsapp" style="margin-top: 5px; font-size: larger;"></i><span style="margin-left: 10px;">Yogesh Test</span>
+					<div class="contactform whatsappform">
+						<a href="#">
+							<i class="fa-solid fa-brands fa-whatsapp" ></i>
+							<div class="contact-info">
+								<span class="contact-name">Drashti</span>
+								<span class="contact-number">+91 9727408511</span>
+							</div>
+						</a>
 					</div>
 				</div>
 				<div class="modal-footer">

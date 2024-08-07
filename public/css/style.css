@@ -485,6 +485,7 @@ tbody tr.hover:not(.selected) td {
 .custom_checkbox{
     display: inline-block;
     padding: 0;
+    margin-bottom: 10px;
 }
 .custom_checkbox .form-check-input{
     display: none;
@@ -498,9 +499,12 @@ tbody tr.hover:not(.selected) td {
     background: var(--color-primary-500);
     color: #fff;
 }
-
+.shape_select_wrapper{
+    display: flex;
+    flex-wrap: wrap;
+}
 .shape_select_wrapper .custom_checkbox .form-check-label {
-    padding: 5px 15px;
+    padding: 9px 15px;
     border: 1px solid #ddd;
     border-radius: 7px;
     display: flex;
@@ -508,10 +512,14 @@ tbody tr.hover:not(.selected) td {
     justify-content: center;
     align-items: center;
     font-size: 12px;
+    line-height: 14px;
+    width: 100px;
+    text-align: center;
+    height: 100px;
 }
 .shape_select_wrapper .custom_checkbox .form-check-label img{
-    width: 50px;
-    height: 50px;
+    width: 40px;
+    height: 40px;
     object-fit: contain;
     margin: 0 0 5px;
     filter: grayscale(1);
@@ -594,7 +602,14 @@ tbody tr.hover:not(.selected) td {
         margin-left: 0;
     }
 }
-
+@media (max-width: 481px){
+    .custom_checkbox {
+        width: calc(50% - .5rem);
+    }
+    .shape_select_wrapper .custom_checkbox .form-check-label {
+        width: 100%;
+    }
+}
 .label-on-border {
     position: absolute;
     top: 0;

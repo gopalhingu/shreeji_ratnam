@@ -10,6 +10,7 @@ use PhpOffice\PhpSpreadsheet\Style\Fill;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use App\Models\Diamond;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\Artisan;
 
 class DiamondController extends Controller
 {
@@ -86,6 +87,15 @@ class DiamondController extends Controller
 
     public function list()
     {
+        Artisan::call('view:clear');
+        // Artisan::call('view:cache');
+        // Artisan::call('route:clear');
+        // Artisan::call('route:cache');
+        // Artisan::call('config:clear');
+        // Artisan::call('config:cache');
+        // Artisan::call('optimize');
+        Artisan::call('optimize:clear');
+
         $shapes = Diamond::select('shape')->whereNotNull('shape')->distinct()->pluck('shape');
         $colors = Diamond::select('color')->whereNotNull('color')->distinct()->pluck('color');
         $clarities = Diamond::select('clarity')->whereNotNull('clarity')->distinct()->pluck('clarity');

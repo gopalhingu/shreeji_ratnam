@@ -231,27 +231,18 @@ document.addEventListener('DOMContentLoaded', function () {
 $(document).ready(function () {
 
     $('.whatsappform').on('click', function () {
-        // Get the contact name and phone number
-        var contactName = $(this).text().trim();
-        // var phoneNumber = contactName === "Lav meruliya" ? "+917567364426" : "+919876543210";
-        var phoneNumber = "+917567364426";
-
+      
         // Get selected stock IDs
         var selectedStockIDs = [];
         $('.selectSingle input[type="checkbox"]:checked').each(function () {
             var stockID = $(this).closest('tr').find('.stock-id').text();
             selectedStockIDs.push(stockID);
         });
-
-        // Format the stock IDs into the message
         var stockIDText = selectedStockIDs.join('\n');
 
+        const phone_number = $(this).find('.contact-info').find('.contact-number').text().replace(/\D/g, '');
         const encodedText = encodeURIComponent(stockIDText);
-
-        // Create the WhatsApp URL
-        const whatsappURL = `https://api.whatsapp.com/send/?phone=%2B916352743508&text=I%20Want%20To%20Select%20This%20Stock%20IDs%3A%0A${encodedText}&type=phone_number&app_absent=0`;
-
-        // Redirect to WhatsApp URL
+        const whatsappURL = `https://api.whatsapp.com/send/?phone=%2B${phone_number}&text=I%20Want%20To%20Select%20This%20Stock%20IDs%3A%0A${encodedText}&type=phone_number&app_absent=0`;
         window.open(whatsappURL, '_blank');
     });
 
@@ -446,8 +437,12 @@ function fetchData() {
                 rows += '<tr class="">';
                 rows += '<td><div class="checkbox selectSingle"><input type="checkbox" data-id="' + item.id + '" /><span class=""></span></div></td>';
                 rows += '<td>' + i + '</td>';
-                $.each(columns, function(k, v) {                    
-                    rows += '<td>' + ((item[v] != null) ? item[v] : '-') + '</td>';
+                $.each(columns, function(k, v) { 
+                    if(v == 'stock_id') {
+                        rows += '<td class="stock-id">' + ((item[v] != null) ? item[v] : '-') + '</td>';
+                    } else {
+                        rows += '<td>' + ((item[v] != null) ? item[v] : '-') + '</td>';
+                    }
                 });
                 rows += '</tr>';
                 i++;
