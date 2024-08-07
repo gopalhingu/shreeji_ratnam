@@ -1,7 +1,7 @@
 @extends("layout.main")
 
 @section("css")
-    <link rel="stylesheet" href="{{ url('css/style.css') }}">
+    <link rel="stylesheet" href="{{ url('css/style.css') }}?t={{ time() }}">
 @endsection
 
 @section("content")
