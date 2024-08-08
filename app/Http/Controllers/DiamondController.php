@@ -98,7 +98,7 @@ class DiamondController extends Controller
 
         $shapes = Diamond::select('shape')->whereNotNull('shape')->distinct()->pluck('shape');
         $colors = Diamond::select('color')->whereNotNull('color')->distinct()->pluck('color');
-        $clarities = Diamond::select('clarity')->whereNotNull('clarity')->distinct()->pluck('clarity');
+        $clarities = Diamond::select('clarity')->whereNotNull('clarity')->distinct()->orderBy('clarity', 'ASC')->pluck('clarity');
         $cuts = Diamond::select('cut')->whereNotNull('cut')->distinct()->pluck('cut');
         $polish = Diamond::select('polish')->whereNotNull('polish')->distinct()->pluck('polish');
         $symmetries = Diamond::select('symmetry')->whereNotNull('symmetry')->distinct()->pluck('symmetry');
@@ -143,10 +143,10 @@ class DiamondController extends Controller
         // Query the database with pagination and sorting
         $query = Diamond::query()
         ->when($minCarat, function ($query, $minCarat) {
-            return $query->where('price_per_carat', '>=', $minCarat);
+            return $query->where('weight', '>=', $minCarat);
         })
         ->when($maxCarat, function ($query, $maxCarat) {
-            return $query->where('price_per_carat', '<=', $maxCarat);
+            return $query->where('weight', '<=', $maxCarat);
         })
         ->when($minLength, function ($query, $minLength) {
             return $query->where('length', '>=', $minLength);
@@ -430,10 +430,10 @@ class DiamondController extends Controller
         // Query the database with pagination and sorting
         $query = Diamond::query()
         ->when($minCarat, function ($query, $minCarat) {
-            return $query->where('price_per_carat', '>=', $minCarat);
+            return $query->where('weight', '>=', $minCarat);
         })
         ->when($maxCarat, function ($query, $maxCarat) {
-            return $query->where('price_per_carat', '<=', $maxCarat);
+            return $query->where('weight', '<=', $maxCarat);
         })
         ->when($minLength, function ($query, $minLength) {
             return $query->where('length', '>=', $minLength);

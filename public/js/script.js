@@ -40,13 +40,13 @@ let multipleFilter = {
 };
 
 let placeholder = {
-    shapeList: '<span class="text-muted"><b>Shape</b></span><br><span class="text-muted">Please choose one or more diamond shape</span>',
-    colorList: '<span class="text-muted"><b>Color</b></span><br><span class="text-muted">Please choose one or more diamond color</span>',
-    clarityList: '<span class="text-muted"><b>Clarity</b></span><br><span class="text-muted">Please choose one or more diamond clarity</span>',
-    cutList: '<span class="text-muted"><b>Cut</b></span><br><span class="text-muted">Please choose one or more diamond cut</span>',
-    polishList: '<span class="text-muted"><b>Polish</b></span><br><span class="text-muted">Please choose one or more diamond polish</span>',
-    symmetryList: '<span class="text-muted"><b>Symmetry</b></span><br><span class="text-muted">Please choose one or more diamond symmetry</span>',
-    labList: '<span class="text-muted"><b>Lab</b></span><br><span class="text-muted">Please choose one or more diamond lab</span>',
+    shapeList: '<span class="text-muted"><b>Shape</b></span><br><span class="text-muted">Please choose one or more</span>',
+    colorList: '<span class="text-muted"><b>Color</b></span><br><span class="text-muted">Please choose one or more</span>',
+    clarityList: '<span class="text-muted"><b>Clarity</b></span><br><span class="text-muted">Please choose one or more</span>',
+    cutList: '<span class="text-muted"><b>Cut</b></span><br><span class="text-muted">Please choose one or more</span>',
+    polishList: '<span class="text-muted"><b>Polish</b></span><br><span class="text-muted">Please choose one or more</span>',
+    symmetryList: '<span class="text-muted"><b>Symmetry</b></span><br><span class="text-muted">Please choose one or more</span>',
+    labList: '<span class="text-muted"><b>Lab</b></span><br><span class="text-muted">Please choose one or more</span>',
 };
 
 let checkInput = [
@@ -346,8 +346,7 @@ $(document).ready(function () {
     });
 
     function toggleButtons() {
-        const anyChecked = $('.selectSingle input:checked').length > 0 || $('.selectAll input:checked').length > 0;
-
+        const anyChecked = $('.selectSingle input:checked').length > 0;
         if (anyChecked) {
             $('.contact-button').hide();
             $('.whatsapp-button').show();
@@ -449,7 +448,7 @@ function fetchData() {
             });
 
             if (response.data.length == 0) {
-                rows += '<tr class=""><td class="text-center" colspan="' + (columns.length + 2) + '">No Record Found</td></tr>';
+                rows += '<tr class=""><td class="text-left" colspan="' + (columns.length + 2) + '">No Record Found</td></tr>';
             }
 
             $('#data-table tbody').html(rows);
@@ -510,6 +509,7 @@ function checkSingleSelect() {
 
 // Export data to CSV
 function exportToCSV() {
+    $('#loader').show();
     $.ajax({
         type: 'POST',
         url: exportCsv,
@@ -523,6 +523,7 @@ function exportToCSV() {
             link.download = "export.csv";
             link.click();
             $("#downloadModal").modal('hide');
+            $('#loader').hide();
         },
         error: function(response) {
             console.error("An error occurred while exporting the data.");
@@ -533,6 +534,7 @@ function exportToCSV() {
 
 // Export data to Excel
 function exportToExcel() {
+    $('#loader').show();
     $.ajax({
         type: 'POST',
         url: urlExportXlsx,
@@ -547,6 +549,7 @@ function exportToExcel() {
             link.download = 'export.xlsx';
             link.click();
             $("#downloadModal").modal('hide');
+            $('#loader').hide();
         },
         error: function(xhr, status, error) {
             console.error("An error occurred while exporting the data.");

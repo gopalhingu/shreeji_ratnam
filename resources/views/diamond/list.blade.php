@@ -12,6 +12,8 @@
 	array_pop($columns);
 	array_pop($columns);
 	$columns = json_encode($columns);
+	$claritiesFinal = ['IF', 'VVS1', 'VVS2', 'VS1', 'VS2', 'SI1', 'SI2', 'SI3', 'I1', 'I2', 'I3', 'I4'];
+	$claritiesArray = $clarities->toArray();
 @endphp
 <div>
 	<div class="content">
@@ -241,6 +243,55 @@
 							<input type="text" class="form-control" id="maxCarat" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');" placeholder=" " />
 							<label for="maxCarat">Max Carat</label>
 						</div>
+						<!-- Shape List Display -->
+						<div class="col-md-12">
+							<div id="shapeList" class="border p-2 rounded focusable" tabindex="0" style="min-height: 50px;">
+								<span class="text-muted"><b>Shape</b></span><br>
+								<span class="text-muted">Please choose one or more</span>
+							</div>
+						</div>
+						<!-- Color List Display -->
+						<div class="col-md-12">
+							<div id="colorList" class="border p-2 rounded" style="min-height: 50px;">
+								<span class="text-muted"><b>Color</b></span><br>
+								<span class="text-muted">Please choose one or more</span>
+							</div>
+						</div>
+						<!-- Clarity List Display -->
+						<div class="col-md-12">
+							<div id="clarityList" class="border p-2 rounded" style="min-height: 50px;">
+								<span class="text-muted"><b>Clarity</b></span><br>
+								<span class="text-muted">Please choose one or more</span>
+							</div>
+						</div>
+						<!-- Cut List Display -->
+						<div class="col-md-12">
+							<div id="cutList" class="border p-2 rounded" style="min-height: 50px;">
+								<span class="text-muted"><b>Cut</b></span><br>
+								<span class="text-muted">Please choose one or more</span>
+							</div>
+						</div>
+						<!-- Polish List Display -->
+						<div class="col-md-12">
+							<div id="polishList" class="border p-2 rounded" style="min-height: 50px;">
+								<span class="text-muted"><b>Polish</b></span><br>
+								<span class="text-muted">Please choose one or more</span>
+							</div>
+						</div>
+						<!-- Symmetry List Display -->
+						<div class="col-md-12">
+							<div id="symmetryList" class="border p-2 rounded" style="min-height: 50px;">
+								<span class="text-muted"><b>Symmetry</b></span><br>
+								<span class="text-muted">Please choose one or more</span>
+							</div>
+						</div>
+						<!-- Lab List Display -->
+						<div class="col-md-12">
+							<div id="labList" class="border p-2 rounded" style="min-height: 50px;">
+								<span class="text-muted"><b>Lab</b></span><br>
+								<span class="text-muted">Please choose one or more</span>
+							</div>
+						</div>
 						<!-- Min Length Filter -->
 						<div class="col-6 form-floating">
 							<input type="text" class="form-control" id="minLength" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');" placeholder=" " />
@@ -301,57 +352,6 @@
 							<input type="text" class="form-control" id="maxTable" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');" placeholder=" " />
 							<label for="maxTable">Max Table</label>
 						</div>
-
-						<!-- Shape List Display -->
-						<div class="col-md-12">
-							<div id="shapeList" class="border p-2 rounded focusable" tabindex="0" style="min-height: 50px;">
-								<span class="text-muted"><b>Shape</b></span><br>
-								<span class="text-muted">Please choose one or more diamond shape</span>
-							</div>
-						</div>
-						<!-- Color List Display -->
-						<div class="col-md-12">
-							<div id="colorList" class="border p-2 rounded" style="min-height: 50px;">
-								<span class="text-muted"><b>Color</b></span><br>
-								<span class="text-muted">Please choose one or more diamond color</span>
-							</div>
-						</div>
-						<!-- Clarity List Display -->
-						<div class="col-md-12">
-							<div id="clarityList" class="border p-2 rounded" style="min-height: 50px;">
-								<span class="text-muted"><b>clarity</b></span><br>
-								<span class="text-muted">Please choose one or more diamond clarity</span>
-							</div>
-						</div>
-						<!-- Cut List Display -->
-						<div class="col-md-12">
-							<div id="cutList" class="border p-2 rounded" style="min-height: 50px;">
-								<span class="text-muted"><b>Cut</b></span><br>
-								<span class="text-muted">Please choose one or more diamond cut</span>
-							</div>
-						</div>
-						<!-- Polish List Display -->
-						<div class="col-md-12">
-							<div id="polishList" class="border p-2 rounded" style="min-height: 50px;">
-								<span class="text-muted"><b>Polish</b></span><br>
-								<span class="text-muted">Please choose one or more diamond polish</span>
-							</div>
-						</div>
-						<!-- Symmetry List Display -->
-						<div class="col-md-12">
-							<div id="symmetryList" class="border p-2 rounded" style="min-height: 50px;">
-								<span class="text-muted"><b>Symmetry</b></span><br>
-								<span class="text-muted">Please choose one or more diamond symmetry</span>
-							</div>
-						</div>
-						<!-- Lab List Display -->
-						<div class="col-md-12">
-							<div id="labList" class="border p-2 rounded" style="min-height: 50px;">
-								<span class="text-muted"><b>Lab</b></span><br>
-								<span class="text-muted">Please choose one or more diamond lab</span>
-							</div>
-						</div>
-
 						<!-- Stock ID Filter -->
 						<div class="col-md-6 form-floating">
 							<input type="text" class="form-control" id="stockId" placeholder=" " />
@@ -365,7 +365,7 @@
 						<!-- Type Filter -->
 						<div class="col-md-12 form-floating">
 							<input type="text" class="form-control" id="type" placeholder=" " />
-							<label for="type">Type</label>
+							<label for="type">Growth Type</label>
 						</div>
 					</form>
 				</div>
@@ -450,11 +450,13 @@
 				</div>
 				<div class="modal-body">
 					<div id="fullClarityList">
-						@foreach ($clarities as $key=>$value)
-							<div class="form-check custom_checkbox me-2">
-								<input class="form-check-input" type="checkbox" value="{{ $value }}" id="clarity{{ $key }}">
-								<label class="form-check-label" for="clarity{{ $key }}">{{ $value }}</label>
-							</div>
+						@foreach ($claritiesFinal as $key=>$value)
+							@if (in_array($value, $claritiesArray))
+								<div class="form-check custom_checkbox me-2">
+									<input class="form-check-input" type="checkbox" value="{{ $value }}" id="clarity{{ $key }}">
+									<label class="form-check-label" for="clarity{{ $key }}">{{ $value }}</label>
+								</div>
+							@endif
 						@endforeach
 					</div>
 				</div>
