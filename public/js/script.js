@@ -68,6 +68,8 @@ function clearFilters() {
     defaultFilter['currentSortColumn'] = 'id';
     defaultFilter['currentSortDirection'] = 'asc';
     defaultFilter['totalPage'] = 0;
+
+    $(".changeNumberOfPerPage").val(defaultFilter['currentPerPage']);
     
     // Clear single filter
     $.each(singleFilter, function(k, v) {
@@ -137,7 +139,7 @@ function applyFilter(modalId, fullListId, placeholderMessage, tagClass, id) {
         });
     }
     $(modalId).modal('hide');
-    fetchData();
+    // fetchData();
 }
 
 $(document).on('click', '.apply-shape-filter', function () {
@@ -415,71 +417,72 @@ $(document).ready(function () {
 });
 
 function fetchData() {
-
-    $.each(singleFilter, function(k, v) {
-        singleFilter[k] = $("#"+k).val();
-    });
     $('#loader').show();
-    postData = {
-        ...defaultFilter,
-        ...singleFilter,
-        ...multipleFilter,
-    };
-    $.ajax({
-        url: urlData,
-        method: 'POST',
-        data: postData,
-        success: function (response) {
-            var i = response.from;
-            var rows = '';
-            $.each(response.data, function (index, item) {
-                rows += '<tr class="">';
-                rows += '<td><div class="checkbox selectSingle"><input type="checkbox" data-id="' + item.id + '" /><span class=""></span></div></td>';
-                rows += '<td>' + i + '</td>';
-                $.each(columns, function(k, v) { 
-                    if(v == 'stock_id') {
-                        rows += '<td class="stock-id">' + ((item[v] != null) ? item[v] : '-') + '</td>';
-                    } else {
-                        rows += '<td>' + ((item[v] != null) ? item[v] : '-') + '</td>';
-                    }
+    setTimeout(function() {
+        $.each(singleFilter, function(k, v) {
+            singleFilter[k] = $("#"+k).val();
+        });
+        postData = {
+            ...defaultFilter,
+            ...singleFilter,
+            ...multipleFilter,
+        };
+        $.ajax({
+            url: urlData,
+            method: 'POST',
+            data: postData,
+            success: function (response) {
+                var i = response.from;
+                var rows = '';
+                $.each(response.data, function (index, item) {
+                    rows += '<tr class="">';
+                    rows += '<td><div class="checkbox selectSingle"><input type="checkbox" data-id="' + item.id + '" /><span class=""></span></div></td>';
+                    rows += '<td>' + i + '</td>';
+                    $.each(columns, function(k, v) { 
+                        if(v == 'stock_id') {
+                            rows += '<td class="stock-id">' + ((item[v] != null) ? item[v] : '-') + '</td>';
+                        } else {
+                            rows += '<td>' + ((item[v] != null) ? item[v] : '-') + '</td>';
+                        }
+                    });
+                    rows += '</tr>';
+                    i++;
                 });
-                rows += '</tr>';
-                i++;
-            });
 
-            if (response.data.length == 0) {
-                rows += '<tr class=""><td class="text-left" colspan="' + (columns.length + 2) + '">No Record Found</td></tr>';
-            }
+                if (response.data.length == 0) {
+                    rows += '<tr class=""><td class="text-left" colspan="' + (columns.length + 2) + '">No Record Found</td></tr>';
+                }
 
-            $('#data-table tbody').html(rows);
-            $(".summary-item.summary-line").eq(0).html('Total Stock <br>' + response.total_stock);
-            $(".summary-item.summary-line").eq(1).html('Total Carat <br>' + Number(response.total_carat).toFixed(2));
-            $(".summary-item.summary-line").eq(2).html('Total Amount <br>' + Number(response.total_amount).toFixed(2));
+                $('#data-table tbody').html(rows);
+                $(".summary-item.summary-line").eq(0).html('Total Stock <br>' + response.total_stock);
+                $(".summary-item.summary-line").eq(1).html('Total Carat <br>' + Number(response.total_carat).toFixed(2));
+                $(".summary-item.summary-line").eq(2).html('Total Amount <br>' + Number(response.total_amount).toFixed(2));
 
-            $("#fromRec").html(response.from);
-            $("#toRec").html(response.to);
-            $("#totalRec").html(response.total);
+                $("#fromRec").html(response.from);
+                $("#toRec").html(response.to);
+                $("#totalRec").html(response.total);
 
-            defaultFilter['totalPage'] = response.last_page;
-            $(".changePage").val(response.current_page);
-            $(".changePage").attr("max", response.last_page);
-            $("#totalPage").html(response.last_page);
+                defaultFilter['totalPage'] = response.last_page;
+                $(".changePage").val(response.current_page);
+                $(".changePage").attr("max", response.last_page);
+                $("#totalPage").html(response.last_page);
 
-            if (defaultFilter['currentPage'] <= 1) {
-                $(".previousPage").addClass("hide");
+                if (defaultFilter['currentPage'] <= 1) {
+                    $(".previousPage").addClass("hide");
+                }
+                if (defaultFilter['currentPage'] >= defaultFilter['totalPage']) {
+                    $(".nextPage").addClass("hide");
+                }
+                if (defaultFilter['currentPage'] > 1) {
+                    $(".previousPage").removeClass("hide");
+                }
+                if (defaultFilter['currentPage'] < defaultFilter['totalPage']) {
+                    $(".nextPage").removeClass("hide");
+                }
+                $('#loader').hide();
             }
-            if (defaultFilter['currentPage'] >= defaultFilter['totalPage']) {
-                $(".nextPage").addClass("hide");
-            }
-            if (defaultFilter['currentPage'] > 1) {
-                $(".previousPage").removeClass("hide");
-            }
-            if (defaultFilter['currentPage'] < defaultFilter['totalPage']) {
-                $(".nextPage").removeClass("hide");
-            }
-            $('#loader').hide();
-        }
-    });
+        });
+    }, 1000);
 }
 
 function checkSingleSelect() {

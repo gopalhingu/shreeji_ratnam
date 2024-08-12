@@ -54,7 +54,8 @@
 				<div class="summary-items">
 					<span>
 					<a href="mailto:shreejiratnam@yahoo.com">Email: shreejiratnam@yahoo.com</a><br>
-					<a href="tel:+919662868968">Call: +919662868968</a>
+					<a href="tel:+919662868968">Call: +919662868968</a> </br>
+					<a href="tel:+918238615800">Call: +918238615800</a>
 					</span>
 				</div>
 			</div>
@@ -160,7 +161,7 @@
 					<a href="https://api.whatsapp.com/send/?phone=%2B919662868968&text&type=phone_number&app_absent=0" target="_blank">
 						<i class="fa-solid fa-brands fa-whatsapp" style="margin-top: 5px;"></i>
 						<div class="contact-info">
-							<span class="contact-name">Shailesh</span>
+							<span class="contact-name">Shailesh Narola</span>
 							<span class="contact-number">+91 9662868968</span>
 						</div>
 					</a>
@@ -170,7 +171,7 @@
 						<a href="https://api.whatsapp.com/send/?phone=%2B918238615800&text&type=phone_number&app_absent=0" target="_blank">
 							<i class="fa-solid fa-brands fa-whatsapp" ></i>
 							<div class="contact-info">
-								<span class="contact-name">Kaushal</span>
+								<span class="contact-name">Kaushal Narola</span>
 								<span class="contact-number">+91 8238615800</span>
 							</div>
 						</a>
@@ -180,7 +181,7 @@
 						<a href="https://api.whatsapp.com/send/?phone=%2B919727408511&text&type=phone_number&app_absent=0" target="_blank">
 							<i class="fa-solid fa-brands fa-whatsapp" ></i>
 							<div class="contact-info">
-								<span class="contact-name">Drashti</span>
+								<span class="contact-name">Drashti Narola</span>
 								<span class="contact-number">+91 9727408511</span>
 							</div>
 						</a>
@@ -190,7 +191,7 @@
 						<a href="tel:+919662868968">
 							<i class="fa-solid fa-phone-volume" ></i>
 							<div class="contact-info">
-								<span class="contact-name">Shailesh</span>
+								<span class="contact-name">Shailesh Narola</span>
 								<span class="contact-number">Call:- +91 9662868968</span>
 							</div>
 						</a>
@@ -200,7 +201,7 @@
 						<a href="tel:+918238615800">
 							<i class="fa-solid fa-phone-volume" ></i>
 							<div class="contact-info">
-								<span class="contact-name">Kaushal</span>
+								<span class="contact-name">Kaushal Narola</span>
 								<span class="contact-number">Call:- +91 8238615800</span>
 							</div>
 						</a>
@@ -210,7 +211,7 @@
 						<a href="tel:+9727408511">
 							<i class="fa-solid fa-phone-volume" ></i>
 							<div class="contact-info">
-								<span class="contact-name">Drashti</span>
+								<span class="contact-name">Drashti Narola</span>
 								<span class="contact-number">Call:- +91 9727408511</span>
 							</div>
 						</a>
@@ -243,6 +244,7 @@
 							<input type="text" class="form-control" id="maxCarat" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');" placeholder=" " />
 							<label for="maxCarat">Max Carat</label>
 						</div>
+
 						<!-- Shape List Display -->
 						<div class="col-md-12">
 							<div id="shapeList" class="border p-2 rounded focusable" tabindex="0" style="min-height: 50px;">
@@ -292,6 +294,7 @@
 								<span class="text-muted">Please choose one or more</span>
 							</div>
 						</div>
+
 						<!-- Min Length Filter -->
 						<div class="col-6 form-floating">
 							<input type="text" class="form-control" id="minLength" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');" placeholder=" " />
@@ -352,6 +355,7 @@
 							<input type="text" class="form-control" id="maxTable" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');" placeholder=" " />
 							<label for="maxTable">Max Table</label>
 						</div>
+
 						<!-- Stock ID Filter -->
 						<div class="col-md-6 form-floating">
 							<input type="text" class="form-control" id="stockId" placeholder=" " />
@@ -623,7 +627,9 @@
 
 </div>
 
-<div id="loader" style="display: none;"></div>
+<div id="loader" style="display: none;">
+	<span class="loader_img"></span>
+</div>
 @endsection
 
 @section("script")
