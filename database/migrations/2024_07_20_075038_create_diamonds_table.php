@@ -60,8 +60,8 @@ class CreateDiamondsTable extends Migration
             $table->string('state')->nullable();
             $table->string('city')->nullable();
             $table->string('certificate_number')->nullable();
-            $table->string('video_url')->nullable();
-            $table->string('image_url')->nullable();
+            $table->text('video_url')->nullable();
+            $table->text('image_url')->nullable();
             $table->string('treatment')->nullable();
             $table->string('country')->nullable();
             $table->text('cert_comment')->nullable();

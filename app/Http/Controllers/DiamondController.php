@@ -54,24 +54,27 @@ class DiamondController extends Controller
                 return array_combine($newHeader, $row);
             }, $data);
 
+            if (count($formattedData) > 0) {
+                Diamond::truncate();
+            }
+
             foreach ($formattedData as $key => $value) {
 
                 array_shift($value); // Remove first element
                 array_pop($value); // Remove last element
+                unset($value['reference']);
 
                 $value['report_date'] = !empty($value['report_date']) ? date("Y-m-d", strtotime($value['report_date'])) : date("Y-m-d");
                 $value['price_per_carat'] = (!empty($value['price_per_carat']) && (int)$value['price_per_carat'] > 0) ? $value['price_per_carat'] : '0';
                 $value['total_price'] = (!empty($value['total_price']) && (int)$value['total_price'] > 0) ? $value['total_price'] : '0';
 
-                // echo "<pre>";
-                // print_r($value);
-                // die;
-
-                $getRecord = Diamond::where("stock_id", $value['stock_id'])->first();
-                if(!empty($getRecord)) {
-                    Diamond::where("stock_id", $value['stock_id'])->update($value);
-                } else {
-                    Diamond::create($value);
+                if(!empty($value['stock_id'])) {
+                    $getRecord = Diamond::where("stock_id", $value['stock_id'])->first();
+                    if(!empty($getRecord)) {
+                        Diamond::where("stock_id", $value['stock_id'])->update($value);
+                    } else {
+                        Diamond::create($value);
+                    }
                 }
             }
 
@@ -139,6 +142,7 @@ class DiamondController extends Controller
         $polishList = $request->input('polishList', []);
         $symmetryList = $request->input('symmetryList', []);
         $labList = $request->input('labList', []);
+        $stockId = preg_replace('/\D/', '', $stockId);
 
         // Query the database with pagination and sorting
         $query = Diamond::query()
@@ -185,7 +189,7 @@ class DiamondController extends Controller
             return $query->where('table_percentage', '<=', $maxTable);
         })
         ->when($stockId, function ($query, $stockId) {
-            return $query->where('stock_id', $stockId);
+            return $query->where('stock_id', 'LIKE', '%'.$stockId.'%');
         })
         ->when($reportNumber, function ($query, $reportNumber) {
             return $query->where('report_number', $reportNumber);
@@ -426,6 +430,7 @@ class DiamondController extends Controller
         $polishList = $request->input('polishList', []);
         $symmetryList = $request->input('symmetryList', []);
         $labList = $request->input('labList', []);
+        $stockId = preg_replace('/\D/', '', $stockId);
 
         // Query the database with pagination and sorting
         $query = Diamond::query()
@@ -472,7 +477,7 @@ class DiamondController extends Controller
             return $query->where('table_percentage', '<=', $maxTable);
         })
         ->when($stockId, function ($query, $stockId) {
-            return $query->where('stock_id', $stockId);
+            return $query->where('stock_id', 'LIKE', '%'.$stockId.'%');
         })
         ->when($reportNumber, function ($query, $reportNumber) {
             return $query->where('report_number', $reportNumber);
