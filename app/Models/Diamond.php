@@ -39,6 +39,7 @@ class Diamond extends Model
         'rap_amount',
         'price_per_carat',
         'total_price',
+        'holesell_price',
         'depth_percentage',
         'table_percentage',
         'crown_height',

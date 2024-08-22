@@ -239,9 +239,20 @@ class DiamondController extends Controller
         ]);
     }
 
-    public function jsonData()
+    public function jsonData(Request $request)
     {
         $record = Diamond::all()->toArray();
+        if (isset($request->price_type) && $request->price_type == 1) {
+            $records = array_map(function($rec) {
+                return array_diff_key($rec, ['total_price' => '']);
+            }, $record);
+            return response()->json($records);
+        } else {
+            $records = array_map(function($rec) {
+                return array_diff_key($rec, ['holesell_price' => '']);
+            }, $record);
+            return response()->json($records);
+        }
         return response()->json($record);
     }
 
