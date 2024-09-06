@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>SHREEJI RATNAM</title>
+    <link rel="icon" type="image/gif" href="{{ url('image/diamond.gif') }}">
     <meta property="og:image" content=""/>
     <meta property="og:type" content="website"/>
     <meta property="og:url" content="https://www.shreejiratnam.com/">
