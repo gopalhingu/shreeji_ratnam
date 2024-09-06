@@ -673,7 +673,7 @@ tbody tr.hover:not(.selected) td {
   }
 
   #loader .loader_img{
-     background: url(/image/diamond.gif);
+     background: url('../image/diamond.gif');
      width: 100px;
      height: 100px;
      display: block;
