@@ -9,8 +9,10 @@ use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use PhpOffice\PhpSpreadsheet\Style\Fill;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use App\Models\Diamond;
+use Exception;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Auth;
 
 class DiamondController extends Controller
 {
@@ -54,6 +56,10 @@ class DiamondController extends Controller
                 return array_combine($newHeader, $row);
             }, $data);
 
+            // echo "<pre>";
+            // print_r($formattedData);
+            // die;
+
             if (count($formattedData) > 0) {
                 Diamond::truncate();
             }
@@ -62,11 +68,18 @@ class DiamondController extends Controller
 
                 array_shift($value); // Remove first element
                 array_pop($value); // Remove last element
-                unset($value['reference']);
 
                 $value['report_date'] = !empty($value['report_date']) ? date("Y-m-d", strtotime($value['report_date'])) : date("Y-m-d");
-                $value['price_per_carat'] = (!empty($value['price_per_carat']) && (int)$value['price_per_carat'] > 0) ? $value['price_per_carat'] : '0';
-                $value['total_price'] = (!empty($value['total_price']) && (int)$value['total_price'] > 0) ? $value['total_price'] : '0';
+                $value['ratio'] = sprintf("%.2f", ((float)($value['length'] ?? 0) / (float)($value['width'] ?? 0)));
+                $value['rap_amount'] = sprintf("%.2f", (((float)($value['weight'] ?? 0)) * (float)($value['live_rap'] ?? 0)));
+                $value['price_per_carat'] = sprintf("%.2f", (((float)($value['live_rap'] ?? 0) * (((float)($value['discounts'] ?? 0)) / 100)) + (float)($value['live_rap'] ?? 0)));
+                $value['total_price'] = sprintf("%.2f", (((float)($value['weight'] ?? 0)) * ($value['price_per_carat'] ?? 0)));
+                $value['bargaining_price_per_carat'] = sprintf("%.2f", ((float)($value['bargaining_price_per_carat'] ?? 0)));
+                $value['bargaining_total_price'] = sprintf("%.2f", ((float)($value['weight'] ?? 0) * ((float)($value['bargaining_price_per_carat'] ?? 0))));
+
+                // echo "<pre>";
+                // print_r($value);
+                // die;
 
                 if(!empty($value['stock_id'])) {
                     $getRecord = Diamond::where("stock_id", $value['stock_id'])->first();
@@ -90,15 +103,7 @@ class DiamondController extends Controller
 
     public function list()
     {
-        Artisan::call('view:clear');
-        // Artisan::call('view:cache');
-        // Artisan::call('route:clear');
-        // Artisan::call('route:cache');
-        // Artisan::call('config:clear');
-        // Artisan::call('config:cache');
-        // Artisan::call('optimize');
-        Artisan::call('optimize:clear');
-
+        $status = Diamond::select('status')->whereNotNull('status')->distinct()->pluck('status');
         $shapes = Diamond::select('shape')->whereNotNull('shape')->distinct()->pluck('shape');
         $colors = Diamond::select('color')->whereNotNull('color')->distinct()->pluck('color');
         $clarities = Diamond::select('clarity')->whereNotNull('clarity')->distinct()->orderBy('clarity', 'ASC')->pluck('clarity');
@@ -107,12 +112,34 @@ class DiamondController extends Controller
         $symmetries = Diamond::select('symmetry')->whereNotNull('symmetry')->distinct()->pluck('symmetry');
         $labs = Diamond::select('lab')->whereNotNull('lab')->distinct()->pluck('lab');
         $columnWithValue = $this->columnWithValue();
+        if (!Auth::user()) {
+            unset($columnWithValue['bargaining_price_per_carat']);
+            unset($columnWithValue['bargaining_total_price']);
+        }
 
-        return view("diamond.list",compact('shapes','colors','clarities','cuts','polish','symmetries','labs', 'columnWithValue'));
+        // echo "<pre>";
+        // print_r($columnWithValue);
+        // die;
+
+        return view("diamond.list",compact('status', 'shapes', 'colors', 'clarities', 'cuts', 'polish', 'symmetries', 'labs', 'columnWithValue'));
     }
 
     public function data(Request $request)
-    {       
+    {
+        $columnWithValue = $this->columnWithValue();
+        $columns = array_keys($columnWithValue);
+        if (Auth::user()) {
+            $excludeColumns = ['id', 'created_at', 'updated_at'];
+            $selectedColumns = array_diff($columns, $excludeColumns);
+        } else {
+            $excludeColumns = ['id', 'price_per_carat', 'total_price', 'bargaining_price_per_carat', 'bargaining_total_price', 'created_at', 'updated_at'];
+            $selectedColumns = array_diff($columns, $excludeColumns);
+            $selectedColumns = array_merge($selectedColumns, [
+                'bargaining_price_per_carat as price_per_carat', 
+                'bargaining_total_price as total_price'
+            ]);
+        }
+        
         $currentPage = $request->input('currentPage', 1);
         $currentPerPage = $request->input('currentPerPage', 10);
         $currentSortColumn = $request->input('currentSortColumn', 'id');
@@ -135,6 +162,8 @@ class DiamondController extends Controller
         $stockId = $request->input('stockId', '');
         $reportNumber = $request->input('reportNumber', '');
         $type = $request->input('type', '');
+        $checkedRecord = $request->input('checkedRecord', []);
+        $statusList = $request->input('statusList', []);
         $shapeList = $request->input('shapeList', []);
         $colorList = $request->input('colorList', []);
         $clarityList = $request->input('clarityList', []);
@@ -146,11 +175,12 @@ class DiamondController extends Controller
 
         // Query the database with pagination and sorting
         $query = Diamond::query()
+        ->select($selectedColumns)
         ->when($minCarat, function ($query, $minCarat) {
-            return $query->where('weight', '>=', $minCarat);
+            return $query->where('weight', '>=', (float)$minCarat);
         })
         ->when($maxCarat, function ($query, $maxCarat) {
-            return $query->where('weight', '<=', $maxCarat);
+            return $query->where('weight', '<=', (float)$maxCarat);
         })
         ->when($minLength, function ($query, $minLength) {
             return $query->where('length', '>=', $minLength);
@@ -197,6 +227,12 @@ class DiamondController extends Controller
         ->when($type, function ($query, $type) {
             return $query->where('growth_type', $type);
         })
+        ->when($checkedRecord, function ($query, $checkedRecord) {
+            return $query->whereIn('stock_id', $checkedRecord);
+        })
+        ->when($statusList, function ($query, $statusList) {
+            return $query->whereIn('status', $statusList);
+        })
         ->when($shapeList, function ($query, $shapeList) {
             return $query->whereIn('shape', $shapeList);
         })
@@ -224,6 +260,14 @@ class DiamondController extends Controller
         $totalCarat = $query->sum('weight') ?: 0;
         $totalAmount = $query->sum('total_price') ?: 0;
 
+        if(is_array($checkedRecord) && count($checkedRecord) > 0) {
+            return response()->json([
+                'total_stock' => $totalStock,
+                'total_carat' => $totalCarat,
+                'total_amount' => $totalAmount,
+            ]);
+        }
+
         $data = $query->paginate($currentPerPage, ['*'], 'page', $currentPage);
 
         return response()->json([
@@ -239,21 +283,45 @@ class DiamondController extends Controller
         ]);
     }
 
-    public function jsonData(Request $request)
+    public function jsonData($type = 2, Request $request)
     {
-        $record = Diamond::all()->toArray();
-        if (isset($request->price_type) && $request->price_type == 1) {
-            $records = array_map(function($rec) {
-                return array_diff_key($rec, ['total_price' => '']);
-            }, $record);
-            return response()->json($records);
-        } else {
-            $records = array_map(function($rec) {
-                return array_diff_key($rec, ['holesell_price' => '']);
-            }, $record);
-            return response()->json($records);
+        try {
+            $columnWithValue = $this->columnWithValue();
+            $columns = array_keys($columnWithValue);
+        
+            // echo "<pre>";
+            // print_r($columns);
+            // die; 
+
+            if ($type == 1) {
+                $excludeColumns = ['bargaining_price_per_carat', 'bargaining_total_price', 'created_at', 'updated_at'];
+                $selectedColumns = array_diff($columns, $excludeColumns);
+                $records = Diamond::select($selectedColumns)->get()->toArray();
+                return response()->json($records);
+            } 
+            else if ($type == 2) {
+                $excludeColumns = ['price_per_carat', 'total_price', 'bargaining_price_per_carat', 'bargaining_total_price', 'created_at', 'updated_at'];
+                $selectedColumns = array_diff($columns, $excludeColumns);
+                $finalColumns = array_merge($selectedColumns, [
+                    'bargaining_price_per_carat as price_per_carat', 
+                    'bargaining_total_price as total_price'
+                ]);
+                $records = Diamond::select($finalColumns)->get()->toArray();
+                return response()->json($records);
+            }
+
+            $responseMessage = [
+                'status' => false,
+                'message' => 'Plese pass type (1 or 2)!',
+            ];
+            return response()->json($responseMessage, 404);
+        } catch (Exception $e) {
+            $responseMessage = [
+                'status' => false,
+                'message' => $e->getMessage(),
+            ];
+            return response()->json($responseMessage, 500);
         }
-        return response()->json($record);
     }
 
     public function exportCsv(Request $request) 
@@ -291,6 +359,21 @@ class DiamondController extends Controller
     {
         $column = $this->columnWithValue();
         $data = $this->getDataForExport($request);
+
+       /*  $columnWithValue = $this->columnWithValue();
+        $columns = array_keys($columnWithValue);
+        if (Auth::user()) {
+            $excludeColumns = ['created_at', 'updated_at'];
+            $selectedColumns = array_diff($columns, $excludeColumns);
+        } else {
+            $excludeColumns = ['price_per_carat', 'total_price', 'bargaining_price_per_carat', 'bargaining_total_price', 'created_at', 'updated_at'];
+            $selectedColumns = array_diff($columns, $excludeColumns);
+            $selectedColumns = array_merge($selectedColumns, [
+                'bargaining_price_per_carat as price_per_carat', 
+                'bargaining_total_price as total_price'
+            ]);
+        } */
+
         $excelData = $this->excelData($column, $data);
         
         $spreadsheet = new Spreadsheet();
@@ -357,7 +440,11 @@ class DiamondController extends Controller
 
     private function excelData($column, $data) 
     {
-        $exception = ['id', 'created_at', 'updated_at'];
+        if (Auth::user()) {
+            $exception = ['id', 'created_at', 'updated_at'];
+        } else {
+            $exception = ['id', 'bargaining_price_per_carat', 'bargaining_total_price', 'created_at', 'updated_at'];
+        }
         $header = ['Serial No.'];
         $totalWeight = 0;
         $totalAmount = 0;
@@ -412,6 +499,20 @@ class DiamondController extends Controller
 
     private function getDataForExport(Request $request)
     {
+        $columnWithValue = $this->columnWithValue();
+        $columns = array_keys($columnWithValue);
+        if (Auth::user()) {
+            $excludeColumns = ['id', 'created_at', 'updated_at'];
+            $selectedColumns = array_diff($columns, $excludeColumns);
+        } else {
+            $excludeColumns = ['id', 'price_per_carat', 'total_price', 'bargaining_price_per_carat', 'bargaining_total_price', 'created_at', 'updated_at'];
+            $selectedColumns = array_diff($columns, $excludeColumns);
+            $selectedColumns = array_merge($selectedColumns, [
+                'bargaining_price_per_carat as price_per_carat', 
+                'bargaining_total_price as total_price'
+            ]);
+        }
+
         // $currentPage = $request->input('currentPage', 1);
         // $currentPerPage = $request->input('currentPerPage', 10);
         $currentSortColumn = $request->input('currentSortColumn', 'id');
@@ -434,6 +535,8 @@ class DiamondController extends Controller
         $stockId = $request->input('stockId', '');
         $reportNumber = $request->input('reportNumber', '');
         $type = $request->input('type', '');
+        $checkedRecord = $request->input('checkedRecord', []);
+        $statusList = $request->input('statusList', []);
         $shapeList = $request->input('shapeList', []);
         $colorList = $request->input('colorList', []);
         $clarityList = $request->input('clarityList', []);
@@ -445,11 +548,12 @@ class DiamondController extends Controller
 
         // Query the database with pagination and sorting
         $query = Diamond::query()
+        ->select($selectedColumns)
         ->when($minCarat, function ($query, $minCarat) {
-            return $query->where('weight', '>=', $minCarat);
+            return $query->where('weight', '>=', (float)$minCarat);
         })
         ->when($maxCarat, function ($query, $maxCarat) {
-            return $query->where('weight', '<=', $maxCarat);
+            return $query->where('weight', '<=', (float)$maxCarat);
         })
         ->when($minLength, function ($query, $minLength) {
             return $query->where('length', '>=', $minLength);
@@ -496,6 +600,12 @@ class DiamondController extends Controller
         ->when($type, function ($query, $type) {
             return $query->where('growth_type', $type);
         })
+        ->when($checkedRecord, function ($query, $checkedRecord) {
+            return $query->whereIn('stock_id', $checkedRecord);
+        })
+        ->when($statusList, function ($query, $statusList) {
+            return $query->whereIn('status', $statusList);
+        })
         ->when($shapeList, function ($query, $shapeList) {
             return $query->whereIn('shape', $shapeList);
         })
@@ -521,5 +631,24 @@ class DiamondController extends Controller
 
         $record = $query->get()->toArray();
         return  $record;
+    }
+
+    public function runCommand($type, $mig)
+    {
+        if($type == 97531) {
+            Artisan::call('view:clear');
+            // Artisan::call('view:cache');
+            // Artisan::call('route:clear');
+            // Artisan::call('route:cache');
+            // Artisan::call('config:clear');
+            // Artisan::call('config:cache');
+            // Artisan::call('optimize');
+            Artisan::call('optimize:clear');
+
+            if($mig == 13579) {
+                Artisan::call('migrate:refresh');
+                Artisan::call('db:seed');
+            }
+        }
     }
 }

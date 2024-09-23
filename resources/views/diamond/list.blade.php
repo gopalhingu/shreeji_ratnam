@@ -1,7 +1,7 @@
 @extends("layout.main")
 
 @section("css")
-    <link rel="stylesheet" href="{{ url('css/style.css') }}?t={{ time() }}">
+    <link rel="stylesheet" href="{{ url('css/style.css') }}?t={{ date('ymd') }}">
 @endsection
 
 @section("content")
@@ -19,7 +19,7 @@
 	<div class="content">
 		<section class="table-header grid">
 			<div class="action-buttons">
-				<button class="button reloadPage" title="Reload Page">
+				<button class="button reloadPage" title="Reload Page" data-toggle="tooltip" data-placement="top">
 					<i class="fa-solid fa-rotate-right icon-size"></i>
 					<!-- <span>Download Options</span> -->
 				</button>
@@ -32,16 +32,16 @@
 				</select>
 			</div>
 			<div class="action-button">
-				<button class="button" title="Download Options" data-bs-toggle="modal" data-bs-target="#downloadModal">
+				<button class="button" title="Download Options" data-bs-toggle="modal" data-bs-target="#downloadModal" data-toggle="tooltip" data-placement="top">
 					<i class="fa-solid fa-download icon-size"></i>
 				</button>
-				<button class="button contact-button" title="Contact us" data-bs-toggle="modal" data-bs-target="#contactModal">
+				<button class="button contact-button" title="Contact us" data-bs-toggle="modal" data-bs-target="#contactModal" data-toggle="tooltip" data-placement="top">
 					<i class="fa-solid fa-phone-volume icon-size"></i>
 				</button>
-				<button class="button whatsapp-button" title="Whawhatsapp" data-bs-toggle="modal" data-bs-target="#whatsappModal" style="display:none">
+				<button class="button whatsapp-button" title="Whawhatsapp" data-bs-toggle="modal" data-bs-target="#whatsappModal" style="display:none" data-toggle="tooltip" data-placement="top">
 					<i class="fa-solid fa-brands fa-whatsapp icon-size"></i>
 				</button>
-				<button class="button" title="Filter Data" data-bs-toggle="modal" data-bs-target="#filterModal">
+				<button class="button" title="Filter Data" data-bs-toggle="modal" data-bs-target="#filterModal" data-toggle="tooltip" data-placement="top">
 					<i class="fa-solid fa-filter icon-size"></i>
 				</button>
 			</div>
@@ -49,8 +49,12 @@
 		<section>
 			<div class="summary">
 				<div class="summary-item summary-line summary-total-stock"></div>
-				<div class="summary-item summary-line summary-total-carat"></div>
-				<div class="summary-item summary-line summary-total-amount"></div>
+				@if (!Auth::user())
+					<div class="summary-items"></div>
+					<div class="summary-items summary-line"></div>
+				@endif
+				<div class="summary-item summary-line summary-total-carat" style="display: {{ Auth::user() ? 'block' : 'none' }}"></div>
+				<div class="summary-item summary-line summary-total-amount" style="display: {{ Auth::user() ? 'block' : 'none' }}"></div>
 				<div class="summary-items">
 					<span>
 					<a href="mailto:shreejiratnam@yahoo.com">Email: shreejiratnam@yahoo.com</a><br>
@@ -80,7 +84,7 @@
 								@endphp
 							@endif
 							@if ($key == "id")
-								<th class="sorting-hide" data-column="id" data-order="asc">
+								<th class="sorting-hide" data-column="{{ $key }}" data-order="asc">
 									No.
 									<span class="sort-icons" style="margin-left: 5px; margin-top: 2px;">
 										{{-- <i class="fa-solid fa-sort default hide sorting_icon"></i> --}}
@@ -88,13 +92,22 @@
 										{{-- <i class="fa-solid fa-sort-down decending hide sorting_icon"></i> --}}
 									</span>
 								</th>
-							@else
+							@elseif($key == "stock_id")
 								<th class="sorting" data-column="{{ $key }}" data-order="asc">
 									{{ $value }}
 									<span class="sort-icons" style="margin-left: 5px; margin-top: 2px;">
 										<i class="fa-solid fa-sort default sorting_icon"></i>
 										<i class="fa-solid fa-sort-up ascending hide sorting_icon"></i>
 										<i class="fa-solid fa-sort-down decending hide sorting_icon"></i>
+									</span>
+								</th>
+							@else
+								<th class="sorting-hide" data-column="{{ $key }}" data-order="asc">
+									{{ $value }}
+									<span class="sort-icons" style="margin-left: 5px; margin-top: 2px;">
+										{{-- <i class="fa-solid fa-sort default sorting_icon"></i> --}}
+										{{-- <i class="fa-solid fa-sort-up ascending hide sorting_icon"></i> --}}
+										{{-- <i class="fa-solid fa-sort-down decending hide sorting_icon"></i> --}}
 									</span>
 								</th>
 							@endif
@@ -245,9 +258,16 @@
 							<label for="maxCarat">Max Carat</label>
 						</div>
 
+						<!-- Status List Display -->
+						<div class="col-md-12">
+							<div id="statusList" class="border p-2 rounded focusable" tabindex="0" style="min-height: 50px;">
+								<span class="text-muted"><b>Status</b></span><br>
+								<span class="text-muted">Please choose one or more</span>
+							</div>
+						</div>
 						<!-- Shape List Display -->
 						<div class="col-md-12">
-							<div id="shapeList" class="border p-2 rounded focusable" tabindex="0" style="min-height: 50px;">
+							<div id="shapeList" class="border p-2 rounded" tabindex="0" style="min-height: 50px;">
 								<span class="text-muted"><b>Shape</b></span><br>
 								<span class="text-muted">Please choose one or more</span>
 							</div>
@@ -380,6 +400,32 @@
 			</div>
 		</div>
 	</div>
+
+	<!-- Status Modal -->
+	<div class="modal fade" id="statusModal" tabindex="-1" aria-labelledby="statusModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="statusModalLabel">Select Diamond Status</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<div id="fullStatusList">
+						@foreach ($status as $key=>$value)
+							<div class="form-check custom_checkbox me-2">
+								<input class="form-check-input" type="checkbox" value="{{ $value }}" id="status{{ $key }}">
+								<label class="form-check-label" for="status{{ $key }}">{{ $value }}</label>
+							</div>
+						@endforeach
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+					<button type="button" class="btn btn-primary apply-status-filter">Apply Filter</button>
+				</div>
+			</div>
+		</div>
+	</div>
 	
 	<!--Shape filter Modal -->
 	<div class="modal fade" id="shapeModal" tabindex="-1" aria-labelledby="shapeModalLabel" aria-hidden="true">
@@ -412,7 +458,7 @@
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-					<button type="button" class="btn btn-primary apply-shape-filter">Apply</button>
+					<button type="button" class="btn btn-primary apply-shape-filter">Apply Filter</button>
 				</div>
 			</div>
 		</div>
@@ -639,5 +685,5 @@
 		const urlExportXlsx = '{{ route("diamond.export.xlsx") }}';
 		const columns = <?php echo $columns; ?>;
 	</script>
-	<script src="{{ url('js/script.js') }}?t={{ time() }}"></script>
+	<script src="{{ url('js/script.js') }}?t={{ date('ymd') }}"></script>
 @endsection

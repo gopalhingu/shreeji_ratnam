@@ -1,5 +1,7 @@
 
 let postData = {};
+let checkedRecord = [];
+let isCheckBoxFunction = false;
 
 let defaultFilter = {
     currentPage: 1,
@@ -30,6 +32,7 @@ let singleFilter = {
 };
 
 let multipleFilter = {
+    statusList: [],
     shapeList: [],
     colorList: [],
     clarityList: [],
@@ -40,6 +43,7 @@ let multipleFilter = {
 };
 
 let placeholder = {
+    statusList: '<span class="text-muted"><b>Status</b></span><br><span class="text-muted">Please choose one or more</span>',
     shapeList: '<span class="text-muted"><b>Shape</b></span><br><span class="text-muted">Please choose one or more</span>',
     colorList: '<span class="text-muted"><b>Color</b></span><br><span class="text-muted">Please choose one or more</span>',
     clarityList: '<span class="text-muted"><b>Clarity</b></span><br><span class="text-muted">Please choose one or more</span>',
@@ -50,6 +54,7 @@ let placeholder = {
 };
 
 let checkInput = [
+    "fullStatusList",
     "fullShapeList",
     "fullColorList",
     "fullClarityList",
@@ -109,6 +114,7 @@ function showModal(modalId) {
     $(modalId).modal('show');
 }
 
+$('#statusList').on('click', function () { showModal('#statusModal'); });
 $('#shapeList').on('click', function () { showModal('#shapeModal'); });
 $('#colorList').on('click', function () { showModal('#colorModal'); });
 $('#clarityList').on('click', function () { showModal('#clarityModal'); });
@@ -141,6 +147,10 @@ function applyFilter(modalId, fullListId, placeholderMessage, tagClass, id) {
     $(modalId).modal('hide');
     // fetchData();
 }
+
+$(document).on('click', '.apply-status-filter', function () {
+    applyFilter('#statusModal', '#fullStatusList', 'placeholderMessage', 'remove-tag', 'statusList');
+});
 
 $(document).on('click', '.apply-shape-filter', function () {
     applyFilter('#shapeModal', '#fullShapeList', 'placeholderMessage', 'remove-tag', 'shapeList');
@@ -180,6 +190,10 @@ function removeTag(tag, id, fullListId, placeholderMessage) {
     }
     fetchData();
 }
+
+$(document).on('click', '.remove-tag', function () {
+    removeTag(this, 'statusList', '#fullStatusList', 'placeholderMessage');
+});
 
 $(document).on('click', '.remove-tag', function () {
     removeTag(this, 'shapeList', '#fullShapeList', 'placeholderMessage');
@@ -234,13 +248,12 @@ $(document).ready(function () {
 
     $('.whatsappform').on('click', function () {
       
-        // Get selected stock IDs
-        var selectedStockIDs = [];
+        checkedRecord = [];
         $('.selectSingle input[type="checkbox"]:checked').each(function () {
             var stockID = $(this).closest('tr').find('.stock-id').text();
-            selectedStockIDs.push(stockID);
+            checkedRecord.push(stockID);
         });
-        var stockIDText = selectedStockIDs.join('\n');
+        var stockIDText = checkedRecord.join('\n');
 
         const phone_number = $(this).find('.contact-info').find('.contact-number').text().replace(/\D/g, '');
         const encodedText = encodeURIComponent(stockIDText);
@@ -324,6 +337,7 @@ $(document).ready(function () {
             $row.addClass("selected");
         }
         toggleButtons();
+        updateTotalStock();
     });
 
     $(document).on('click', '.selectSingle', function (e) {
@@ -345,6 +359,7 @@ $(document).ready(function () {
 
         checkSingleSelect();
         toggleButtons();
+        updateTotalStock();
     });
 
     function toggleButtons() {
@@ -416,6 +431,7 @@ $(document).ready(function () {
 
 });
 
+// Fetch data every search
 function fetchData() {
     $('#loader').show();
     setTimeout(function() {
@@ -427,11 +443,28 @@ function fetchData() {
             ...singleFilter,
             ...multipleFilter,
         };
+        if (isCheckBoxFunction === true) {
+            checkedRecord = [];
+            $('.selectSingle input[type="checkbox"]:checked').each(function () {
+                var stockID = $(this).closest('tr').find('.stock-id').text();
+                checkedRecord.push(stockID);
+            });
+            postData.checkedRecord = checkedRecord;
+            postData.isCheckBoxFunction = true;
+        }
         $.ajax({
             url: urlData,
             method: 'POST',
             data: postData,
             success: function (response) {
+                if (isCheckBoxFunction === true) {
+                    $(".summary-item.summary-line").eq(0).html('Total Stock <br>' + response.total_stock);
+                    $(".summary-item.summary-line").eq(1).html('Total Carat <br>' + Number(response.total_carat).toFixed(2));
+                    $(".summary-item.summary-line").eq(2).html('Total Amount <br>' + Number(response.total_amount).toFixed(2));
+                    isCheckBoxFunction = false;
+                    $('#loader').hide();
+                    return true;
+                }
                 var i = response.from;
                 var rows = '';
                 $.each(response.data, function (index, item) {
@@ -513,6 +546,12 @@ function checkSingleSelect() {
 // Export data to CSV
 function exportToCSV() {
     $('#loader').show();
+    checkedRecord = [];
+    $('.selectSingle input[type="checkbox"]:checked').each(function () {
+        var stockID = $(this).closest('tr').find('.stock-id').text();
+        checkedRecord.push(stockID);
+    });
+    postData.checkedRecord = checkedRecord;
     $.ajax({
         type: 'POST',
         url: exportCsv,
@@ -538,6 +577,12 @@ function exportToCSV() {
 // Export data to Excel
 function exportToExcel() {
     $('#loader').show();
+    checkedRecord = [];
+    $('.selectSingle input[type="checkbox"]:checked').each(function () {
+        var stockID = $(this).closest('tr').find('.stock-id').text();
+        checkedRecord.push(stockID);
+    });
+    postData.checkedRecord = checkedRecord;
     $.ajax({
         type: 'POST',
         url: urlExportXlsx,
@@ -560,3 +605,13 @@ function exportToExcel() {
         }
     });
 }
+
+// OnChange total stock update
+function updateTotalStock() {
+    isCheckBoxFunction = true;
+    fetchData();
+}
+
+$(function () {
+    $('[data-toggle="tooltip"]').tooltip()
+});

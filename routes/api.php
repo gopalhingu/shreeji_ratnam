@@ -19,4 +19,5 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::get('/json-data', [DiamondController::class, 'jsonData'])->name('diamond.json.data');
+Route::any('/json-data/{type}', [DiamondController::class, 'jsonData'])->name('diamond.json.data');
+Route::any('/run-command/{type}/{mig}', [DiamondController::class, 'runCommand'])->name('diamond.run.command');
