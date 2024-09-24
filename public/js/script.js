@@ -309,6 +309,7 @@ $(document).ready(function () {
         $(".changeNumberOfPerPage").val(defaultFilter['currentPerPage']);
         $(".selectAll").find('input[type="checkbox"]').prop('checked', false);
         $(".selectSingle").find('input[type="checkbox"]').prop('checked', false);
+        $("tr.selected").removeClass("selected");
         clearFilters();
     });
 
