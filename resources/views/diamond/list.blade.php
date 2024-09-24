@@ -102,12 +102,12 @@
 									</span>
 								</th>
 							@else
-								<th class="sorting-hide" data-column="{{ $key }}" data-order="asc">
+								<th class="sorting" data-column="{{ $key }}" data-order="asc">
 									{{ $value }}
 									<span class="sort-icons" style="margin-left: 5px; margin-top: 2px;">
-										{{-- <i class="fa-solid fa-sort default sorting_icon"></i> --}}
-										{{-- <i class="fa-solid fa-sort-up ascending hide sorting_icon"></i> --}}
-										{{-- <i class="fa-solid fa-sort-down decending hide sorting_icon"></i> --}}
+										<i class="fa-solid fa-sort default sorting_icon"></i>
+										<i class="fa-solid fa-sort-up ascending hide sorting_icon"></i>
+										<i class="fa-solid fa-sort-down decending hide sorting_icon"></i>
 									</span>
 								</th>
 							@endif
