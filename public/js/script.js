@@ -1,7 +1,8 @@
 
 let postData = {};
-let checkedRecord = [];
-let isCheckBoxFunction = false;
+let total_stock = 0;
+let total_carat = 0;
+let total_amount = 0;
 
 let defaultFilter = {
     currentPage: 1,
@@ -246,18 +247,26 @@ document.addEventListener('DOMContentLoaded', function () {
 
 $(document).ready(function () {
 
-    $('.whatsappform').on('click', function () {
-      
-        checkedRecord = [];
+    $(document).on('click', '.whatsappform', function (e) {
+        e.preventDefault();
+        var text = '';
+        text += "I Want To Select These Diamond Stock :- \n\n";
         $('.selectSingle input[type="checkbox"]:checked').each(function () {
-            var stockID = $(this).closest('tr').find('.stock-id').text();
-            checkedRecord.push(stockID);
+            text += 'Stock ID: ' + $(this).closest('tr').find('.check_stock_id').text() + "\n";
+            text += 'Weight: ' + $(this).closest('tr').find('.check_weight').text() + "\n";
+            text += 'Color: ' + $(this).closest('tr').find('.check_color').text() + "\n";
+            text += 'Clarity: ' + $(this).closest('tr').find('.check_clarity').text() + "\n";
+            text += 'Cut: ' + $(this).closest('tr').find('.check_cut').text() + "\n";
+            text += 'Shape: ' + $(this).closest('tr').find('.check_shape').text() + "\n";
+            text += 'Price Per Carat: ' + $(this).closest('tr').find('.check_price_per_carat').text() + "\n";
+            text += 'Certificate: ' + $(this).closest('tr').find('.check_certificate_number').text() + "\n";
+            text += 'Report: ' + $(this).closest('tr').find('.check_report_number').text() + "\n";
+            text += 'Lab: ' + $(this).closest('tr').find('.check_lab').text() + "\n";
+            text += "\n";
         });
-        var stockIDText = checkedRecord.join('\n');
-
         const phone_number = $(this).find('.contact-info').find('.contact-number').text().replace(/\D/g, '');
-        const encodedText = encodeURIComponent(stockIDText);
-        const whatsappURL = `https://api.whatsapp.com/send/?phone=%2B${phone_number}&text=I%20Want%20To%20Select%20This%20Stock%20IDs%3A%0A${encodedText}&type=phone_number&app_absent=0`;
+        const encodedText = encodeURIComponent(text);
+        const whatsappURL = `https://api.whatsapp.com/send/?phone=%2B${phone_number}&text=${encodedText}&type=phone_number&app_absent=0`;
         window.open(whatsappURL, '_blank');
     });
 
@@ -298,6 +307,8 @@ $(document).ready(function () {
         e.preventDefault();
 
         $(".changeNumberOfPerPage").val(defaultFilter['currentPerPage']);
+        $(".selectAll").find('input[type="checkbox"]').prop('checked', false);
+        $(".selectSingle").find('input[type="checkbox"]').prop('checked', false);
         clearFilters();
     });
 
@@ -361,17 +372,6 @@ $(document).ready(function () {
         toggleButtons();
         updateTotalStock();
     });
-
-    function toggleButtons() {
-        const anyChecked = $('.selectSingle input:checked').length > 0;
-        if (anyChecked) {
-            $('.contact-button').hide();
-            $('.whatsapp-button').show();
-        } else {
-            $('.contact-button').show();
-            $('.whatsapp-button').hide();
-        }
-    }
 
     $(document).on('click', '.previousPage', function (e) {
         e.preventDefault();
@@ -443,39 +443,30 @@ function fetchData() {
             ...singleFilter,
             ...multipleFilter,
         };
-        if (isCheckBoxFunction === true) {
-            checkedRecord = [];
-            $('.selectSingle input[type="checkbox"]:checked').each(function () {
-                var stockID = $(this).closest('tr').find('.stock-id').text();
-                checkedRecord.push(stockID);
-            });
-            postData.checkedRecord = checkedRecord;
-            postData.isCheckBoxFunction = true;
-        }
+        // var checkedRecord = [];
+        // $('.selectSingle input[type="checkbox"]:checked').each(function () {
+        //     var stockID = $(this).data('stock_id');
+        //     checkedRecord.push(stockID);
+        // });
+        // postData.checkedRecord = checkedRecord;
         $.ajax({
             url: urlData,
             method: 'POST',
             data: postData,
             success: function (response) {
-                if (isCheckBoxFunction === true) {
-                    $(".summary-item.summary-line").eq(0).html('Total Stock <br>' + response.total_stock);
-                    $(".summary-item.summary-line").eq(1).html('Total Carat <br>' + Number(response.total_carat).toFixed(2));
-                    $(".summary-item.summary-line").eq(2).html('Total Amount <br>' + Number(response.total_amount).toFixed(2));
-                    isCheckBoxFunction = false;
-                    $('#loader').hide();
-                    return true;
-                }
                 var i = response.from;
                 var rows = '';
                 $.each(response.data, function (index, item) {
                     rows += '<tr class="">';
-                    rows += '<td><div class="checkbox selectSingle"><input type="checkbox" data-id="' + item.id + '" /><span class=""></span></div></td>';
+                    rows += '<td data-id="' + item['id'] + '"><div class="checkbox selectSingle"><input type="checkbox" data-stock_id="' + item['stock_id'] + '" /><span class=""></span></div></td>';
                     rows += '<td>' + i + '</td>';
                     $.each(columns, function(k, v) { 
-                        if(v == 'stock_id') {
-                            rows += '<td class="stock-id">' + ((item[v] != null) ? item[v] : '-') + '</td>';
+                        if(v == 'id') {
+                            return true;;
+                        } else if(v == 'stock_id') {
+                            rows += '<td class="check_'+ v +'">' + ((item[v] != null) ? item[v] : '-') + '</td>';
                         } else {
-                            rows += '<td>' + ((item[v] != null) ? item[v] : '-') + '</td>';
+                            rows += '<td class="check_'+ v +'">' + ((item[v] != null) ? item[v] : '-') + '</td>';
                         }
                     });
                     rows += '</tr>';
@@ -513,9 +504,13 @@ function fetchData() {
                     $(".nextPage").removeClass("hide");
                 }
                 $('#loader').hide();
+
+                total_stock = response.total_stock;
+                total_carat = response.total_carat;
+                total_amount = response.total_amount;
             }
         });
-    }, 1000);
+    }, 500);
 }
 
 function checkSingleSelect() {
@@ -546,9 +541,9 @@ function checkSingleSelect() {
 // Export data to CSV
 function exportToCSV() {
     $('#loader').show();
-    checkedRecord = [];
+    var checkedRecord = [];
     $('.selectSingle input[type="checkbox"]:checked').each(function () {
-        var stockID = $(this).closest('tr').find('.stock-id').text();
+        var stockID = $(this).data('stock_id');
         checkedRecord.push(stockID);
     });
     postData.checkedRecord = checkedRecord;
@@ -577,9 +572,9 @@ function exportToCSV() {
 // Export data to Excel
 function exportToExcel() {
     $('#loader').show();
-    checkedRecord = [];
+    var checkedRecord = [];
     $('.selectSingle input[type="checkbox"]:checked').each(function () {
-        var stockID = $(this).closest('tr').find('.stock-id').text();
+        var stockID = $(this).data('stock_id');
         checkedRecord.push(stockID);
     });
     postData.checkedRecord = checkedRecord;
@@ -609,7 +604,35 @@ function exportToExcel() {
 // OnChange total stock update
 function updateTotalStock() {
     isCheckBoxFunction = true;
-    fetchData();
+    var checkedRecord = [];
+    var totalCarat = 0;
+    var totalAmount = 0;
+    $('.selectSingle input[type="checkbox"]:checked').each(function () {
+        var stockID = $(this).data('stock_id');
+        totalCarat += parseFloat($(this).closest('tr').find('.check_weight').text());
+        totalAmount += parseFloat($(this).closest('tr').find('.check_total_price').text());
+        checkedRecord.push(stockID);
+    });
+    if (checkedRecord.length > 0) {
+        $(".summary-item.summary-line").eq(0).html('Total Stock <br>' + checkedRecord.length);
+        $(".summary-item.summary-line").eq(1).html('Total Carat <br>' + Number(totalCarat).toFixed(2));
+        $(".summary-item.summary-line").eq(2).html('Total Amount <br>' + Number(totalAmount).toFixed(2));
+    } else {
+        $(".summary-item.summary-line").eq(0).html('Total Stock <br>' + total_stock);
+        $(".summary-item.summary-line").eq(1).html('Total Carat <br>' + Number(total_carat).toFixed(2));
+        $(".summary-item.summary-line").eq(2).html('Total Amount <br>' + Number(total_amount).toFixed(2));
+    }
+}
+
+function toggleButtons() {
+    const anyChecked = $('.selectSingle input:checked').length > 0;
+    if (anyChecked) {
+        $('.contact-button').hide();
+        $('.whatsapp-button').show();
+    } else {
+        $('.contact-button').show();
+        $('.whatsapp-button').hide();
+    }
 }
 
 $(function () {

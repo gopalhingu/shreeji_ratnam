@@ -8,7 +8,7 @@
 
 @php
 	$columns = array_keys($columnWithValue);
-	array_shift($columns);
+	// array_shift($columns);
 	array_pop($columns);
 	array_pop($columns);
 	$columns = json_encode($columns);

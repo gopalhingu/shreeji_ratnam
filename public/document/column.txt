@@ -53,3 +53,7 @@
 [country]                    => Country of origin for the diamond.
 [cert_comment]               => Additional certification comments.
 
+
+http://127.0.0.1:8000/document/API-Documentation-For-Retrieving-Diamond-Data.docx
+http://127.0.0.1:8000/document/Sample-Shreeji-Ratnam-sheet.xlsx
+http://127.0.0.1:8000/api/run-command/97531/13579

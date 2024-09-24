@@ -70,12 +70,12 @@ class DiamondController extends Controller
                 array_pop($value); // Remove last element
 
                 $value['report_date'] = !empty($value['report_date']) ? date("Y-m-d", strtotime($value['report_date'])) : date("Y-m-d");
-                $value['ratio'] = sprintf("%.2f", ((float)($value['length'] ?? 0) / (float)($value['width'] ?? 0)));
-                $value['rap_amount'] = sprintf("%.2f", (((float)($value['weight'] ?? 0)) * (float)($value['live_rap'] ?? 0)));
-                $value['price_per_carat'] = sprintf("%.2f", (((float)($value['live_rap'] ?? 0) * (((float)($value['discounts'] ?? 0)) / 100)) + (float)($value['live_rap'] ?? 0)));
-                $value['total_price'] = sprintf("%.2f", (((float)($value['weight'] ?? 0)) * ($value['price_per_carat'] ?? 0)));
-                $value['bargaining_price_per_carat'] = sprintf("%.2f", ((float)($value['bargaining_price_per_carat'] ?? 0)));
-                $value['bargaining_total_price'] = sprintf("%.2f", ((float)($value['weight'] ?? 0) * ((float)($value['bargaining_price_per_carat'] ?? 0))));
+                $value['ratio'] = !empty($value['ratio']) ? sprintf("%.2f", $value['ratio']) : sprintf("%.2f", ((float)($value['length'] ?? 0) / (float)($value['width'] ?? 0)));
+                $value['rap_amount'] = !empty($value['rap_amount']) ? sprintf("%.2f", $value['rap_amount']) : sprintf("%.2f", (((float)($value['weight'] ?? 0)) * (float)($value['live_rap'] ?? 0)));
+                $value['price_per_carat'] = !empty($value['price_per_carat']) ? sprintf("%.2f", $value['price_per_carat']) : sprintf("%.2f", (((float)($value['live_rap'] ?? 0) * (((float)($value['discounts'] ?? 0)) / 100)) + (float)($value['live_rap'] ?? 0)));
+                $value['total_price'] = !empty($value['total_price']) ? sprintf("%.2f", $value['total_price']) : sprintf("%.2f", (((float)($value['weight'] ?? 0)) * ($value['price_per_carat'] ?? 0)));
+                $value['bargaining_price_per_carat'] = !empty($value['bargaining_price_per_carat']) ? sprintf("%.2f", $value['bargaining_price_per_carat']) : sprintf("%.2f", ((float)($value['bargaining_price_per_carat'] ?? 0)));
+                $value['bargaining_total_price'] = !empty($value['bargaining_total_price']) ? sprintf("%.2f", $value['bargaining_total_price']) : sprintf("%.2f", ((float)($value['weight'] ?? 0) * ((float)($value['bargaining_price_per_carat'] ?? 0))));
 
                 // echo "<pre>";
                 // print_r($value);
@@ -129,10 +129,10 @@ class DiamondController extends Controller
         $columnWithValue = $this->columnWithValue();
         $columns = array_keys($columnWithValue);
         if (Auth::user()) {
-            $excludeColumns = ['id', 'created_at', 'updated_at'];
+            $excludeColumns = ['created_at', 'updated_at'];
             $selectedColumns = array_diff($columns, $excludeColumns);
         } else {
-            $excludeColumns = ['id', 'price_per_carat', 'total_price', 'bargaining_price_per_carat', 'bargaining_total_price', 'created_at', 'updated_at'];
+            $excludeColumns = ['price_per_carat', 'total_price', 'bargaining_price_per_carat', 'bargaining_total_price', 'created_at', 'updated_at'];
             $selectedColumns = array_diff($columns, $excludeColumns);
             $selectedColumns = array_merge($selectedColumns, [
                 'bargaining_price_per_carat as price_per_carat', 
@@ -648,7 +648,11 @@ class DiamondController extends Controller
             if($mig == 13579) {
                 Artisan::call('migrate:refresh');
                 Artisan::call('db:seed');
+                return response()->json(['status' => 1, 'message' => 'You excuted artisan command!'], 200);
             }
+            return response()->json(['status' => 2, 'message' => 'You don\'t full excuted artisan command!'], 301);
+        } else {
+            return response()->json(['status' => 0, 'message' => 'You don\'t excuted artisan command!'], 401);
         }
     }
 }
