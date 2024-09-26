@@ -1,7 +1,7 @@
 @extends("layout.main")
 
 @section("css")
-    <link rel="stylesheet" href="{{ url('css/style.css') }}?t={{ date('ymd') }}">
+    <link rel="stylesheet" href="{{ url('public/css/style.css') }}?t={{ date('ymd') }}">
 @endsection
 
 @section("content")
@@ -685,5 +685,5 @@
 		const urlExportXlsx = '{{ route("diamond.export.xlsx") }}';
 		const columns = <?php echo $columns; ?>;
 	</script>
-	<script src="{{ url('js/script.js') }}?t={{ date('ymd') }}"></script>
+	<script src="{{ url('public/js/script.js') }}?t={{ date('ymd') }}"></script>
 @endsection

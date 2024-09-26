@@ -636,18 +636,18 @@ class DiamondController extends Controller
     public function runCommand($type, $mig)
     {
         if($type == 97531) {
-            Artisan::call('view:clear');
             // Artisan::call('view:cache');
-            // Artisan::call('route:clear');
+            Artisan::call('view:clear');
             // Artisan::call('route:cache');
-            // Artisan::call('config:clear');
+            Artisan::call('route:clear');
             // Artisan::call('config:cache');
+            Artisan::call('config:clear');
             // Artisan::call('optimize');
             Artisan::call('optimize:clear');
 
             if($mig == 13579) {
-                Artisan::call('migrate:refresh');
-                Artisan::call('db:seed');
+                // Artisan::call('migrate:refresh');
+                // Artisan::call('db:seed');
                 return response()->json(['status' => 1, 'message' => 'You excuted artisan command!'], 200);
             }
             return response()->json(['status' => 2, 'message' => 'You don\'t full excuted artisan command!'], 301);
