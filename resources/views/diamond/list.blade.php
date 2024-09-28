@@ -446,7 +446,7 @@
 						<div class="shape_select_wrapper">
 							@foreach ($shapes as $key=>$value)
 								@php
-									$iconPath = asset('image/shape/' . strtoupper($value) . '.svg');
+									$iconPath = asset('public/image/shape/' . strtoupper($value) . '.svg');
 								@endphp
 								<div class="form-check custom_checkbox me-2">
 									<input class="form-check-input" type="checkbox" value="{{ $value }}" id="shape{{ $key }}">

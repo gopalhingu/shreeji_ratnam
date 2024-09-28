@@ -70,7 +70,7 @@ class DiamondController extends Controller
                 array_pop($value); // Remove last element
 
                 $value['report_date'] = !empty($value['report_date']) ? date("Y-m-d", strtotime($value['report_date'])) : date("Y-m-d");
-                $value['ratio'] = !empty($value['ratio']) ? sprintf("%.2f", $value['ratio']) : sprintf("%.2f", ((float)($value['length'] ?? 0) / (float)($value['width'] ?? 0)));
+                $value['ratio'] = !empty($value['ratio']) ? sprintf("%.2f", $value['ratio']) : sprintf("%.2f", ((float)($value['length'] ?? 0) / (((float)$value['width'] > 0) ? (float)$value['width'] : 1) ?? 0));
                 $value['rap_amount'] = !empty($value['rap_amount']) ? sprintf("%.2f", $value['rap_amount']) : sprintf("%.2f", (((float)($value['weight'] ?? 0)) * (float)($value['live_rap'] ?? 0)));
                 $value['price_per_carat'] = !empty($value['price_per_carat']) ? sprintf("%.2f", $value['price_per_carat']) : sprintf("%.2f", (((float)($value['live_rap'] ?? 0) * (((float)($value['discounts'] ?? 0)) / 100)) + (float)($value['live_rap'] ?? 0)));
                 $value['total_price'] = !empty($value['total_price']) ? sprintf("%.2f", $value['total_price']) : sprintf("%.2f", (((float)($value['weight'] ?? 0)) * ($value['price_per_carat'] ?? 0)));
@@ -84,7 +84,8 @@ class DiamondController extends Controller
                 if(!empty($value['stock_id'])) {
                     $getRecord = Diamond::where("stock_id", $value['stock_id'])->first();
                     if(!empty($getRecord)) {
-                        Diamond::where("stock_id", $value['stock_id'])->update($value);
+                        continue;
+                        // Diamond::where("stock_id", $value['stock_id'])->update($value);
                     } else {
                         Diamond::create($value);
                     }
