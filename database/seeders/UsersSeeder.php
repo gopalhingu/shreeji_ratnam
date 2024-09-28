@@ -27,9 +27,9 @@ class UsersSeeder extends Seeder
             ],
             [
                 'name' => 'Nityanand Jha',
-                'email' => 'gopalhingu123@yopmail.com',
+                'email' => 'gopalhingu123@gmail.com',
                 'email_verified_at' => Carbon::now(),
-                'password' => Hash::make('Gopal@123'),
+                'password' => Hash::make('Hingu@1234567'),
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
             ],

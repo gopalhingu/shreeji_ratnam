@@ -34,6 +34,7 @@ let singleFilter = {
 
 let multipleFilter = {
     statusList: [],
+    locationList: [],
     shapeList: [],
     colorList: [],
     clarityList: [],
@@ -45,6 +46,7 @@ let multipleFilter = {
 
 let placeholder = {
     statusList: '<span class="text-muted"><b>Status</b></span><br><span class="text-muted">Please choose one or more</span>',
+    locationList: '<span class="text-muted"><b>Location</b></span><br><span class="text-muted">Please choose one or more</span>',
     shapeList: '<span class="text-muted"><b>Shape</b></span><br><span class="text-muted">Please choose one or more</span>',
     colorList: '<span class="text-muted"><b>Color</b></span><br><span class="text-muted">Please choose one or more</span>',
     clarityList: '<span class="text-muted"><b>Clarity</b></span><br><span class="text-muted">Please choose one or more</span>',
@@ -56,6 +58,7 @@ let placeholder = {
 
 let checkInput = [
     "fullStatusList",
+    "fullLocationList",
     "fullShapeList",
     "fullColorList",
     "fullClarityList",
@@ -116,6 +119,7 @@ function showModal(modalId) {
 }
 
 $('#statusList').on('click', function () { showModal('#statusModal'); });
+$('#locationList').on('click', function () { showModal('#locationModal'); });
 $('#shapeList').on('click', function () { showModal('#shapeModal'); });
 $('#colorList').on('click', function () { showModal('#colorModal'); });
 $('#clarityList').on('click', function () { showModal('#clarityModal'); });
@@ -151,6 +155,10 @@ function applyFilter(modalId, fullListId, placeholderMessage, tagClass, id) {
 
 $(document).on('click', '.apply-status-filter', function () {
     applyFilter('#statusModal', '#fullStatusList', 'placeholderMessage', 'remove-tag', 'statusList');
+});
+
+$(document).on('click', '.apply-location-filter', function () {
+    applyFilter('#locationModal', '#fullLocationList', 'placeholderMessage', 'remove-tag', 'locationList');
 });
 
 $(document).on('click', '.apply-shape-filter', function () {
@@ -194,6 +202,10 @@ function removeTag(tag, id, fullListId, placeholderMessage) {
 
 $(document).on('click', '.remove-tag', function () {
     removeTag(this, 'statusList', '#fullStatusList', 'placeholderMessage');
+});
+
+$(document).on('click', '.remove-tag', function () {
+    removeTag(this, 'locationList', '#fullLocationList', 'placeholderMessage');
 });
 
 $(document).on('click', '.remove-tag', function () {
@@ -247,6 +259,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
 $(document).ready(function () {
 
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    });
+
     $(document).on('click', '.whatsappform', function (e) {
         e.preventDefault();
         var text = '';
@@ -259,7 +277,7 @@ $(document).ready(function () {
             text += 'Cut: ' + $(this).closest('tr').find('.check_cut').text() + "\n";
             text += 'Shape: ' + $(this).closest('tr').find('.check_shape').text() + "\n";
             text += 'Price Per Carat: ' + $(this).closest('tr').find('.check_price_per_carat').text() + "\n";
-            text += 'Certificate: ' + $(this).closest('tr').find('.check_certificate_number').text() + "\n";
+            text += 'Certificate: ' + $(this).closest('tr').find('.check_cert_url').text() + "\n";
             text += 'Report: ' + $(this).closest('tr').find('.check_report_number').text() + "\n";
             text += 'Lab: ' + $(this).closest('tr').find('.check_lab').text() + "\n";
             text += "\n";
@@ -430,6 +448,25 @@ $(document).ready(function () {
         }
     });
 
+    $(document).on('change', '.statusChangeFunction', function (e) {
+        e.preventDefault();
+        $('#loader').show();
+        var status = $(this).val();
+        var stock_id = $(this).closest('tr').find('.check_stock_id').text();
+        $.ajax({
+            type: 'POST',
+            url: urlStatus,
+            data: {stock_id, status},
+            success: function(response) {
+                $('#loader').hide();
+            },
+            error: function(xhr, status, error) {
+                console.error("An error occurred while exporting the data.");
+                console.error(xhr.responseText);
+            }
+        });
+    });
+
 });
 
 // Fetch data every search
@@ -466,6 +503,14 @@ function fetchData() {
                             return true;;
                         } else if(v == 'stock_id') {
                             rows += '<td class="check_'+ v +'">' + ((item[v] != null) ? item[v] : '-') + '</td>';
+                        } else if(v == 'status' && userId > 0) {
+                            rows += '<td class="check_'+ v +'">';
+                            rows += '<select name="status" class="statusChangeFunction form-control">';
+                            rows += '<option value="AVAILABLE" ' + ((item[v] == 'AVAILABLE') ? 'selected' : '') + '>AVAILABLE</option>';
+                            rows += '<option value="HOLD" ' + ((item[v] == 'HOLD') ? 'selected' : '') + '>HOLD</option>';
+                            rows += '<option value="SOLD" ' + ((item[v] == 'SOLD') ? 'selected' : '') + '>SOLD</option>';
+                            rows += '</select>';
+                            rows += '</td>';
                         } else {
                             rows += '<td class="check_'+ v +'">' + ((item[v] != null) ? item[v] : '-') + '</td>';
                         }
@@ -550,7 +595,7 @@ function exportToCSV() {
     postData.checkedRecord = checkedRecord;
     $.ajax({
         type: 'POST',
-        url: exportCsv,
+        url: urlExportCsv,
         data: postData,
         xhrFields: {
             responseType: 'blob'
@@ -563,7 +608,7 @@ function exportToCSV() {
             $("#downloadModal").modal('hide');
             $('#loader').hide();
         },
-        error: function(response) {
+        error: function(xhr, status, error) {
             console.error("An error occurred while exporting the data.");
             console.error(xhr.responseText);
         }

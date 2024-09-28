@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 
 Route::get('/', [DiamondController::class, 'list'])->name('diamond.list');
 Route::post('/data', [DiamondController::class, 'data'])->name('diamond.data');
+Route::post('/status', [DiamondController::class, 'status'])->name('diamond.status');
 Route::post('/import-save', [DiamondController::class, 'importSave'])->name('diamond.import.save');
 Route::post('/export-xlsx', [DiamondController::class, 'exportXlsx'])->name('diamond.export.xlsx');
 Route::post('/export-csv', [DiamondController::class, 'exportCsv'])->name('diamond.export.csv');

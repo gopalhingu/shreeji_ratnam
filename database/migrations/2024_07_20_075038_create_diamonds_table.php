@@ -18,6 +18,7 @@ class CreateDiamondsTable extends Migration
             $table->string('stock_id')->unique();
             $table->string('growth_type')->nullable();
             $table->string('status')->nullable();
+            $table->string('reference')->nullable();
             $table->string('range')->nullable();
             $table->string('shape')->nullable();
             $table->string('weight')->nullable();
@@ -61,7 +62,7 @@ class CreateDiamondsTable extends Migration
             $table->string('culet')->nullable();
             $table->string('state')->nullable();
             $table->string('city')->nullable();
-            $table->string('certificate_number')->nullable();
+            $table->string('cert_url')->nullable();
             $table->text('video_url')->nullable();
             $table->text('image_url')->nullable();
             $table->string('treatment')->nullable();

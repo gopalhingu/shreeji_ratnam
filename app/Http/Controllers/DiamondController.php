@@ -105,6 +105,7 @@ class DiamondController extends Controller
     public function list()
     {
         $status = Diamond::select('status')->whereNotNull('status')->distinct()->pluck('status');
+        $location = Diamond::select('location')->whereNotNull('location')->distinct()->pluck('location');
         $shapes = Diamond::select('shape')->whereNotNull('shape')->distinct()->pluck('shape');
         $colors = Diamond::select('color')->whereNotNull('color')->distinct()->pluck('color');
         $clarities = Diamond::select('clarity')->whereNotNull('clarity')->distinct()->orderBy('clarity', 'ASC')->pluck('clarity');
@@ -114,6 +115,7 @@ class DiamondController extends Controller
         $labs = Diamond::select('lab')->whereNotNull('lab')->distinct()->pluck('lab');
         $columnWithValue = $this->columnWithValue();
         if (!Auth::user()) {
+            unset($columnWithValue['reference']);
             unset($columnWithValue['bargaining_price_per_carat']);
             unset($columnWithValue['bargaining_total_price']);
         }
@@ -122,7 +124,7 @@ class DiamondController extends Controller
         // print_r($columnWithValue);
         // die;
 
-        return view("diamond.list",compact('status', 'shapes', 'colors', 'clarities', 'cuts', 'polish', 'symmetries', 'labs', 'columnWithValue'));
+        return view("diamond.list",compact('status', 'location', 'shapes', 'colors', 'clarities', 'cuts', 'polish', 'symmetries', 'labs', 'columnWithValue'));
     }
 
     public function data(Request $request)
@@ -133,7 +135,7 @@ class DiamondController extends Controller
             $excludeColumns = ['created_at', 'updated_at'];
             $selectedColumns = array_diff($columns, $excludeColumns);
         } else {
-            $excludeColumns = ['price_per_carat', 'total_price', 'bargaining_price_per_carat', 'bargaining_total_price', 'created_at', 'updated_at'];
+            $excludeColumns = ['reference', 'price_per_carat', 'total_price', 'bargaining_price_per_carat', 'bargaining_total_price', 'created_at', 'updated_at'];
             $selectedColumns = array_diff($columns, $excludeColumns);
             $selectedColumns = array_merge($selectedColumns, [
                 'bargaining_price_per_carat as price_per_carat', 
@@ -165,6 +167,7 @@ class DiamondController extends Controller
         $type = $request->input('type', '');
         $checkedRecord = $request->input('checkedRecord', []);
         $statusList = $request->input('statusList', []);
+        $locationList = $request->input('locationList', []);
         $shapeList = $request->input('shapeList', []);
         $colorList = $request->input('colorList', []);
         $clarityList = $request->input('clarityList', []);
@@ -234,6 +237,9 @@ class DiamondController extends Controller
         ->when($statusList, function ($query, $statusList) {
             return $query->whereIn('status', $statusList);
         })
+        ->when($locationList, function ($query, $locationList) {
+            return $query->whereIn('location', $locationList);
+        })
         ->when($shapeList, function ($query, $shapeList) {
             return $query->whereIn('shape', $shapeList);
         })
@@ -284,6 +290,19 @@ class DiamondController extends Controller
         ]);
     }
 
+    public function status(Request $request)
+    {
+        try {
+            $update = Diamond::where('stock_id', $request->stock_id)->update(['status' => $request->status]);
+            if (!$update) {
+                return response()->json(['status' => false, 'message' => 'Something went wrong!', 500]);
+            }
+            return response()->json(['status' => true, 'message' => 'Successfully!', 200]);
+        } catch (Exception $e) {
+            return response()->json(['status' => false, 'message' => $e->getMessage(), 500]);
+        }
+    }
+
     public function jsonData($type = 2, Request $request)
     {
         try {
@@ -295,13 +314,13 @@ class DiamondController extends Controller
             // die; 
 
             if ($type == 1) {
-                $excludeColumns = ['bargaining_price_per_carat', 'bargaining_total_price', 'created_at', 'updated_at'];
+                $excludeColumns = ['reference', 'bargaining_price_per_carat', 'bargaining_total_price', 'created_at', 'updated_at'];
                 $selectedColumns = array_diff($columns, $excludeColumns);
                 $records = Diamond::select($selectedColumns)->get()->toArray();
                 return response()->json($records);
             } 
             else if ($type == 2) {
-                $excludeColumns = ['price_per_carat', 'total_price', 'bargaining_price_per_carat', 'bargaining_total_price', 'created_at', 'updated_at'];
+                $excludeColumns = ['reference', 'price_per_carat', 'total_price', 'bargaining_price_per_carat', 'bargaining_total_price', 'created_at', 'updated_at'];
                 $selectedColumns = array_diff($columns, $excludeColumns);
                 $finalColumns = array_merge($selectedColumns, [
                     'bargaining_price_per_carat as price_per_carat', 
@@ -360,20 +379,6 @@ class DiamondController extends Controller
     {
         $column = $this->columnWithValue();
         $data = $this->getDataForExport($request);
-
-       /*  $columnWithValue = $this->columnWithValue();
-        $columns = array_keys($columnWithValue);
-        if (Auth::user()) {
-            $excludeColumns = ['created_at', 'updated_at'];
-            $selectedColumns = array_diff($columns, $excludeColumns);
-        } else {
-            $excludeColumns = ['price_per_carat', 'total_price', 'bargaining_price_per_carat', 'bargaining_total_price', 'created_at', 'updated_at'];
-            $selectedColumns = array_diff($columns, $excludeColumns);
-            $selectedColumns = array_merge($selectedColumns, [
-                'bargaining_price_per_carat as price_per_carat', 
-                'bargaining_total_price as total_price'
-            ]);
-        } */
 
         $excelData = $this->excelData($column, $data);
         
@@ -444,7 +449,7 @@ class DiamondController extends Controller
         if (Auth::user()) {
             $exception = ['id', 'created_at', 'updated_at'];
         } else {
-            $exception = ['id', 'bargaining_price_per_carat', 'bargaining_total_price', 'created_at', 'updated_at'];
+            $exception = ['id', 'reference', 'bargaining_price_per_carat', 'bargaining_total_price', 'created_at', 'updated_at'];
         }
         $header = ['Serial No.'];
         $totalWeight = 0;
@@ -506,7 +511,7 @@ class DiamondController extends Controller
             $excludeColumns = ['id', 'created_at', 'updated_at'];
             $selectedColumns = array_diff($columns, $excludeColumns);
         } else {
-            $excludeColumns = ['id', 'price_per_carat', 'total_price', 'bargaining_price_per_carat', 'bargaining_total_price', 'created_at', 'updated_at'];
+            $excludeColumns = ['id', 'reference', 'price_per_carat', 'total_price', 'bargaining_price_per_carat', 'bargaining_total_price', 'created_at', 'updated_at'];
             $selectedColumns = array_diff($columns, $excludeColumns);
             $selectedColumns = array_merge($selectedColumns, [
                 'bargaining_price_per_carat as price_per_carat', 
@@ -538,6 +543,7 @@ class DiamondController extends Controller
         $type = $request->input('type', '');
         $checkedRecord = $request->input('checkedRecord', []);
         $statusList = $request->input('statusList', []);
+        $locationList = $request->input('locationList', []);
         $shapeList = $request->input('shapeList', []);
         $colorList = $request->input('colorList', []);
         $clarityList = $request->input('clarityList', []);
@@ -606,6 +612,9 @@ class DiamondController extends Controller
         })
         ->when($statusList, function ($query, $statusList) {
             return $query->whereIn('status', $statusList);
+        })
+        ->when($locationList, function ($query, $locationList) {
+            return $query->whereIn('location', $locationList);
         })
         ->when($shapeList, function ($query, $shapeList) {
             return $query->whereIn('shape', $shapeList);

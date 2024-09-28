@@ -2,6 +2,11 @@
 
 @section("css")
     <link rel="stylesheet" href="{{ url('public/css/style.css') }}?t={{ date('ymd') }}">
+	<style>
+		.statusChangeFunction {
+			width: auto;
+		}
+	</style>
 @endsection
 
 @section("content")
@@ -259,49 +264,56 @@
 						</div>
 
 						<!-- Status List Display -->
-						<div class="col-md-12">
+						<div class="col-md-6">
 							<div id="statusList" class="border p-2 rounded focusable" tabindex="0" style="min-height: 50px;">
 								<span class="text-muted"><b>Status</b></span><br>
 								<span class="text-muted">Please choose one or more</span>
 							</div>
 						</div>
+						<!-- Location List Display -->
+						<div class="col-md-6">
+							<div id="locationList" class="border p-2 rounded focusable" tabindex="0" style="min-height: 50px;">
+								<span class="text-muted"><b>Location</b></span><br>
+								<span class="text-muted">Please choose one or more</span>
+							</div>
+						</div>
 						<!-- Shape List Display -->
-						<div class="col-md-12">
+						<div class="col-md-6">
 							<div id="shapeList" class="border p-2 rounded" tabindex="0" style="min-height: 50px;">
 								<span class="text-muted"><b>Shape</b></span><br>
 								<span class="text-muted">Please choose one or more</span>
 							</div>
 						</div>
 						<!-- Color List Display -->
-						<div class="col-md-12">
+						<div class="col-md-6">
 							<div id="colorList" class="border p-2 rounded" style="min-height: 50px;">
 								<span class="text-muted"><b>Color</b></span><br>
 								<span class="text-muted">Please choose one or more</span>
 							</div>
 						</div>
 						<!-- Clarity List Display -->
-						<div class="col-md-12">
+						<div class="col-md-6">
 							<div id="clarityList" class="border p-2 rounded" style="min-height: 50px;">
 								<span class="text-muted"><b>Clarity</b></span><br>
 								<span class="text-muted">Please choose one or more</span>
 							</div>
 						</div>
 						<!-- Cut List Display -->
-						<div class="col-md-12">
+						<div class="col-md-6">
 							<div id="cutList" class="border p-2 rounded" style="min-height: 50px;">
 								<span class="text-muted"><b>Cut</b></span><br>
 								<span class="text-muted">Please choose one or more</span>
 							</div>
 						</div>
 						<!-- Polish List Display -->
-						<div class="col-md-12">
+						<div class="col-md-6">
 							<div id="polishList" class="border p-2 rounded" style="min-height: 50px;">
 								<span class="text-muted"><b>Polish</b></span><br>
 								<span class="text-muted">Please choose one or more</span>
 							</div>
 						</div>
 						<!-- Symmetry List Display -->
-						<div class="col-md-12">
+						<div class="col-md-6">
 							<div id="symmetryList" class="border p-2 rounded" style="min-height: 50px;">
 								<span class="text-muted"><b>Symmetry</b></span><br>
 								<span class="text-muted">Please choose one or more</span>
@@ -422,6 +434,32 @@
 				<div class="modal-footer">
 					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
 					<button type="button" class="btn btn-primary apply-status-filter">Apply Filter</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- Location Modal -->
+	<div class="modal fade" id="locationModal" tabindex="-1" aria-labelledby="locationModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="locationModalLabel">Select Diamond Location</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<div id="fullLocationList">
+						@foreach ($location as $key=>$value)
+							<div class="form-check custom_checkbox me-2">
+								<input class="form-check-input" type="checkbox" value="{{ $value }}" id="location{{ $key }}">
+								<label class="form-check-label" for="location{{ $key }}">{{ $value }}</label>
+							</div>
+						@endforeach
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+					<button type="button" class="btn btn-primary apply-location-filter">Apply Filter</button>
 				</div>
 			</div>
 		</div>
@@ -680,8 +718,10 @@
 
 @section("script")
 	<script>
+		const userId = {{ Auth::user()->id ?? 0 }};
 		const urlData = '{{ route("diamond.data") }}';
-		const exportCsv = '{{ route("diamond.export.csv") }}';
+		const urlStatus = '{{ route("diamond.status") }}';
+		const urlExportCsv = '{{ route("diamond.export.csv") }}';
 		const urlExportXlsx = '{{ route("diamond.export.xlsx") }}';
 		const columns = <?php echo $columns; ?>;
 	</script>
