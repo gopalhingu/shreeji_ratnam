@@ -361,10 +361,15 @@ class DiamondController extends Controller
 
         // Add custom row at the end
         $lastRow = $sheet->getHighestRow() + 2;
-        $sheet->setCellValue("G{$lastRow}", $excelData['totalWeight']);
-        $sheet->setCellValue("Y{$lastRow}", $excelData['averageAmount']);
-        $sheet->setCellValue("Z{$lastRow}", $excelData['totalAmount']);
-        $sheet->getStyle("A{$lastRow}:AY{$lastRow}")->getFont()->setBold(true);
+        if(Auth::user()) {
+            $sheet->setCellValue("H{$lastRow}", $excelData['totalWeight']);
+            $sheet->setCellValue("Z{$lastRow}", $excelData['averageAmount']);
+            $sheet->setCellValue("AA{$lastRow}", $excelData['totalAmount']);
+        } else {
+            $sheet->setCellValue("G{$lastRow}", $excelData['totalWeight']);
+            $sheet->setCellValue("Y{$lastRow}", $excelData['averageAmount']);
+            $sheet->setCellValue("Z{$lastRow}", $excelData['totalAmount']);
+        }
 
         // Set response headers
         $filename = 'export.csv';
@@ -420,13 +425,24 @@ class DiamondController extends Controller
 
         // Add custom row at the end
         $lastRow = $sheet->getHighestRow() + 2;
-        $sheet->setCellValue("G{$lastRow}", $excelData['totalWeight']);
-        $sheet->setCellValue("Y{$lastRow}", $excelData['averageAmount']);
-        $sheet->setCellValue("Z{$lastRow}", $excelData['totalAmount']);
-        $sheet->getStyle("A{$lastRow}:{$sheet->getHighestColumn()}{$lastRow}")->getFont()->setBold(true);
+        if(Auth::user()) {
+            $sheet->setCellValue("H{$lastRow}", $excelData['totalWeight']);
+            $sheet->setCellValue("Z{$lastRow}", $excelData['averageAmount']);
+            $sheet->setCellValue("AA{$lastRow}", $excelData['totalAmount']);
+            $sheet->getStyle("A{$lastRow}:{$sheet->getHighestColumn()}{$lastRow}")->getFont()->setBold(true);
+        } else {
+            $sheet->setCellValue("G{$lastRow}", $excelData['totalWeight']);
+            $sheet->setCellValue("Y{$lastRow}", $excelData['averageAmount']);
+            $sheet->setCellValue("Z{$lastRow}", $excelData['totalAmount']);
+            $sheet->getStyle("A{$lastRow}:{$sheet->getHighestColumn()}{$lastRow}")->getFont()->setBold(true);
+        }
 
         // Set background color for a specific column 
-        $colorColumn = ['G', 'Y', 'Z'];
+        if(Auth::user()) {
+            $colorColumn = ['H', 'Z', 'AA'];
+        } else {
+            $colorColumn = ['G', 'Y', 'Z'];
+        }
         foreach ($colorColumn as $key => $value) {
             $sheet->getStyle($value . '1:' . $value . $sheet->getHighestRow())
                 ->getFill()
