@@ -3,7 +3,7 @@
 @section("css")
     <link rel="stylesheet" href="{{ url('public/css/style.css') }}?t={{ date('ymd') }}">
 	<style>
-		.statusChangeFunction {
+		.update-data {
 			width: auto;
 		}
 	</style>
@@ -720,7 +720,7 @@
 	<script>
 		const userId = {{ Auth::user()->id ?? 0 }};
 		const urlData = '{{ route("diamond.data") }}';
-		const urlStatus = '{{ route("diamond.status") }}';
+		const urlUpdateData = '{{ route("diamond.update.data") }}';
 		const urlExportCsv = '{{ route("diamond.export.csv") }}';
 		const urlExportXlsx = '{{ route("diamond.export.xlsx") }}';
 		const columns = <?php echo $columns; ?>;

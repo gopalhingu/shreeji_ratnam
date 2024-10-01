@@ -290,10 +290,12 @@ class DiamondController extends Controller
         ]);
     }
 
-    public function status(Request $request)
+    public function updateData(Request $request)
     {
         try {
-            $update = Diamond::where('stock_id', $request->stock_id)->update(['status' => $request->status]);
+            $data = $request->all();
+            unset($data['stock_id']);
+            $update = Diamond::where('stock_id', $request->stock_id)->update($data);
             if (!$update) {
                 return response()->json(['status' => false, 'message' => 'Something went wrong!', 500]);
             }

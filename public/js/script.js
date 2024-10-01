@@ -455,8 +455,27 @@ $(document).ready(function () {
         var stock_id = $(this).closest('tr').find('.check_stock_id').text();
         $.ajax({
             type: 'POST',
-            url: urlStatus,
+            url: urlUpdateData,
             data: {stock_id, status},
+            success: function(response) {
+                $('#loader').hide();
+            },
+            error: function(xhr, status, error) {
+                console.error("An error occurred while exporting the data.");
+                console.error(xhr.responseText);
+            }
+        });
+    });
+
+    $(document).on('change', '.referenceChangeFunction', function (e) {
+        e.preventDefault();
+        $('#loader').show();
+        var reference = $(this).val();
+        var stock_id = $(this).closest('tr').find('.check_stock_id').text();
+        $.ajax({
+            type: 'POST',
+            url: urlUpdateData,
+            data: {stock_id, reference},
             success: function(response) {
                 $('#loader').hide();
             },
@@ -503,9 +522,13 @@ function fetchData() {
                             return true;;
                         } else if(v == 'stock_id') {
                             rows += '<td class="check_'+ v +'">' + ((item[v] != null) ? item[v] : '-') + '</td>';
+                        } else if(v == 'reference' && userId > 0) {
+                            rows += '<td class="check_'+ v +'">';
+                            rows += '<input type="text" value="' + ((item[v] != null) ? item[v] : '') + '" name="reference" class="referenceChangeFunction form-control update-data" placeholder="Enter Reference">';
+                            rows += '</td>';
                         } else if(v == 'status' && userId > 0) {
                             rows += '<td class="check_'+ v +'">';
-                            rows += '<select name="status" class="statusChangeFunction form-control">';
+                            rows += '<select name="status" class="statusChangeFunction form-control update-data">';
                             rows += '<option value="AVAILABLE" ' + ((item[v] == 'AVAILABLE') ? 'selected' : '') + '>AVAILABLE</option>';
                             rows += '<option value="HOLD" ' + ((item[v] == 'HOLD') ? 'selected' : '') + '>HOLD</option>';
                             rows += '<option value="SOLD" ' + ((item[v] == 'SOLD') ? 'selected' : '') + '>SOLD</option>';
