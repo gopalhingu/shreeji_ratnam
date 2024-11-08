@@ -42,6 +42,7 @@ let multipleFilter = {
     polishList: [],
     symmetryList: [],
     labList: [],
+    referenceList: [],
 };
 
 let placeholder = {
@@ -54,6 +55,7 @@ let placeholder = {
     polishList: '<span class="text-muted"><b>Polish</b></span><br><span class="text-muted">Please choose one or more</span>',
     symmetryList: '<span class="text-muted"><b>Symmetry</b></span><br><span class="text-muted">Please choose one or more</span>',
     labList: '<span class="text-muted"><b>Lab</b></span><br><span class="text-muted">Please choose one or more</span>',
+    referenceList: '<span class="text-muted"><b>Reference</b></span><br><span class="text-muted">Please choose one or more</span>',
 };
 
 let checkInput = [
@@ -66,6 +68,7 @@ let checkInput = [
     "fullPolishList",
     "fullSymmetryList",
     "fullLabList",
+    "fullReferenceList",
 ];
 
 // Utility function to clear all filters
@@ -127,6 +130,7 @@ $('#cutList').on('click', function () { showModal('#cutModal'); });
 $('#polishList').on('click', function () { showModal('#polishModal'); });
 $('#symmetryList').on('click', function () { showModal('#symmetryModal'); });
 $('#labList').on('click', function () { showModal('#labModal'); });
+$('#referenceList').on('click', function () { showModal('#referenceModal'); });
 
 function applyFilter(modalId, fullListId, placeholderMessage, tagClass, id) {
 
@@ -189,6 +193,10 @@ $(document).on('click', '.apply-lab-filter', function () {
     applyFilter('#labModal', '#fullLabList', 'labPlaceholderMessage', 'remove-lab-tag', 'labList');
 });
 
+$(document).on('click', '.apply-reference-filter', function () {
+    applyFilter('#referenceModal', '#fullReferenceList', 'referencePlaceholderMessage', 'remove-lab-tag', 'referenceList');
+});
+
 function removeTag(tag, id, fullListId, placeholderMessage) {
     var item = $(tag).closest('.badge').text().trim().slice(0, -2);
     $(tag).closest('.badge').remove();
@@ -236,6 +244,10 @@ $(document).on('click', '.remove-lab-tag', function () {
     removeTag(this, 'labList', '#fullLabList', 'labPlaceholderMessage');
 });
 
+$(document).on('click', '.remove-lab-tag', function () {
+    removeTag(this, 'referenceList', '#fullReferenceList', 'referencePlaceholderMessage');
+});
+
 document.querySelectorAll('.focusable').forEach(element => {
     element.addEventListener('click', () => {
         element.focus();
@@ -280,6 +292,7 @@ $(document).ready(function () {
             text += 'Certificate: ' + $(this).closest('tr').find('.check_cert_url').text() + "\n";
             text += 'Report: ' + $(this).closest('tr').find('.check_report_number').text() + "\n";
             text += 'Lab: ' + $(this).closest('tr').find('.check_lab').text() + "\n";
+            text += 'Reference: ' + $(this).closest('tr').find('.check_reference').text() + "\n";
             text += "\n";
         });
         const phone_number = $(this).find('.contact-info').find('.contact-number').text().replace(/\D/g, '');
@@ -530,6 +543,7 @@ function fetchData() {
                             rows += '<td class="check_'+ v +'">';
                             rows += '<select name="status" class="statusChangeFunction form-control update-data">';
                             rows += '<option value="AVAILABLE" ' + ((item[v] == 'AVAILABLE') ? 'selected' : '') + '>AVAILABLE</option>';
+                            rows += '<option value="ON MEMO" ' + ((item[v] == 'ON MEMO') ? 'selected' : '') + '>ON MEMO</option>';
                             rows += '<option value="HOLD" ' + ((item[v] == 'HOLD') ? 'selected' : '') + '>HOLD</option>';
                             rows += '<option value="SOLD" ' + ((item[v] == 'SOLD') ? 'selected' : '') + '>SOLD</option>';
                             rows += '</select>';

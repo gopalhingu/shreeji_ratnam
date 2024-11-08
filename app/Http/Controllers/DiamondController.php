@@ -113,6 +113,7 @@ class DiamondController extends Controller
         $polish = Diamond::select('polish')->whereNotNull('polish')->distinct()->pluck('polish');
         $symmetries = Diamond::select('symmetry')->whereNotNull('symmetry')->distinct()->pluck('symmetry');
         $labs = Diamond::select('lab')->whereNotNull('lab')->distinct()->pluck('lab');
+        $reference = Diamond::select('reference')->whereNotNull('reference')->distinct()->pluck('reference');
         $columnWithValue = $this->columnWithValue();
         if (!Auth::user()) {
             unset($columnWithValue['reference']);
@@ -124,7 +125,7 @@ class DiamondController extends Controller
         // print_r($columnWithValue);
         // die;
 
-        return view("diamond.list",compact('status', 'location', 'shapes', 'colors', 'clarities', 'cuts', 'polish', 'symmetries', 'labs', 'columnWithValue'));
+        return view("diamond.list",compact('status', 'location', 'shapes', 'colors', 'clarities', 'cuts', 'polish', 'symmetries', 'labs', 'reference', 'columnWithValue'));
     }
 
     public function data(Request $request)
@@ -175,6 +176,7 @@ class DiamondController extends Controller
         $polishList = $request->input('polishList', []);
         $symmetryList = $request->input('symmetryList', []);
         $labList = $request->input('labList', []);
+        $referenceList = $request->input('referenceList', []);
         $stockId = preg_replace('/\D/', '', $stockId);
 
         // Query the database with pagination and sorting
@@ -260,6 +262,9 @@ class DiamondController extends Controller
         })
         ->when($labList, function ($query, $labList) {
             return $query->whereIn('lab', $labList);
+        })
+        ->when($referenceList, function ($query, $referenceList) {
+            return $query->whereIn('reference', $referenceList);
         })
         ->orderBy($currentSortColumn, $currentSortDirection);
 
@@ -569,6 +574,7 @@ class DiamondController extends Controller
         $polishList = $request->input('polishList', []);
         $symmetryList = $request->input('symmetryList', []);
         $labList = $request->input('labList', []);
+        $referenceList = $request->input('referenceList', []);
         $stockId = preg_replace('/\D/', '', $stockId);
 
         // Query the database with pagination and sorting
@@ -654,6 +660,9 @@ class DiamondController extends Controller
         })
         ->when($labList, function ($query, $labList) {
             return $query->whereIn('lab', $labList);
+        })
+        ->when($referenceList, function ($query, $referenceList) {
+            return $query->whereIn('reference', $referenceList);
         })
         ->orderBy($currentSortColumn, $currentSortDirection);
 

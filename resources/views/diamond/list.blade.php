@@ -320,13 +320,21 @@
 							</div>
 						</div>
 						<!-- Lab List Display -->
-						<div class="col-md-12">
+						<div class="{{ isset(Auth::user()->id) ? 'col-md-6' : 'col-md-12' }}">
 							<div id="labList" class="border p-2 rounded" style="min-height: 50px;">
 								<span class="text-muted"><b>Lab</b></span><br>
 								<span class="text-muted">Please choose one or more</span>
 							</div>
 						</div>
-
+						@if (isset(Auth::user()->id))
+							<!-- Reference Filter -->
+							<div class="col-md-6">
+								<div id="referenceList" class="border p-2 rounded" style="min-height: 50px;">
+									<span class="text-muted"><b>Reference</b></span><br>
+									<span class="text-muted">Please choose one or more</span>
+								</div>
+							</div>
+						@endif
 						<!-- Min Length Filter -->
 						<div class="col-6 form-floating">
 							<input type="text" class="form-control" id="minLength" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');" placeholder=" " />
@@ -708,7 +716,34 @@
 			</div>
 		</div>
 	</div>
-
+	@if (isset(Auth::user()->id))
+		<div class="modal fade" id="referenceModal" tabindex="-1" aria-labelledby="referenceModalLabel" aria-hidden="true">
+			<div class="modal-dialog modal-lg">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="referenceModalLabel">Select Reference</h5>
+						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+					</div>
+					<div class="modal-body">
+						<form id="referenceFilter" class="row g-3">
+							<div id="fullReferenceList" class="col-md-12">
+								@foreach ($reference as $key=>$value)
+									<div class="form-check custom_checkbox me-2">
+										<input class="form-check-input" type="checkbox" value="{{ $value }}" id="reference{{ $key }}">
+										<label class="form-check-label" for="reference{{ $key }}">{{ $value }}</label>
+									</div>
+								@endforeach
+							</div>
+						</form>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary filter-clear-button" data-bs-dismiss="modal">Clear Filter</button>
+						<button type="button" class="btn btn-primary apply-reference-filter">Apply Filter</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	@endif
 </div>
 
 <div id="loader" style="display: none;">
