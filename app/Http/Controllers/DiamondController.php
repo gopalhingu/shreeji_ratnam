@@ -13,6 +13,7 @@ use Exception;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class DiamondController extends Controller
 {
@@ -312,6 +313,11 @@ class DiamondController extends Controller
 
     public function jsonData($type = 2, Request $request)
     {
+        $currentDateTime = now()->toDateTimeString();
+
+        Log::info("[$currentDateTime]", ["****************************************************************************************************"]);
+        Log::info("[$currentDateTime] Type: ", [$type]);
+        
         try {
             $columnWithValue = $this->columnWithValue();
             $columns = array_keys($columnWithValue);
@@ -324,7 +330,8 @@ class DiamondController extends Controller
                 $excludeColumns = ['reference', 'bargaining_price_per_carat', 'bargaining_total_price', 'created_at', 'updated_at'];
                 $selectedColumns = array_diff($columns, $excludeColumns);
                 $records = Diamond::select($selectedColumns)->get()->toArray();
-                return response()->json($records);
+                Log::info("[$currentDateTime] Response: ", [count($records)]);
+                return response()->json($records, 200);
             } 
             else if ($type == 2) {
                 $excludeColumns = ['reference', 'price_per_carat', 'total_price', 'bargaining_price_per_carat', 'bargaining_total_price', 'created_at', 'updated_at'];
@@ -334,19 +341,22 @@ class DiamondController extends Controller
                     'bargaining_total_price as total_price'
                 ]);
                 $records = Diamond::select($finalColumns)->get()->toArray();
-                return response()->json($records);
+                Log::info("[$currentDateTime] Response: ", [count($records)]);
+                return response()->json($records, 200);
             }
 
             $responseMessage = [
                 'status' => false,
                 'message' => 'Plese pass type (1 or 2)!',
             ];
+            Log::info("[$currentDateTime] Error: ", [json_encode($responseMessage)]);
             return response()->json($responseMessage, 404);
         } catch (Exception $e) {
             $responseMessage = [
                 'status' => false,
                 'message' => $e->getMessage(),
             ];
+            Log::info("[$currentDateTime] Error: ", [json_encode($responseMessage)]);
             return response()->json($responseMessage, 500);
         }
     }
