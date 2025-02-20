@@ -68,6 +68,7 @@ class CreateDiamondsTable extends Migration
             $table->string('treatment')->nullable();
             $table->string('country')->nullable();
             $table->text('cert_comment')->nullable();
+            $table->text('cop')->nullable();
             $table->timestamps();
         });
     }

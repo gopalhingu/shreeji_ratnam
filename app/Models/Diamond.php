@@ -66,6 +66,7 @@ class Diamond extends Model
         'image_url',
         'treatment',
         'country',
-        'cert_comment'
+        'cert_comment',
+        'cop',
     ];
 }

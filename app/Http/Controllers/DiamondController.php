@@ -67,8 +67,7 @@ class DiamondController extends Controller
 
             foreach ($formattedData as $key => $value) {
 
-                array_shift($value); // Remove first element
-                array_pop($value); // Remove last element
+                if($key == 'id') { array_shift($value); }
 
                 $value['report_date'] = !empty($value['report_date']) ? date("Y-m-d", strtotime($value['report_date'])) : date("Y-m-d");
                 $value['ratio'] = !empty($value['ratio']) ? sprintf("%.2f", $value['ratio']) : sprintf("%.2f", ((float)($value['length'] ?? 0) / (((float)$value['width'] > 0) ? (float)$value['width'] : 1) ?? 0));
@@ -121,6 +120,8 @@ class DiamondController extends Controller
             unset($columnWithValue['bargaining_price_per_carat']);
             unset($columnWithValue['bargaining_total_price']);
         }
+        unset($columnWithValue['created_at']);
+        unset($columnWithValue['updated_at']);
 
         // echo "<pre>";
         // print_r($columnWithValue);
@@ -359,6 +360,31 @@ class DiamondController extends Controller
             Log::info("[$currentDateTime] Error: ", [json_encode($responseMessage)]);
             return response()->json($responseMessage, 500);
         }
+    }
+
+    public function updateStatus($type = 'HOLD', $stockId)
+    {
+        if (!in_array($type, ['AVAILABLE', 'ON MEMO', 'HOLD', 'SOLD'])) {
+            $type = 'HOLD';
+        }
+        $currentDateTime = date('Y-m-d H:i:s');
+        $diamond = Diamond::where('stock_id', $stockId)->first();
+        if (!$diamond) {
+            $responseMessage = [
+                'status' => false,
+                'message' => 'Diamond not found!',
+            ];
+            Log::info("[$currentDateTime] Error: ", [json_encode($responseMessage)]);
+            return response()->json($responseMessage, 404);
+        }
+
+        $diamond->status = strtoupper($type);
+        $diamond->save();
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Diamond status updated successfully!',
+        ], 200);
     }
 
     public function exportCsv(Request $request) 

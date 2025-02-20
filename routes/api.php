@@ -20,4 +20,5 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::any('/json-data/{type}', [DiamondController::class, 'jsonData'])->name('diamond.json.data');
+Route::any('/status/{type}/{stockId}', [DiamondController::class, 'updateStatus'])->name('diamond.update.status');
 Route::any('/run-command/{type}/{mig}', [DiamondController::class, 'runCommand'])->name('diamond.run.command');

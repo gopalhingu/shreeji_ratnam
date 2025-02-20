@@ -13,9 +13,6 @@
 
 @php
 	$columns = array_keys($columnWithValue);
-	// array_shift($columns);
-	array_pop($columns);
-	array_pop($columns);
 	$columns = json_encode($columns);
 	$claritiesFinal = ['IF', 'VVS1', 'VVS2', 'VS1', 'VS2', 'SI1', 'SI2', 'SI3', 'I1', 'I2', 'I3', 'I4'];
 	$claritiesArray = $clarities->toArray();
