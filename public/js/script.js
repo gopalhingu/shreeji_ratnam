@@ -532,7 +532,7 @@ function fetchData() {
                     rows += '<td>' + i + '</td>';
                     $.each(columns, function(k, v) { 
                         if(v == 'id') {
-                            return true;;
+                            return true;
                         } else if(v == 'stock_id') {
                             rows += '<td class="check_'+ v +'">' + ((item[v] != null) ? item[v] : '-') + '</td>';
                         } else if(v == 'reference' && userId > 0) {
@@ -549,7 +549,24 @@ function fetchData() {
                             rows += '</select>';
                             rows += '</td>';
                         } else {
-                            rows += '<td class="check_'+ v +'">' + ((item[v] != null) ? item[v] : '-') + '</td>';
+                            // Check if the value is a URL
+                            let value = item[v] != null ? item[v] : '-';
+                            // Simple URL regex
+                            let urlPattern = /^(https?:\/\/[^\s]+)$/;
+                            // Check if it's an image
+                            let imagePattern = /\.(jpeg|jpg|png|gif|webp|bmp|svg)$/i;
+
+                            if (urlPattern.test(value)) {
+                                if (imagePattern.test(value)) {
+                                    // If it's an image, wrap in an <a> tag
+                                    rows += '<td class="check_'+ v +'"><a href="' + value + '" target="_blank"><img src="' + value + '" alt="Image" style="width:50px; height:auto;"></a></td>';
+                                } else {
+                                    // If it's a normal link, just make it clickable
+                                    rows += '<td class="check_'+ v +'"><a href="' + value + '" target="_blank">' + value + '</a></td>';
+                                }
+                            } else {
+                                rows += '<td class="check_'+ v +'">' + value + '</td>';
+                            }
                         }
                     });
                     rows += '</tr>';

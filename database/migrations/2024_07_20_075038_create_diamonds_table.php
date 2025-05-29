@@ -33,7 +33,7 @@ class CreateDiamondsTable extends Migration
             $table->string('height')->nullable();
             $table->decimal('ratio')->nullable();
             $table->string('lab')->nullable();
-            $table->date('report_date')->nullable();
+            $table->string('report_date')->nullable();
             $table->string('report_number')->nullable();
             $table->string('location')->nullable();
             $table->string('discounts', 8, 2)->nullable();

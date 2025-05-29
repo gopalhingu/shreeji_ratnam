@@ -14,6 +14,9 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Carbon\Carbon;
+use Illuminate\Support\Str;
+use Illuminate\Http\JsonResponse;
 
 class DiamondController extends Controller
 {
@@ -69,7 +72,15 @@ class DiamondController extends Controller
 
                 if($key == 'id') { array_shift($value); }
 
-                $value['report_date'] = !empty($value['report_date']) ? date("Y-m-d", strtotime($value['report_date'])) : date("Y-m-d");
+                /* try {
+                    $value['report_date'] = !empty($value['report_date'])
+                        ? Carbon::createFromFormat('d/m/Y', $value['report_date'])->format('Y-m-d')
+                        : Carbon::now()->format('Y-m-d');
+                } catch (\Exception $e) {
+                    return redirect()->back()->with('error', $e->getMessage());
+                } */
+
+                $value['report_date'] = !empty($value['report_date']) ? $value['report_date'] : date("Y-m-d");
                 $value['ratio'] = !empty($value['ratio']) ? sprintf("%.2f", $value['ratio']) : sprintf("%.2f", ((float)($value['length'] ?? 0) / (((float)$value['width'] > 0) ? (float)$value['width'] : 1) ?? 0));
                 $value['rap_amount'] = !empty($value['rap_amount']) ? sprintf("%.2f", $value['rap_amount']) : sprintf("%.2f", (((float)($value['weight'] ?? 0)) * (float)($value['live_rap'] ?? 0)));
                 $value['price_per_carat'] = !empty($value['price_per_carat']) ? sprintf("%.2f", $value['price_per_carat']) : sprintf("%.2f", (((float)($value['live_rap'] ?? 0) * (((float)($value['discounts'] ?? 0)) / 100)) + (float)($value['live_rap'] ?? 0)));
@@ -312,7 +323,7 @@ class DiamondController extends Controller
         }
     }
 
-    public function jsonData($type = 2, Request $request)
+    public function jsonData(int $type = 2): JsonResponse
     {
         $currentDateTime = now()->toDateTimeString();
 
@@ -362,8 +373,9 @@ class DiamondController extends Controller
         }
     }
 
-    public function updateStatus($type = 'HOLD', $stockId)
+    public function updateStatus(string $type = 'HOLD', string $stockId): JsonResponse
     {
+        $type = Str::upper($type);
         if (!in_array($type, ['AVAILABLE', 'ON MEMO', 'HOLD', 'SOLD'])) {
             $type = 'HOLD';
         }
