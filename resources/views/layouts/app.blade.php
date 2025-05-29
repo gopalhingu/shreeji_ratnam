@@ -20,6 +20,7 @@
 
     <!-- Styles -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    @yield('css')
 </head>
 <body>
     <div id="app">
@@ -83,5 +84,6 @@
             @yield('content')
         </main>
     </div>
+    @yield('script')
 </body>
 </html>

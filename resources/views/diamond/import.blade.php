@@ -21,7 +21,7 @@
                         @endif
                     </div>
                 </div>
-                <form action="{{ route('diamond.import.save') }}" method="post" enctype="multipart/form-data">
+                <form action="{{ route('diamond.import.save') }}" method="post" id="submitForm" enctype="multipart/form-data">
                     @csrf
                     <div class="row justify-content-center mt-4">
                         <div class="col-sm-1"></div>
@@ -35,8 +35,11 @@
                                     @endif
                                 </div>
                              
-                                <div class="form-group p-1 text-center">
-                                    <button type="submit" class="btn btn-outline-primary" name="submit"><b>Submit</b></button>
+                                <div class="mb-3 text-end form-group p-1 text-center">
+                                    <button name="submit" type="submit" class="btn btn-outline-primary" id="submitButton">
+                                        <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true" id="loadingSpinner"></span>
+                                        Submit
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -47,4 +50,13 @@
         </div>
     </div>
 </div>
+@endsection
+
+@section('script')
+<script>
+    document.getElementById('submitForm').addEventListener('submit', function() {
+        document.getElementById('loadingSpinner').classList.remove('d-none');
+        document.getElementById('submitButton').disabled = true;
+    });
+</script>
 @endsection

@@ -69,6 +69,11 @@ class CreateDiamondsTable extends Migration
             $table->string('country')->nullable();
             $table->text('cert_comment')->nullable();
             $table->text('cop')->nullable();
+            $table->string('category')->nullable();
+            $table->text('images')->nullable();
+            $table->string('shade')->nullable();
+            $table->string('milky')->nullable();
+            $table->string('eye_clean')->nullable();
             $table->timestamps();
         });
     }

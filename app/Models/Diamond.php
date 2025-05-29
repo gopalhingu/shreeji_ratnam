@@ -68,5 +68,11 @@ class Diamond extends Model
         'country',
         'cert_comment',
         'cop',
+        'category',
+        'images',
+        'shade',
+        'milky',
+        'eye_clean',
+
     ];
 }
