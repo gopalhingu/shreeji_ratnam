@@ -24,7 +24,7 @@ class DiamondController extends Controller
     {
         return view("diamond.import");
     }
-    
+
     public function importSave(Request $request)
     {
         $request->validate([
@@ -152,11 +152,11 @@ class DiamondController extends Controller
             $excludeColumns = ['reference', 'price_per_carat', 'total_price', 'bargaining_price_per_carat', 'bargaining_total_price', 'created_at', 'updated_at'];
             $selectedColumns = array_diff($columns, $excludeColumns);
             $selectedColumns = array_merge($selectedColumns, [
-                'bargaining_price_per_carat as price_per_carat', 
+                'bargaining_price_per_carat as price_per_carat',
                 'bargaining_total_price as total_price'
             ]);
         }
-        
+
         $currentPage = $request->input('currentPage', 1);
         $currentPerPage = $request->input('currentPerPage', 10);
         $currentSortColumn = $request->input('currentSortColumn', 'id');
@@ -329,14 +329,13 @@ class DiamondController extends Controller
 
         Log::info("[$currentDateTime]", ["****************************************************************************************************"]);
         Log::info("[$currentDateTime] Type: ", [$type]);
-        
+
         try {
             $columnWithValue = $this->columnWithValue();
             $columns = array_keys($columnWithValue);
-        
             // echo "<pre>";
             // print_r($columns);
-            // die; 
+            // die;
 
             if ($type == 1) {
                 $excludeColumns = ['reference', 'bargaining_price_per_carat', 'bargaining_total_price', 'created_at', 'updated_at'];
@@ -344,15 +343,22 @@ class DiamondController extends Controller
                 $records = Diamond::select($selectedColumns)->get()->toArray();
                 Log::info("[$currentDateTime] Response: ", [count($records)]);
                 return response()->json($records, 200);
-            } 
+            }
             else if ($type == 2) {
                 $excludeColumns = ['reference', 'price_per_carat', 'total_price', 'bargaining_price_per_carat', 'bargaining_total_price', 'created_at', 'updated_at'];
                 $selectedColumns = array_diff($columns, $excludeColumns);
                 $finalColumns = array_merge($selectedColumns, [
-                    'bargaining_price_per_carat as price_per_carat', 
+                    'bargaining_price_per_carat as price_per_carat',
                     'bargaining_total_price as total_price'
                 ]);
                 $records = Diamond::select($finalColumns)->get()->toArray();
+
+                // echo "<pre>";
+                // print_r($records);
+                // die;
+
+
+
                 Log::info("[$currentDateTime] Response: ", [count($records)]);
                 return response()->json($records, 200);
             }
@@ -372,7 +378,62 @@ class DiamondController extends Controller
             return response()->json($responseMessage, 500);
         }
     }
+    public function newjsonData(int $type = 2): JsonResponse
+    {
+        $currentDateTime = now()->toDateTimeString();
 
+        Log::info("[$currentDateTime]", ["****************************************************************************************************"]);
+        Log::info("[$currentDateTime] Type: ", [$type]);
+
+        try {
+            $columnWithValue = $this->columnWithValue();
+            $columns = array_keys($columnWithValue);
+
+
+            if ($type == 1) {
+                $excludeColumns = ['reference', 'bargaining_price_per_carat', 'bargaining_total_price', 'created_at', 'updated_at'];
+                $selectedColumns = array_diff($columns, $excludeColumns);
+                // $records = Diamond::select($selectedColumns)->get()->toArray();
+                $records = Diamond::select($selectedColumns) // your existing columns
+                ->selectRaw('ROUND(total_price + (total_price * 18 / 100),2) as total_price') // calculated column
+                ->get()
+                ->toArray();
+
+                Log::info("[$currentDateTime] Response: ", [count($records)]);
+                return response()->json($records, 200);
+            }
+            else if ($type == 2) {
+                $excludeColumns = ['reference', 'price_per_carat', 'total_price', 'bargaining_price_per_carat', 'bargaining_total_price', 'created_at', 'updated_at'];
+                $selectedColumns = array_diff($columns, $excludeColumns);
+                $finalColumns = array_merge($selectedColumns, [
+                    'bargaining_price_per_carat as price_per_carat',
+                    'bargaining_total_price as total_price'
+                ]);
+                // $records = Diamond::select($finalColumns)->get()->toArray();
+                $records = Diamond::select($finalColumns) // your existing columns
+                ->selectRaw('ROUND(bargaining_total_price + (bargaining_total_price * 18 / 100),2) as total_price') // calculated column
+                ->get()
+                ->toArray();
+
+                Log::info("[$currentDateTime] Response: ", [count($records)]);
+                return response()->json($records, 200);
+            }
+
+            $responseMessage = [
+                'status' => false,
+                'message' => 'Plese pass type (1 or 2)!',
+            ];
+            Log::info("[$currentDateTime] Error: ", [json_encode($responseMessage)]);
+            return response()->json($responseMessage, 404);
+        } catch (Exception $e) {
+            $responseMessage = [
+                'status' => false,
+                'message' => $e->getMessage(),
+            ];
+            Log::info("[$currentDateTime] Error: ", [json_encode($responseMessage)]);
+            return response()->json($responseMessage, 500);
+        }
+    }
     public function updateStatus(string $type = 'HOLD', string $stockId): JsonResponse
     {
         $type = Str::upper($type);
@@ -399,7 +460,7 @@ class DiamondController extends Controller
         ], 200);
     }
 
-    public function exportCsv(Request $request) 
+    public function exportCsv(Request $request)
     {
         $column = $this->columnWithValue();
         $data = $this->getDataForExport($request);
@@ -435,13 +496,13 @@ class DiamondController extends Controller
         return response()->download($temp_file, $filename)->deleteFileAfterSend(true);
     }
 
-    public function exportXlsx(Request $request) 
+    public function exportXlsx(Request $request)
     {
         $column = $this->columnWithValue();
         $data = $this->getDataForExport($request);
 
         $excelData = $this->excelData($column, $data);
-        
+
         $spreadsheet = new Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
 
@@ -492,7 +553,7 @@ class DiamondController extends Controller
             $sheet->getStyle("A{$lastRow}:{$sheet->getHighestColumn()}{$lastRow}")->getFont()->setBold(true);
         }
 
-        // Set background color for a specific column 
+        // Set background color for a specific column
         if(Auth::user()) {
             $colorColumn = ['H', 'Z', 'AA'];
         } else {
@@ -515,7 +576,7 @@ class DiamondController extends Controller
         return response()->download($temp_file, $filename)->deleteFileAfterSend(true);
     }
 
-    private function excelData($column, $data) 
+    private function excelData($column, $data)
     {
         if (Auth::user()) {
             $exception = ['id', 'created_at', 'updated_at'];
@@ -585,7 +646,7 @@ class DiamondController extends Controller
             $excludeColumns = ['id', 'reference', 'price_per_carat', 'total_price', 'bargaining_price_per_carat', 'bargaining_total_price', 'created_at', 'updated_at'];
             $selectedColumns = array_diff($columns, $excludeColumns);
             $selectedColumns = array_merge($selectedColumns, [
-                'bargaining_price_per_carat as price_per_carat', 
+                'bargaining_price_per_carat as price_per_carat',
                 'bargaining_total_price as total_price'
             ]);
         }
