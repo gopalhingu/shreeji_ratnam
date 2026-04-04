@@ -34,7 +34,7 @@
 				</select>
 			</div>
 			<div class="action-button">
-				<button class="button" title="Download Options" data-bs-toggle="modal" id="downloadModal" data-bs-target="#downloadModal" data-toggle="tooltip" data-placement="top">
+				<button class="button" title="Download Options" data-bs-toggle="modal" data-bs-target="#downloadModal" data-toggle="tooltip" data-placement="top">
 					<i class="fa-solid fa-download icon-size"></i>
 				</button>
 				<button class="button contact-button" title="Contact us" data-bs-toggle="modal" data-bs-target="#contactModal" data-toggle="tooltip" data-placement="top">

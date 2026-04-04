@@ -573,10 +573,8 @@ function fetchData() {
                     i++;
                 });
 
-                $("#downloadModal").removeClass('hide');
                 if (response.data.length == 0) {
                     rows += '<tr class=""><td class="text-left" colspan="' + (columns.length + 2) + '">No Record Found</td></tr>';
-                    $("#downloadModal").addClass('hide');
                 }
 
                 $('#data-table tbody').html(rows);

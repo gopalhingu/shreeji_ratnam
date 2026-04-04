@@ -605,7 +605,9 @@ class DiamondController extends Controller
             }
             $excelArray[] = $array;
         }
-        $averageAmount = round(($totalAmount / $totalWeight), 2);
+        if ($totalWeight > 0 || $totalAmount > 0) {
+            $averageAmount = round(($totalAmount / $totalWeight), 2);
+        }
         return [
             'header' => $header,
             'data' => $excelArray,
