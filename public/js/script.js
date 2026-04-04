@@ -82,7 +82,7 @@ function clearFilters() {
     defaultFilter['totalPage'] = 0;
 
     $(".changeNumberOfPerPage").val(defaultFilter['currentPerPage']);
-    
+
     // Clear single filter
     $.each(singleFilter, function(k, v) {
         singleFilter[k] = '';
@@ -530,7 +530,7 @@ function fetchData() {
                     rows += '<tr class="">';
                     rows += '<td data-id="' + item['id'] + '"><div class="checkbox selectSingle"><input type="checkbox" data-stock_id="' + item['stock_id'] + '" /><span class=""></span></div></td>';
                     rows += '<td>' + i + '</td>';
-                    $.each(columns, function(k, v) { 
+                    $.each(columns, function(k, v) {
                         if(v == 'id') {
                             return true;
                         } else if(v == 'stock_id') {
@@ -573,8 +573,10 @@ function fetchData() {
                     i++;
                 });
 
+                $("#downloadModal").removeClass('hide');
                 if (response.data.length == 0) {
                     rows += '<tr class=""><td class="text-left" colspan="' + (columns.length + 2) + '">No Record Found</td></tr>';
+                    $("#downloadModal").addClass('hide');
                 }
 
                 $('#data-table tbody').html(rows);

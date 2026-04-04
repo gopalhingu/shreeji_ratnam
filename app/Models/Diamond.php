@@ -73,6 +73,7 @@ class Diamond extends Model
         'shade',
         'milky',
         'eye_clean',
+        'h_and_a',
 
     ];
 }

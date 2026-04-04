@@ -74,6 +74,7 @@ class CreateDiamondsTable extends Migration
             $table->string('shade')->nullable();
             $table->string('milky')->nullable();
             $table->string('eye_clean')->nullable();
+            $table->string('h_and_a')->nullable();
             $table->timestamps();
         });
     }

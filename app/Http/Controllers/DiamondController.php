@@ -617,12 +617,12 @@ class DiamondController extends Controller
 
     private function format_column($column)
     {
-        return strtolower(str_replace(" ", "_", str_replace('%', 'percentage', str_replace('#', 'number', $column))));
+        return strtolower(str_replace(" ", "_", str_replace('%', 'percentage', str_replace('#', 'number', str_replace('&', 'and', $column)))));
     }
 
     private function format_column_reverse($column)
     {
-        return ucwords(str_replace("_", " ", str_replace('percentage', '%', str_replace('number', '#', $column))));
+        return ucwords(str_replace("_", " ", str_replace('percentage', '%', str_replace('number', '#', str_replace('and', '&', $column)))));
     }
 
     private function columnWithValue()
