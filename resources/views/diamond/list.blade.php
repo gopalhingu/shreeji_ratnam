@@ -6,6 +6,41 @@
 		.update-data {
 			width: auto;
 		}
+		.cell-clip {
+			display: inline-flex;
+			align-items: center;
+			gap: 8px;
+			max-width: 320px;
+			vertical-align: middle;
+		}
+		.cell-clip-text {
+			display: inline-block;
+			max-width: 240px;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			white-space: nowrap;
+		}
+		.cell-view-btn {
+			flex: 0 0 auto;
+			border: 1px solid #b7d7c4;
+			background: #f3faf6;
+			color: #0f6b45;
+			border-radius: 999px;
+			font-size: 12px;
+			line-height: 1;
+			padding: 5px 8px;
+			cursor: pointer;
+		}
+		.cell-view-btn:hover {
+			background: #e5f6ec;
+		}
+		.cell-full-text {
+			white-space: pre-wrap;
+			word-break: break-word;
+			max-height: 60vh;
+			overflow: auto;
+			margin: 0;
+		}
 	</style>
 @endsection
 
@@ -743,6 +778,20 @@
 	@endif
 </div>
 
+<div class="modal fade" id="cellTextModal" tabindex="-1" aria-labelledby="cellTextTitle" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered modal-lg">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="cellTextTitle">Details</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<p id="cellTextBody" class="cell-full-text"></p>
+			</div>
+		</div>
+	</div>
+</div>
+
 <div id="loader" style="display: none;">
 	<span class="loader_img"></span>
 </div>
@@ -757,5 +806,5 @@
 		const urlExportXlsx = '{{ route("diamond.export.xlsx") }}';
 		const columns = <?php echo $columns; ?>;
 	</script>
-	<script src="{{ url('public/js/script.js') }}?t={{ date('ymd') }}"></script>
+	<script src="{{ url('public/js/script.js') }}?v={{ filemtime(public_path('js/script.js')) }}"></script>
 @endsection

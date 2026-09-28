@@ -1,9 +1,19 @@
+<IfModule php_module>
+    php_value upload_max_filesize 64M
+    php_value post_max_size 64M
+    php_value max_execution_time 300
+    php_value max_input_time 300
+</IfModule>
+
 <IfModule mod_rewrite.c>
     <IfModule mod_negotiation.c>
         Options -MultiViews -Indexes
     </IfModule>
 
     RewriteEngine On
+
+    # Document root is already /public, but pages request /public/css and /public/js.
+    RewriteRule ^public/(.*)$ $1 [L]
 
     # Handle Authorization Header
     RewriteCond %{HTTP:Authorization} .

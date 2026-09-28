@@ -94,8 +94,8 @@ function clearFilters() {
     });
 
     // Clear multiple filter
-    $.each(multipleFilter, function(k, v) {
-        multipleFilter[k] = '';
+        $.each(multipleFilter, function(k, v) {
+        multipleFilter[k] = [];
     });
 
     // Clear Array tags
@@ -148,8 +148,8 @@ function applyFilter(modalId, fullListId, placeholderMessage, tagClass, id) {
 
         $.each(selectedItems, function (index, item) {
             $("#"+id).append(
-                '<span class="badge bg-primary me-2 mb-1">' + item +
-                ' <span class="' + tagClass + '" style="cursor:pointer;">&times;</span></span>'
+                '<span class="badge bg-primary me-2 mb-1">' + escapeHtml(item) +
+                ' <span class="remove-filter-tag" data-list="' + id + '" data-source="' + fullListId + '" style="cursor:pointer;">&times;</span></span>'
             );
         });
     }
@@ -197,55 +197,78 @@ $(document).on('click', '.apply-reference-filter', function () {
     applyFilter('#referenceModal', '#fullReferenceList', 'referencePlaceholderMessage', 'remove-lab-tag', 'referenceList');
 });
 
-function removeTag(tag, id, fullListId, placeholderMessage) {
+function escapeHtml(value) {
+    return String(value)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+}
+
+var cellTextStore = {};
+var cellTextSeq = 0;
+var cellTextLimit = 48;
+
+function columnTitle(column) {
+    var header = document.querySelector('#data-table thead th[data-column="' + column + '"]');
+    if (!header) {
+        return column;
+    }
+    var clone = header.cloneNode(true);
+    var icons = clone.querySelectorAll('.sort-icons');
+    var index;
+    for (index = 0; index < icons.length; index++) {
+        icons[index].remove();
+    }
+    return clone.textContent.replace(/\s+/g, ' ').trim() || column;
+}
+
+function longCell(column, value) {
+    var text = String(value == null ? '' : value);
+    if (text === '' || text === '-' || text.length <= cellTextLimit) {
+        return escapeHtml(text === '' ? '-' : text);
+    }
+    cellTextSeq++;
+    var id = String(cellTextSeq);
+    cellTextStore[id] = text;
+    var preview = text.replace(/\s+/g, ' ').trim().slice(0, cellTextLimit);
+    return '<span class="cell-clip">'
+        + '<span class="cell-clip-text">' + escapeHtml(preview) + '…</span>'
+        + '<button type="button" class="cell-view-btn" data-text-id="' + id + '" data-column="' + escapeHtml(column) + '" title="View full text">'
+        + '<i class="fa-solid fa-eye"></i> View'
+        + '</button></span>';
+}
+
+$(document).on('click', '.cell-view-btn', function (event) {
+    event.preventDefault();
+    event.stopPropagation();
+    var id = $(this).attr('data-text-id');
+    var column = $(this).attr('data-column');
+    var text = Object.prototype.hasOwnProperty.call(cellTextStore, id) ? cellTextStore[id] : '';
+    $('#cellTextTitle').text(columnTitle(column));
+    $('#cellTextBody').text(text);
+    var modalElement = document.getElementById('cellTextModal');
+    if (modalElement && window.bootstrap) {
+        window.bootstrap.Modal.getOrCreateInstance(modalElement).show();
+    }
+});
+
+function removeTag(tag, id, fullListId) {
     var item = $(tag).closest('.badge').text().trim().slice(0, -2);
     $(tag).closest('.badge').remove();
-    $(fullListId + ' input[value="' + item + '"]').prop('checked', false);
+    $(fullListId).find('input').filter(function () {
+        return this.value === item;
+    }).prop('checked', false);
 
-    if ($(id + ' .badge').length === 0) {
+    if ($('#' + id + ' .badge').length === 0) {
         $("#"+id).html(placeholder[id]);
     }
     fetchData();
 }
 
-$(document).on('click', '.remove-tag', function () {
-    removeTag(this, 'statusList', '#fullStatusList', 'placeholderMessage');
-});
-
-$(document).on('click', '.remove-tag', function () {
-    removeTag(this, 'locationList', '#fullLocationList', 'placeholderMessage');
-});
-
-$(document).on('click', '.remove-tag', function () {
-    removeTag(this, 'shapeList', '#fullShapeList', 'placeholderMessage');
-});
-
-$(document).on('click', '.remove-color-tag', function () {
-    removeTag(this, 'colorList', '#fullColorList', 'colorPlaceholderMessage');
-});
-
-$(document).on('click', '.remove-clarity-tag', function () {
-    removeTag(this, 'clarityList', '#fullClarityList', 'clarityPlaceholderMessage');
-});
-
-$(document).on('click', '.remove-cut-tag', function () {
-    removeTag(this, 'cutList', '#fullCutList', 'cutPlaceholderMessage');
-});
-
-$(document).on('click', '.remove-polish-tag', function () {
-    removeTag(this, 'polishList', '#fullPolishList', 'polishPlaceholderMessage');
-});
-
-$(document).on('click', '.remove-symmetry-tag', function () {
-    removeTag(this, 'symmetryList', '#fullSymmetryList', 'symmetryPlaceholderMessage');
-});
-
-$(document).on('click', '.remove-lab-tag', function () {
-    removeTag(this, 'labList', '#fullLabList', 'labPlaceholderMessage');
-});
-
-$(document).on('click', '.remove-lab-tag', function () {
-    removeTag(this, 'referenceList', '#fullReferenceList', 'referencePlaceholderMessage');
+$(document).on('click', '.remove-filter-tag', function () {
+    removeTag(this, $(this).attr('data-list'), $(this).attr('data-source'));
 });
 
 document.querySelectorAll('.focusable').forEach(element => {
@@ -476,6 +499,7 @@ $(document).ready(function () {
             error: function(xhr, status, error) {
                 console.error("An error occurred while exporting the data.");
                 console.error(xhr.responseText);
+                $('#loader').hide();
             }
         });
     });
@@ -495,6 +519,7 @@ $(document).ready(function () {
             error: function(xhr, status, error) {
                 console.error("An error occurred while exporting the data.");
                 console.error(xhr.responseText);
+                $('#loader').hide();
             }
         });
     });
@@ -526,18 +551,20 @@ function fetchData() {
             success: function (response) {
                 var i = response.from;
                 var rows = '';
+                cellTextStore = {};
+                cellTextSeq = 0;
                 $.each(response.data, function (index, item) {
                     rows += '<tr class="">';
-                    rows += '<td data-id="' + item['id'] + '"><div class="checkbox selectSingle"><input type="checkbox" data-stock_id="' + item['stock_id'] + '" /><span class=""></span></div></td>';
+                    rows += '<td data-id="' + escapeHtml(item['id']) + '"><div class="checkbox selectSingle"><input type="checkbox" data-stock_id="' + escapeHtml(item['stock_id']) + '" /><span class=""></span></div></td>';
                     rows += '<td>' + i + '</td>';
                     $.each(columns, function(k, v) {
                         if(v == 'id') {
                             return true;
                         } else if(v == 'stock_id') {
-                            rows += '<td class="check_'+ v +'">' + ((item[v] != null) ? item[v] : '-') + '</td>';
+                            rows += '<td class="check_'+ v +'">' + ((item[v] != null) ? escapeHtml(item[v]) : '-') + '</td>';
                         } else if(v == 'reference' && userId > 0) {
                             rows += '<td class="check_'+ v +'">';
-                            rows += '<input type="text" value="' + ((item[v] != null) ? item[v] : '') + '" name="reference" class="referenceChangeFunction form-control update-data" placeholder="Enter Reference">';
+                            rows += '<input type="text" value="' + ((item[v] != null) ? escapeHtml(item[v]) : '') + '" name="reference" class="referenceChangeFunction form-control update-data" placeholder="Enter Reference">';
                             rows += '</td>';
                         } else if(v == 'status' && userId > 0) {
                             rows += '<td class="check_'+ v +'">';
@@ -557,15 +584,16 @@ function fetchData() {
                             let imagePattern = /\.(jpeg|jpg|png|gif|webp|bmp|svg)$/i;
 
                             if (urlPattern.test(value)) {
+                                var safeUrl = escapeHtml(value);
                                 if (imagePattern.test(value)) {
-                                    // If it's an image, wrap in an <a> tag
-                                    rows += '<td class="check_'+ v +'"><a href="' + value + '" target="_blank"><img src="' + value + '" alt="Image" style="width:50px; height:auto;"></a></td>';
+                                    rows += '<td class="check_'+ v +'"><a href="' + safeUrl + '" target="_blank"><img src="' + safeUrl + '" alt="Image" style="width:50px; height:auto;"></a></td>';
+                                } else if (value.length > cellTextLimit) {
+                                    rows += '<td class="check_'+ v +'"><span class="cell-clip"><a class="cell-clip-text" href="' + safeUrl + '" target="_blank">' + escapeHtml(value.slice(0, cellTextLimit)) + '…</a></span></td>';
                                 } else {
-                                    // If it's a normal link, just make it clickable
-                                    rows += '<td class="check_'+ v +'"><a href="' + value + '" target="_blank">' + value + '</a></td>';
+                                    rows += '<td class="check_'+ v +'"><a href="' + safeUrl + '" target="_blank">' + safeUrl + '</a></td>';
                                 }
                             } else {
-                                rows += '<td class="check_'+ v +'">' + value + '</td>';
+                                rows += '<td class="check_'+ v +'">' + longCell(v, value) + '</td>';
                             }
                         }
                     });
@@ -608,6 +636,9 @@ function fetchData() {
                 total_stock = response.total_stock;
                 total_carat = response.total_carat;
                 total_amount = response.total_amount;
+            },
+            error: function () {
+                $('#loader').hide();
             }
         });
     }, 500);
@@ -665,6 +696,7 @@ function exportToCSV() {
         error: function(xhr, status, error) {
             console.error("An error occurred while exporting the data.");
             console.error(xhr.responseText);
+            $('#loader').hide();
         }
     });
 }
@@ -697,6 +729,7 @@ function exportToExcel() {
         error: function(xhr, status, error) {
             console.error("An error occurred while exporting the data.");
             console.error(xhr.responseText);
+            $('#loader').hide();
         }
     });
 }
