@@ -3,9 +3,14 @@
 @section('css')
 <style>
     .import-shell {
-        width: 100%;
-        max-width: none;
-        padding: 0 16px 20px;
+        width: min(1440px, calc(100% - 80px));
+        max-width: 1440px;
+        margin: 0 auto 16px;
+        padding: 0;
+    }
+    .import-table-shell {
+        width: calc(100% - 24px);
+        margin: 0 12px 20px;
     }
     .import-panel {
         background: #fff;
@@ -196,6 +201,64 @@
     body.import-busy {
         overflow: hidden;
     }
+    html[data-bs-theme="dark"] .import-panel {
+        background: #1b2230;
+        border-color: #334155;
+    }
+    html[data-bs-theme="dark"] .import-steps li {
+        background: #243044;
+        color: #cbd5e1;
+    }
+    html[data-bs-theme="dark"] .import-steps li.is-done {
+        background: #143028;
+        color: #86efac;
+    }
+    html[data-bs-theme="dark"] #importPreview {
+        background: #1b2230;
+        border-color: #334155;
+    }
+    html[data-bs-theme="dark"] #importPreviewTable th,
+    html[data-bs-theme="dark"] #importPreviewTable td,
+    html[data-bs-theme="dark"] #importPreviewTable .row-no {
+        background: #1e2430;
+        border-color: #334155;
+        color: #e5e7eb;
+    }
+    html[data-bs-theme="dark"] #importPreviewTable thead th,
+    html[data-bs-theme="dark"] #importPreviewTable thead .row-no {
+        background: #243044;
+        color: #e5e7eb;
+        box-shadow: inset 0 -1px 0 #334155;
+    }
+    html[data-bs-theme="dark"] #importPreviewTable .row-no {
+        color: #94a3b8;
+        box-shadow: 1px 0 0 #334155;
+    }
+    html[data-bs-theme="dark"] #importPreviewTable tbody tr.is-alt td {
+        background: #232a38;
+    }
+    html[data-bs-theme="dark"] #importPreviewTable tbody tr:hover td {
+        background: #2a3550;
+    }
+    html[data-bs-theme="dark"] #importPreviewTable tbody tr.is-error td,
+    html[data-bs-theme="dark"] #importPreviewTable tbody tr.is-error .row-no {
+        background: #3f1d24;
+        color: #fecdd3;
+    }
+    html[data-bs-theme="dark"] #importPreviewTable tbody tr.is-error:hover td,
+    html[data-bs-theme="dark"] #importPreviewTable tbody tr.is-error:hover .row-no {
+        background: #4c242c;
+    }
+    html[data-bs-theme="dark"] #importPreviewTable tbody tr.is-saving td {
+        background: #3a3018;
+    }
+    html[data-bs-theme="dark"] #importPreviewTable tbody tr.is-saved td {
+        background: #143028;
+    }
+    html[data-bs-theme="dark"] .import-lock-card {
+        background: #1b2230;
+        color: #e5e7eb;
+    }
 </style>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
 @endsection
@@ -224,11 +287,15 @@
             </div>
         @endif
 
-        <div class="mb-3">
+        <div class="mb-0">
             <label for="import_file" class="form-label">Excel file</label>
             <input type="file" class="form-control" id="import_file" accept=".xlsx,.xls,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
         </div>
+    </div>
+</div>
 
+<div class="import-table-shell d-none" id="importTableCard">
+    <div class="import-panel">
         <div class="import-toolbar">
             <div id="importSummary" class="import-toolbar-main d-none">
                 <button type="button" class="btn btn-sm btn-outline-secondary is-active" data-filter="all">All <span id="countAll">0</span></button>

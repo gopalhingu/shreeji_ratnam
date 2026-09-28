@@ -8,6 +8,7 @@
     var buttonLabel = document.getElementById('importButtonLabel');
     var spinner = document.getElementById('loadingSpinner');
     var preview = document.getElementById('importPreview');
+    var tableCard = document.getElementById('importTableCard');
     var scrollBox = document.getElementById('importScroll');
     var head = document.getElementById('importHead');
     var body = document.getElementById('importBody');
@@ -335,7 +336,7 @@
         var end = Math.min(total, start + count);
         var top = start * rowHeight;
         var bottom = Math.max(0, (total - end) * rowHeight);
-        var colspan = labels.length + 1;
+        var colspan = visibleColumnCount();
         var html = '';
         if (top > 0) {
             html += '<tr class="spacer"><td colspan="' + colspan + '" style="height:' + top + 'px;line-height:0;font-size:0"></td></tr>';
@@ -370,6 +371,9 @@
         html += '<td class="row-no" title="' + escapeHtml(tip || ('Row ' + row.number)) + '">' + row.number + '</td>';
         var cell;
         for (cell = 0; cell < row.cells.length; cell++) {
+            if (isSerialColumn(cell)) {
+                continue;
+            }
             var value = row.cells[cell] == null ? '' : row.cells[cell];
             var title = tip ? tip : value;
             html += '<td title="' + escapeHtml(title) + '">' + escapeHtml(value) + '</td>';
@@ -378,10 +382,31 @@
         return html;
     }
 
+    function isSerialColumn(index) {
+        var key = String(keys[index] || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+        var label = String(labels[index] || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+        return key === 'serialno' || key === 'serialnumber' || key === 'srno' || key === 'sno'
+            || label === 'serialno' || label === 'serialnumber' || label === 'srno' || label === 'sno';
+    }
+
+    function visibleColumnCount() {
+        var count = 1;
+        var index;
+        for (index = 0; index < labels.length; index++) {
+            if (!isSerialColumn(index)) {
+                count++;
+            }
+        }
+        return count;
+    }
+
     function renderHead() {
         var html = '<tr><th class="row-no">No.</th>';
         var index;
         for (index = 0; index < labels.length; index++) {
+            if (isSerialColumn(index)) {
+                continue;
+            }
             html += '<th>' + escapeHtml(labels[index] || keys[index]) + '</th>';
         }
         html += '</tr>';
@@ -400,6 +425,9 @@
         body.innerHTML = '';
         preview.classList.add('d-none');
         summary.classList.add('d-none');
+        if (tableCard) {
+            tableCard.classList.add('d-none');
+        }
         button.disabled = true;
         buttonLabel.textContent = 'Import';
         setActiveFilter('all');
@@ -634,6 +662,9 @@
         keys = header.keys;
         renderHead();
         preview.classList.remove('d-none');
+        if (tableCard) {
+            tableCard.classList.remove('d-none');
+        }
         var dataRows = [];
         var index;
         for (index = 0; index < rowNumbers.length; index++) {
